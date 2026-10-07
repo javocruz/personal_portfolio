@@ -1,4 +1,6 @@
 import { useEffect, useRef } from 'react'
+import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom'
+import { BlogIndex, BlogPost } from './Blog'
 import Lenis from 'lenis'
 import { motion } from 'motion/react'
 import { FlowingGradient, FilmGrain, Aurora, Grid, Vignette, ChromaFlow, MeshGradient, Dither } from 'shaders/react'
@@ -51,37 +53,8 @@ function Work({ p }: { p: Project }) {
   )
 }
 
-export default function App() {
-  const cursor = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const lenis = new Lenis({ lerp: 0.09 })
-    let raf = requestAnimationFrame(function tick(t) { lenis.raf(t); raf = requestAnimationFrame(tick) })
-    return () => { cancelAnimationFrame(raf); lenis.destroy() }
-  }, [])
-
-  useEffect(() => {
-    const el = cursor.current
-    if (!el || !matchMedia('(hover: hover)').matches) return
-    let x = 0, y = 0, cx = 0, cy = 0, raf = 0
-    const move = (e: MouseEvent) => { x = e.clientX; y = e.clientY; el.dataset.on = '1'
-      el.dataset.big = (e.target as HTMLElement).closest('a,button,.work,.xp-row') ? '1' : '0' }
-    const loop = () => { cx += (x - cx) * 0.18; cy += (y - cy) * 0.18; el.style.transform = `translate(${cx}px,${cy}px)`; raf = requestAnimationFrame(loop) }
-    addEventListener('mousemove', move); raf = requestAnimationFrame(loop)
-    return () => { removeEventListener('mousemove', move); cancelAnimationFrame(raf) }
-  }, [])
-
+function Home() {
   return (
-    <>
-      <div ref={cursor} className="cursor" aria-hidden />
-      <header className="nav">
-        <a href="#top" className="logo">JCV</a>
-        <nav>
-          <a href="#work">Work</a><a href="#experience">Experience</a><a href="#about">About</a><a href="#contact">Contact</a>
-        </nav>
-      </header>
-
       <main id="top">
         <section className="hero">
           <LazyShader className="hero-bg" fallback="radial-gradient(ellipse at 70% 20%, #3a1408, #0a0908 70%)">
@@ -173,6 +146,56 @@ export default function App() {
           <footer className="mono dim">© {new Date().getFullYear()} {profile.name}</footer>
         </section>
       </main>
+  )
+}
+
+function Shell() {
+  const { pathname } = useLocation()
+  useEffect(() => { if (!location.hash) scrollTo(0, 0) }, [pathname])
+  const cursor = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const lenis = new Lenis({ lerp: 0.09 })
+    let raf = requestAnimationFrame(function tick(t) { lenis.raf(t); raf = requestAnimationFrame(tick) })
+    return () => { cancelAnimationFrame(raf); lenis.destroy() }
+  }, [])
+
+  useEffect(() => {
+    const el = cursor.current
+    if (!el || !matchMedia('(hover: hover)').matches) return
+    let x = 0, y = 0, cx = 0, cy = 0, raf = 0
+    const move = (e: MouseEvent) => { x = e.clientX; y = e.clientY; el.dataset.on = '1'
+      el.dataset.big = (e.target as HTMLElement).closest('a,button,.work,.xp-row') ? '1' : '0' }
+    const loop = () => { cx += (x - cx) * 0.18; cy += (y - cy) * 0.18; el.style.transform = `translate(${cx}px,${cy}px)`; raf = requestAnimationFrame(loop) }
+    addEventListener('mousemove', move); raf = requestAnimationFrame(loop)
+    return () => { removeEventListener('mousemove', move); cancelAnimationFrame(raf) }
+  }, [])
+
+  return (
+    <>
+      <div ref={cursor} className="cursor" aria-hidden />
+      <header className="nav">
+        <a href="/" className="logo">JCV</a>
+        <nav>
+          <a href="/#work">Work</a><a href="/#experience">Experience</a><Link to="/blog">Writing</Link><a href="/#contact">Contact</a>
+        </nav>
+      </header>
+
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/blog" element={<BlogIndex />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path="*" element={<Home />} />
+        </Routes>
     </>
+  )
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Shell />
+    </BrowserRouter>
   )
 }
