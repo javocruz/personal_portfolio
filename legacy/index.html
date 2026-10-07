@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Javier Cruz Villarreal - CS & AI Student, Full-Stack Developer, and Growth Strategist based in Madrid, Spain">
+    <meta name="keywords" content="Javier Cruz, Full-Stack Developer, AI, Computer Science, Portfolio">
+    <meta name="author" content="Javier Cruz Villarreal">
+    <title>Javier Cruz Villarreal | CS & AI Developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav" id="nav" aria-label="Main navigation">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo" aria-label="Home">
+                <span class="logo-bracket">&lt;</span>JCV<span class="logo-bracket">/&gt;</span>
+            </a>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                <span class="hamburger"></span>
+            </button>
+            <ul class="nav-links" id="nav-links" role="menubar">
+                <li role="none"><a href="#about" role="menuitem">About</a></li>
+                <li role="none"><a href="#experience" role="menuitem">Experience</a></li>
+                <li role="none"><a href="#projects" role="menuitem">Projects</a></li>
+                <li role="none"><a href="#skills" role="menuitem">Skills</a></li>
+                <li role="none"><a href="#education" role="menuitem">Education</a></li>
+                <li role="none"><a href="#contact" role="menuitem">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero" aria-label="Introduction">
+        <div class="ascii-background" aria-hidden="true"></div>
+        <div class="grid-overlay" aria-hidden="true"></div>
+        <div class="scanlines" aria-hidden="true"></div>
+
+        <div class="hero-content">
+            <div class="hero-terminal">
+                <div class="terminal-header">
+                    <span class="terminal-dot red"></span>
+                    <span class="terminal-dot yellow"></span>
+                    <span class="terminal-dot green"></span>
+                    <span class="terminal-title">visitor@portfolio ~ %</span>
+                </div>
+                <div class="terminal-body">
+                    <p class="terminal-line">
+                        <span class="terminal-prompt">$</span>
+                        <span class="terminal-command typing" id="terminal-text"></span>
+                        <span class="cursor">_</span>
+                    </p>
+                </div>
+            </div>
+
+            <h1 class="hero-name">
+                <span class="name-line">Javier Cruz</span>
+                <span class="name-line">Villarreal</span>
+            </h1>
+
+            <p class="hero-title">
+                <span class="title-bracket">[</span>
+                <span class="title-text">CS & AI Student</span>
+                <span class="title-separator">|</span>
+                <span class="title-text">Full-Stack Developer</span>
+                <span class="title-separator">|</span>
+                <span class="title-text">Growth Strategist</span>
+                <span class="title-bracket">]</span>
+            </p>
+
+            <p class="hero-location">
+                <span class="location-icon">&#9679;</span>
+                Madrid, Spain
+            </p>
+
+            <div class="hero-cta">
+                <a href="#about" class="cta-button" aria-label="Explore my work">
+                    <span class="cta-text">Explore My Work</span>
+                    <span class="cta-arrow">&darr;</span>
+                </a>
+            </div>
+
+            <div class="hero-links">
+                <a href="https://github.com/javocruz" target="_blank" rel="noopener noreferrer" class="hero-link" aria-label="GitHub Profile">
+                    <span class="link-icon">&#60;/&#62;</span>
+                    <span class="link-text">GitHub</span>
+                </a>
+                <a href="https://linkedin.com/in/javiercruzv" target="_blank" rel="noopener noreferrer" class="hero-link" aria-label="LinkedIn Profile">
+                    <span class="link-icon">in</span>
+                    <span class="link-text">LinkedIn</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="scroll-indicator" aria-hidden="true">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main>
+        <!-- About Section -->
+        <section class="section about" id="about" aria-labelledby="about-heading">
+            <div class="container">
+                <h2 class="section-title" id="about-heading">
+                    <span class="title-number">01.</span>
+                    <span class="title-text">About Me</span>
+                    <span class="title-line"></span>
+                </h2>
+
+                <div class="about-content">
+                    <div class="about-text">
+                        <p class="about-summary">
+                            Computer Science & AI undergraduate student with hands-on experience in
+                            <span class="highlight">full-stack development</span>,
+                            <span class="highlight">data analytics</span>,
+                            client communication and
+                            <span class="highlight">growth strategies</span>.
+                        </p>
+                        <p class="about-detail">
+                            Skilled in driving projects from concept through deployment, communicating and leading teams,
+                            and experienced in the world of growth marketing, UGC and social media.
+                            Eager to expand my experience in project and product management.
+                        </p>
+                        <div class="about-stats">
+                            <div class="stat">
+                                <span class="stat-number">5M+</span>
+                                <span class="stat-label">Organic Views</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number">Top 5</span>
+                                <span class="stat-label">Datathon Finalist</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number">A+</span>
+                                <span class="stat-label">IE Shadowing</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="about-terminal">
+                        <div class="code-block">
+                            <div class="code-header">
+                                <span class="code-dot"></span>
+                                <span class="code-dot"></span>
+                                <span class="code-dot"></span>
+                                <span class="code-filename">javier.config.ts</span>
+                            </div>
+                            <pre class="code-content"><code><span class="code-keyword">const</span> <span class="code-variable">developer</span> = {
+  <span class="code-property">name</span>: <span class="code-string">"Javier Cruz Villarreal"</span>,
+  <span class="code-property">location</span>: <span class="code-string">"Madrid, Spain"</span>,
+  <span class="code-property">focus</span>: [
+    <span class="code-string">"Full-Stack Development"</span>,
+    <span class="code-string">"AI & Machine Learning"</span>,
+    <span class="code-string">"Growth Strategy"</span>
+  ],
+  <span class="code-property">currentlyLearning</span>: <span class="code-string">"LLMs & Prompt Engineering"</span>,
+  <span class="code-property">openTo</span>: <span class="code-string">"New Opportunities"</span>
+};</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section class="section experience" id="experience" aria-labelledby="experience-heading">
+            <div class="container">
+                <h2 class="section-title" id="experience-heading">
+                    <span class="title-number">02.</span>
+                    <span class="title-text">Experience</span>
+                    <span class="title-line"></span>
+                </h2>
+
+                <div class="timeline">
+
+                    <!-- IE Technology & Innovation Club -->
+                    <article class="timeline-item" data-animate>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <h3 class="timeline-title">Partnerships Officer</h3>
+                                <span class="timeline-company">IE Technology & Innovation Club</span>
+                            </div>
+                            <span class="timeline-date">Jan 2026 - Present</span>
+                            <ul class="timeline-details">
+                                <li>Drive strategic outreach to leading technology companies and high-growth startups</li>
+                                <li>Cultivate long-term industry relationships to secure partnerships, sponsorships, and guest speakers</li>
+                                <li>Expand organizational visibility and create professional opportunities for club members</li>
+                            </ul>
+                            <div class="timeline-tags">
+                                <span class="tag">Partnerships</span>
+                                <span class="tag">Strategy</span>
+                                <span class="tag">Networking</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Extern -->
+                    <article class="timeline-item" data-animate>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <h3 class="timeline-title">Document Insights & Data Extraction Extern</h3>
+                                <span class="timeline-company">IE x Extern Program</span>
+                            </div>
+                            <span class="timeline-date">Dec 2025 - Present</span>
+                            <ul class="timeline-details">
+                                <li>Chosen for an exclusive IE x Extern program, selected among a competitive applicant pool</li>
+                                <li>Working with machine learning techniques, large language models (LLMs), and prompt engineering to extract structured insights from unstructured documents</li>
+                                <li>Building Python automation workflows for OCR, text extraction, and document processing</li>
+                                <li>Applying document intelligence and LLM-based analysis techniques to real-world automation use cases</li>
+                            </ul>
+                            <div class="timeline-tags">
+                                <span class="tag">AI/ML</span>
+                                <span class="tag">LLMs</span>
+                                <span class="tag">Python</span>
+                                <span class="tag">Automation</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- amo UGC -->
+                    <article class="timeline-item" data-animate>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <h3 class="timeline-title">UGC and Content Creator</h3>
+                                <span class="timeline-company">amo</span>
+                            </div>
+                            <span class="timeline-date">Jul 2025 - Dec 2025</span>
+                            <ul class="timeline-details">
+                                <li>Created and shared user-generated content, reaching over <span class="highlight-inline">5M organic views</span> on Instagram Reels and <span class="highlight-inline">20M+ pushed views</span> on TikTok</li>
+                                <li>Collaborated with the global Amo team to support content planning and growth strategy initiatives</li>
+                                <li>Managed Instagram and TikTok accounts, optimizing posts and engagement through performance analysis</li>
+                            </ul>
+                            <div class="timeline-tags">
+                                <span class="tag">Content Creation</span>
+                                <span class="tag">Social Media</span>
+                                <span class="tag">Growth</span>
+                            </div>
+                        </div>
+                    </article>
+
+                                        <!-- Frutas Prohibidas -->
+                    <article class="timeline-item" data-animate>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <h3 class="timeline-title">Software Developer & Team Lead</h3>
+                                <span class="timeline-company">IEU Labs Frutas Prohibidas</span>
+                            </div>
+                            <span class="timeline-date">Feb 2025 - Jun 2025</span>
+                            <ul class="timeline-details">
+                                <li>Led a team of 2 programmers and 1 designer to deliver a real-time dashboard platform for a vegan restaurant</li>
+                                <li>Coordinated client meetings to demo progress, gather feedback, and refine requirements</li>
+                                <li>Oversaw development using React (TypeScript), Node.js/Express, and Supabase, ensuring smooth collaboration and timely delivery</li>
+                            </ul>
+                            <div class="timeline-tags">
+                                <span class="tag">Team Lead</span>
+                                <span class="tag">React</span>
+                                <span class="tag">Node.js</span>
+                                <span class="tag">Supabase</span>
+                            </div>
+                        </div>
+                    </article>
+
+                                     <!-- AI Lab Second Year -->
+                    <article class="timeline-item" data-animate>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <h3 class="timeline-title">AI Lab Team Leader & Mentor</h3>
+                                <span class="timeline-company">IE University AI Lab</span>
+                            </div>
+                            <span class="timeline-date">Feb 2026 - Jun 2026</span>
+                            <ul class="timeline-details">
+                                <li>Re-enrolled in the AI Lab following strong encouragement from the professor, recognized for leadership and commitment</li>
+                                <li>Expected to serve as a team leader and mentor to new participants</li>
+                            </ul>
+                            <div class="timeline-tags">
+                                <span class="tag">Leadership</span>
+                                <span class="tag">AI</span>
+                                <span class="tag">Mentoring</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- IE Shadowing -->
+                    <article class="timeline-item" data-animate>
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <div class="timeline-header">
+                                <h3 class="timeline-title">IE Shadowing Program Participant</h3>
+                                <span class="timeline-company">IE University - Immersive Learning Division</span>
+                            </div>
+                            <span class="timeline-date">Apr 2025</span>
+                            <ul class="timeline-details">
+                                <li>Participated in the selective IE Shadowing Program within the Immersive Learning Division</li>
+                                <li>Shadowed the Director of the VR Program department to understand the integration of virtual reality in higher education</li>
+                                <li>Received an <span class="highlight-inline">A+ evaluation</span> from the program mentor</li>
+                            </ul>
+                            <div class="timeline-tags">
+                                <span class="tag">VR</span>
+                                <span class="tag">EdTech</span>
+                                <span class="tag">Research</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section class="section projects" id="projects" aria-labelledby="projects-heading">
+            <div class="container">
+                <h2 class="section-title" id="projects-heading">
+                    <span class="title-number">03.</span>
+                    <span class="title-text">Featured Projects</span>
+                    <span class="title-line"></span>
+                </h2>
+
+                <div class="projects-grid">
+                    <!-- Frutas Prohibidas Project -->
+                    <article class="project-card featured" data-animate>
+                        <div class="project-image">
+                            <div class="project-placeholder">
+                                <span class="placeholder-icon">&#127813;</span>
+                                <span class="placeholder-text">Frutas Prohibidas</span>
+                            </div>
+                        </div>
+                        <div class="project-content">
+                            <div class="project-label">Featured Project</div>
+                            <h3 class="project-title">Frutas Prohibidas</h3>
+                            <p class="project-subtitle">Vegan Restaurant Web App | Full-Stack</p>
+                            <div class="project-description">
+                                <p>Architected front-end (React + TypeScript) and back-end (Node.js/Express with Supabase) to deliver a dynamic web application for a vegan restaurant.</p>
+                                <ul class="project-highlights">
+                                    <li>Developed an admin dashboard enabling staff to manage menu items, monitor sustainability metrics, and configure eco-receipt printing rules</li>
+                                    <li>Implemented secure authentication and role-based access control</li>
+                                    <li>Set up CI/CD pipelines to automate testing and streamline deployment</li>
+                                </ul>
+                            </div>
+                            <div class="project-tech">
+                                <span class="tech-tag">React</span>
+                                <span class="tech-tag">TypeScript</span>
+                                <span class="tech-tag">Node.js</span>
+                                <span class="tech-tag">Express</span>
+                                <span class="tech-tag">Supabase</span>
+                                <span class="tech-tag">CI/CD</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="https://github.com/javocruz" target="_blank" rel="noopener noreferrer" class="project-link">
+                                    <span class="link-icon">&#60;/&#62;</span>
+                                    View Code
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- IATA Datathon Project -->
+                    <article class="project-card featured" data-animate>
+                        <div class="project-image">
+                            <div class="project-placeholder datathon">
+                                <span class="placeholder-icon">&#9992;</span>
+                                <span class="placeholder-text">IATA Datathon</span>
+                            </div>
+                        </div>
+                        <div class="project-content">
+                            <div class="project-label">Competition - Top 5 Finalist</div>
+                            <h3 class="project-title">IATA x Infosys Sustainability Datathon</h3>
+                            <p class="project-subtitle">Aviation Decarbonization | Data Science</p>
+                            <div class="project-description">
+                                <p>Selected as a <span class="highlight-inline">Top 5 finalist out of 38 teams</span> for designing a system that improves capital efficiency by 95%, reducing marginal abatement costs from $633/t to $29/t.</p>
+                                <ul class="project-highlights">
+                                    <li>Architected a proprietary, government-backed Sustainable Aviation Fuel (SAF) levy to address physical supply constraints in aviation decarbonization</li>
+                                    <li>Validated through consultations with Qatar Airways leadership</li>
+                                    <li>Developed a predictive model demonstrating that integrating a SAF Levy with the Global Book & Claim mechanism eliminates the 15% logistics penalty present in current EU mandates</li>
+                                </ul>
+                            </div>
+                            <div class="project-tech">
+                                <span class="tech-tag">Data Analysis</span>
+                                <span class="tech-tag">Predictive Modeling</span>
+                                <span class="tech-tag">Sustainability</span>
+                                <span class="tech-tag">Policy Design</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Unity Web Design Project -->
+                    <article class="project-card" data-animate>
+                        <div class="project-content compact">
+                            <h3 class="project-title">Unity Web Design Platform</h3>
+                            <p class="project-subtitle">Reporting Interface | Full-Stack</p>
+                            <div class="project-description">
+                                <p>Spearheaded the design and implementation of a web-based reporting interface using Unity for robust UI elements. Leveraged Bootstrap for responsive design and engineered backend solutions using Node.js and Express.</p>
+                            </div>
+                            <div class="project-tech">
+                                <span class="tech-tag">Unity</span>
+                                <span class="tech-tag">Bootstrap</span>
+                                <span class="tech-tag">Node.js</span>
+                                <span class="tech-tag">AJAX</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section class="section skills" id="skills" aria-labelledby="skills-heading">
+            <div class="container">
+                <h2 class="section-title" id="skills-heading">
+                    <span class="title-number">04.</span>
+                    <span class="title-text">Skills & Technologies</span>
+                    <span class="title-line"></span>
+                </h2>
+
+                <div class="skills-grid">
+                    <div class="skill-category" data-animate>
+                        <h3 class="category-title">
+                            <span class="category-icon">&#60;/&#62;</span>
+                            Languages & Frameworks
+                        </h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Python</span>
+                            <span class="skill-tag">TypeScript</span>
+                            <span class="skill-tag">React</span>
+                            <span class="skill-tag">Node.js</span>
+                            <span class="skill-tag">Express</span>
+                            <span class="skill-tag">C/C++</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category" data-animate>
+                        <h3 class="category-title">
+                            <span class="category-icon">&#128202;</span>
+                            Data & Analytics
+                        </h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">SQL</span>
+                            <span class="skill-tag">BigQuery</span>
+                            <span class="skill-tag">Looker</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category" data-animate>
+                        <h3 class="category-title">
+                            <span class="category-icon">&#9881;</span>
+                            DevOps & Tools
+                        </h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Google Cloud Platform</span>
+                            <span class="skill-tag">Docker</span>
+                            <span class="skill-tag">CI/CD</span>
+                            <span class="skill-tag">Git/GitHub</span>
+                            <span class="skill-tag">VS Code</span>
+                            <span class="skill-tag">Notion</span>
+                        </div>
+                    </div>
+
+                    <div class="skill-category" data-animate>
+                        <h3 class="category-title">
+                            <span class="category-icon">&#127760;</span>
+                            Languages
+                        </h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Spanish <span class="skill-level">(Native)</span></span>
+                            <span class="skill-tag">English <span class="skill-level">(C1, Fluent)</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Education Section -->
+        <section class="section education" id="education" aria-labelledby="education-heading">
+            <div class="container">
+                <h2 class="section-title" id="education-heading">
+                    <span class="title-number">05.</span>
+                    <span class="title-text">Education & Certifications</span>
+                    <span class="title-line"></span>
+                </h2>
+
+                <div class="education-grid">
+                    <div class="education-main">
+                        <article class="education-card" data-animate>
+                            <div class="education-icon">&#127891;</div>
+                            <div class="education-content">
+                                <h3 class="education-title">Bachelor's Degree in Computer Science and Artificial Intelligence</h3>
+                                <p class="education-school">IE School of Sciences and Technology</p>
+                                <p class="education-location">Madrid, Spain</p>
+                                <p class="education-date">Graduating June 2028</p>
+                            </div>
+                        </article>
+
+                        <article class="education-card" data-animate>
+                            <div class="education-icon">&#127891;</div>
+                            <div class="education-content">
+                                <h3 class="education-title">B.S in Computer Science and Technology</h3>
+                                <p class="education-school">Instituto Tecnologico y de Estudios Superiores de Monterrey</p>
+                                <p class="education-location">Monterrey, Mexico</p>
+                                <p class="education-date">Sep 2022 - Jan 2024</p>
+                            </div>
+                        </article>
+
+                        <div class="coursework" data-animate>
+                            <h4 class="coursework-title">Key Coursework</h4>
+                            <div class="coursework-tags">
+                                <span class="coursework-tag">Data Structures & Algorithms</span>
+                                <span class="coursework-tag">Object-Oriented Programming</span>
+                                <span class="coursework-tag">IoT Implementation</span>
+                                <span class="coursework-tag">Machine Learning Fundamentals</span>
+                                <span class="coursework-tag">Mathematics & Data Science</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="certifications">
+                        <h3 class="certifications-title">Certifications</h3>
+
+                        <article class="cert-card" data-animate>
+                            <div class="cert-badge">&#9989;</div>
+                            <div class="cert-content">
+                                <h4 class="cert-name">Google Cloud Computing Foundations</h4>
+                                <p class="cert-issuer">Google Cloud</p>
+                                <p class="cert-date">November 2024</p>
+                                <p class="cert-details">Compute Engine, App Engine, Cloud Storage, BigQuery, Cloud Dataflow, Cloud Dataproc</p>
+                            </div>
+                        </article>
+
+                        <article class="cert-card" data-animate>
+                            <div class="cert-badge in-progress">&#8987;</div>
+                            <div class="cert-content">
+                                <h4 class="cert-name">Google Project Management Professional</h4>
+                                <p class="cert-issuer">Coursera</p>
+                                <p class="cert-date">In Progress - Est. Jul 2025</p>
+                            </div>
+                        </article>
+
+                        <article class="cert-card" data-animate>
+                            <div class="cert-badge">&#9989;</div>
+                            <div class="cert-content">
+                                <h4 class="cert-name">Responsive Web Design Certification</h4>
+                                <p class="cert-issuer">freeCodeCamp</p>
+                                <p class="cert-date">January 2023</p>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="section contact" id="contact" aria-labelledby="contact-heading">
+            <div class="container">
+                <h2 class="section-title centered" id="contact-heading">
+                    <span class="title-number">06.</span>
+                    <span class="title-text">Get In Touch</span>
+                </h2>
+
+                <div class="contact-content" data-animate>
+                    <p class="contact-intro">
+                        I'm currently looking for new opportunities and my inbox is always open.
+                        Whether you have a question, want to collaborate, or just want to say hi,
+                        I'll get back to you as soon as possible.
+                    </p>
+
+                    <div class="contact-methods">
+                        <a href="mailto:javiercruzvill123@gmail.com" class="contact-method">
+                            <span class="method-icon">&#9993;</span>
+                            <span class="method-text">javiercruzvill123@gmail.com</span>
+                        </a>
+                        <a href="tel:+34673256252" class="contact-method">
+                            <span class="method-icon">&#9742;</span>
+                            <span class="method-text">+34 673 256 252</span>
+                        </a>
+                    </div>
+
+                    <div class="contact-links">
+                        <a href="https://github.com/javocruz" target="_blank" rel="noopener noreferrer" class="contact-link" aria-label="GitHub">
+                            <span class="contact-link-text">GitHub</span>
+                        </a>
+                        <a href="https://linkedin.com/in/javiercruzv" target="_blank" rel="noopener noreferrer" class="contact-link" aria-label="LinkedIn">
+                            <span class="contact-link-text">LinkedIn</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">
+                <span class="footer-bracket">&lt;</span>
+                Designed & Built by Javier Cruz Villarreal
+                <span class="footer-bracket">/&gt;</span>
+            </p>
+            <p class="footer-year">2025</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
