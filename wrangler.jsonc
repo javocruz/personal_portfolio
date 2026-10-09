@@ -1,8 +1,16 @@
 {
   "name": "personal-portfolio",
+  "main": "worker/index.ts",
   "compatibility_date": "2026-10-01",
+  // Keep variables that are set in the Cloudflare dashboard (FORWARD_TO) when deploying from git.
+  "keep_vars": true,
   "assets": {
     "directory": "./dist",
-    "not_found_handling": "single-page-application"
-  }
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    // Only /api/* runs the Worker; everything else is served straight from the static assets.
+    "run_worker_first": ["/api/*"]
+  },
+  // Sends the contact-form email through Email Routing (only to verified destination addresses).
+  "send_email": [{ "name": "EMAIL" }]
 }
