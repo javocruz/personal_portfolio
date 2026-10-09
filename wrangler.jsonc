@@ -12,5 +12,9 @@
     "run_worker_first": ["/api/*"]
   },
   // Sends the contact-form email through Email Routing (only to verified destination addresses).
-  "send_email": [{ "name": "EMAIL" }]
+  "send_email": [{ "name": "EMAIL" }],
+  // Branch/PR preview deployments ("wrangler preview") need their own copy of the bindings.
+  "previews": {
+    "send_email": [{ "name": "EMAIL" }]
+  }
 }
