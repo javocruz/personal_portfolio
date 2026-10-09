@@ -1,0 +1,63 @@
+import type { Lang } from './types'
+
+const en = {
+  'nav.work': 'Work', 'nav.experience': 'Experience', 'nav.writing': 'Writing', 'nav.cv': 'CV', 'nav.contact': 'Contact',
+  'hero.kicker': 'CS & AI · Madrid · Open to opportunities',
+  'hero.cta1': 'Selected work', 'hero.cta2': 'Get in touch', 'hero.scroll': 'Scroll',
+  'strip.label': 'Worked with',
+  'work.title1': 'Selected', 'work.title2': 'work', 'work.all': 'All projects', 'work.index.sub': 'Case studies from startups, client work, hackathons and competitions.',
+  'case.back': 'All projects', 'case.problem': 'The problem', 'case.built': 'What I built', 'case.outcome': 'Outcome', 'case.stack': 'Stack', 'case.links': 'Links', 'case.role': 'Role', 'case.team': 'Team', 'case.when': 'When', 'case.next': 'Next project', 'case.notfound': 'Project not found',
+  'builds.title': 'Also built', 'builds.sub': 'Smaller projects, hackathons and coursework.',
+  'xp.title': 'Experience', 'lead.title': 'Leadership',
+  'now.title': 'Now', 'now.github': 'Latest on GitHub', 'now.loading': 'Loading activity…', 'now.unavailable': 'Activity is unavailable right now.', 'now.pushed': 'pushed to', 'now.commits': 'commits',
+  'about.title': 'About', 'skills.title': 'Skills', 'edu.title': 'Education', 'certs.title': 'Certifications',
+  'testi.title': 'Kind words',
+  'contact.kicker': 'Let’s talk', 'contact.or': 'or write directly to',
+  'form.name': 'Your name', 'form.email': 'Your email', 'form.message': 'What would you like to talk about?', 'form.send': 'Send message', 'form.sending': 'Sending…',
+  'form.sent': 'Thanks! Your message is on its way. I’ll reply within a couple of days.',
+  'form.error': 'Something went wrong. Please email me directly instead.', 'form.invalid': 'Please check your name, email and message.', 'form.local': 'The form only works on the live site. Email me directly for now.',
+  'blog.title1': 'Notes &', 'blog.title2': 'essays', 'blog.sub': 'Things I’m building, learning and figuring out.', 'blog.empty': 'First post coming soon.', 'blog.all': 'All writing', 'blog.min': 'min read', 'blog.filter': 'Filter by tag', 'blog.clear': 'Clear', 'blog.notfound': 'Post not found', 'blog.rss': 'RSS feed',
+  'cv.title': 'Curriculum vitae', 'cv.sub': 'Pick the version that fits. All three are the same person, tuned for different roles.', 'cv.download': 'Download PDF', 'cv.open': 'Open in new tab', 'cv.preview': 'Preview',
+  'cv.aixx.name': 'AI × X · full CV', 'cv.aixx.desc': 'The complete version, two pages, with project detail and leadership.',
+  'cv.fde.name': 'Forward-deployed engineer', 'cv.fde.desc': 'One page, written around embedded, customer-facing delivery.',
+  'cv.general.name': 'General · one page', 'cv.general.desc': 'A tight one-page summary for quick screens.',
+  'pal.placeholder': 'Search pages, projects and actions…', 'pal.empty': 'Nothing found', 'pal.hint': 'Type to search',
+  'pal.g.go': 'Go to', 'pal.g.projects': 'Projects', 'pal.g.writing': 'Writing', 'pal.g.actions': 'Actions',
+  'pal.home': 'Home', 'pal.theme': 'Toggle light / dark theme', 'pal.lang': 'Switch to Spanish (Español)', 'pal.copy': 'Copy email address', 'pal.copied': 'Email copied', 'pal.github': 'Open GitHub', 'pal.linkedin': 'Open LinkedIn', 'pal.cv': 'Download CV (PDF)',
+  'theme.toggle': 'Toggle theme', 'lang.toggle': 'Switch language to Spanish', 'search': 'Search',
+  'egg.on': 'Hyperdrive engaged', 'egg.off': 'Back to normal',
+  'footer.built': 'Designed & built by Javier', '404.title': 'Page not found', '404.text': 'That page doesn’t exist, but the work does.', '404.home': 'Back home',
+} as const
+
+export type UIKey = keyof typeof en
+
+const es: Record<UIKey, string> = {
+  'nav.work': 'Proyectos', 'nav.experience': 'Experiencia', 'nav.writing': 'Blog', 'nav.cv': 'CV', 'nav.contact': 'Contacto',
+  'hero.kicker': 'CS e IA · Madrid · Abierto a oportunidades',
+  'hero.cta1': 'Proyectos', 'hero.cta2': 'Contactar', 'hero.scroll': 'Desliza',
+  'strip.label': 'He trabajado con',
+  'work.title1': 'Proyectos', 'work.title2': 'destacados', 'work.all': 'Todos los proyectos', 'work.index.sub': 'Casos de estudio de startups, proyectos para clientes, hackathons y competiciones.',
+  'case.back': 'Todos los proyectos', 'case.problem': 'El problema', 'case.built': 'Qué construí', 'case.outcome': 'Resultado', 'case.stack': 'Tecnologías', 'case.links': 'Enlaces', 'case.role': 'Rol', 'case.team': 'Equipo', 'case.when': 'Cuándo', 'case.next': 'Siguiente proyecto', 'case.notfound': 'Proyecto no encontrado',
+  'builds.title': 'También construí', 'builds.sub': 'Proyectos más pequeños, hackathons y trabajos universitarios.',
+  'xp.title': 'Experiencia', 'lead.title': 'Liderazgo',
+  'now.title': 'Ahora', 'now.github': 'Lo último en GitHub', 'now.loading': 'Cargando actividad…', 'now.unavailable': 'La actividad no está disponible ahora mismo.', 'now.pushed': 'subió cambios a', 'now.commits': 'commits',
+  'about.title': 'Sobre mí', 'skills.title': 'Habilidades', 'edu.title': 'Educación', 'certs.title': 'Certificaciones',
+  'testi.title': 'Palabras amables',
+  'contact.kicker': 'Hablemos', 'contact.or': 'o escribe directamente a',
+  'form.name': 'Tu nombre', 'form.email': 'Tu correo', 'form.message': '¿De qué te gustaría hablar?', 'form.send': 'Enviar mensaje', 'form.sending': 'Enviando…',
+  'form.sent': '¡Gracias! Tu mensaje va en camino. Responderé en un par de días.',
+  'form.error': 'Algo salió mal. Escríbeme directamente por correo.', 'form.invalid': 'Revisa tu nombre, correo y mensaje.', 'form.local': 'El formulario solo funciona en el sitio en vivo. Por ahora, escríbeme por correo.',
+  'blog.title1': 'Notas y', 'blog.title2': 'ensayos', 'blog.sub': 'Lo que estoy construyendo, aprendiendo y descubriendo.', 'blog.empty': 'Pronto, la primera entrada.', 'blog.all': 'Todas las entradas', 'blog.min': 'min de lectura', 'blog.filter': 'Filtrar por etiqueta', 'blog.clear': 'Quitar', 'blog.notfound': 'Entrada no encontrada', 'blog.rss': 'Feed RSS',
+  'cv.title': 'Currículum', 'cv.sub': 'Elige la versión que mejor encaje. Las tres son la misma persona, ajustadas a distintos roles.', 'cv.download': 'Descargar PDF', 'cv.open': 'Abrir en otra pestaña', 'cv.preview': 'Vista previa',
+  'cv.aixx.name': 'IA × X · CV completo', 'cv.aixx.desc': 'La versión completa, dos páginas, con detalle de proyectos y liderazgo.',
+  'cv.fde.name': 'Forward-deployed engineer', 'cv.fde.desc': 'Una página, pensada para entrega integrada con el cliente.',
+  'cv.general.name': 'General · una página', 'cv.general.desc': 'Un resumen compacto de una página para filtros rápidos.',
+  'pal.placeholder': 'Busca páginas, proyectos y acciones…', 'pal.empty': 'Sin resultados', 'pal.hint': 'Escribe para buscar',
+  'pal.g.go': 'Ir a', 'pal.g.projects': 'Proyectos', 'pal.g.writing': 'Blog', 'pal.g.actions': 'Acciones',
+  'pal.home': 'Inicio', 'pal.theme': 'Cambiar tema claro / oscuro', 'pal.lang': 'Switch to English', 'pal.copy': 'Copiar correo', 'pal.copied': 'Correo copiado', 'pal.github': 'Abrir GitHub', 'pal.linkedin': 'Abrir LinkedIn', 'pal.cv': 'Descargar CV (PDF)',
+  'theme.toggle': 'Cambiar tema', 'lang.toggle': 'Cambiar idioma a inglés', 'search': 'Buscar',
+  'egg.on': 'Hiperimpulso activado', 'egg.off': 'De vuelta a la normalidad',
+  'footer.built': 'Diseñado y construido por Javier', '404.title': 'Página no encontrada', '404.text': 'Esa página no existe, pero el trabajo sí.', '404.home': 'Volver al inicio',
+}
+
+export const dict: Record<Lang, Record<UIKey, string>> = { en: en as Record<UIKey, string>, es }
