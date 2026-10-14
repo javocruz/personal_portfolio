@@ -28,7 +28,7 @@ export function Scene({ name, className = '' }: { name: SceneName; className?: s
     return () => io.disconnect()
   }, [])
   return (
-    <div ref={ref} className={`shader ${className}`} style={{ background: fallbacks[name] }} aria-hidden>
+    <div ref={ref} className={`art-scene ${className}`} style={{ background: fallbacks[name] }} aria-hidden>
       {live && <Suspense fallback={null}><SceneImpl name={name} /></Suspense>}
     </div>
   )

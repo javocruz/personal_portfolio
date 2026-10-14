@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
 import Lenis from 'lenis'
@@ -13,6 +13,14 @@ import CaseStudy from './pages/CaseStudy'
 import Cv from './pages/Cv'
 import NotFound from './pages/NotFound'
 import { BlogIndex, BlogPost } from './pages/Blog'
+
+const LabIndex = lazy(() => import('./lab/LabIndex'))
+const Heroes = lazy(() => import('./lab/Heroes'))
+const Plates = lazy(() => import('./lab/Plates'))
+const Cabinet = lazy(() => import('./lab/Cabinet'))
+const LayoutA = lazy(() => import('./lab/layouts/A'))
+const LayoutB = lazy(() => import('./lab/layouts/B'))
+const LayoutC = lazy(() => import('./lab/layouts/C'))
 
 function Shell() {
   const location = useLocation()
@@ -58,7 +66,7 @@ function Shell() {
   return (
     <>
       <div ref={cursor} className="cursor" aria-hidden />
-      <Nav openPalette={() => setPalette(true)} />
+      {!location.pathname.startsWith('/lab') && <Nav openPalette={() => setPalette(true)} />}
       <CommandPalette open={palette} onClose={() => setPalette(false)} />
       <AnimatePresence mode="wait" initial={false}>
         <motion.div key={location.pathname} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}>
@@ -69,6 +77,13 @@ function Shell() {
             <Route path="/blog" element={<BlogIndex />} />
             <Route path="/blog/:slug" element={<BlogPost />} />
             <Route path="/cv" element={<Cv />} />
+            <Route path="/lab" element={<Suspense fallback={null}><LabIndex /></Suspense>} />
+            <Route path="/lab/plates" element={<Suspense fallback={null}><Plates /></Suspense>} />
+            <Route path="/lab/cabinet" element={<Suspense fallback={null}><Cabinet /></Suspense>} />
+            <Route path="/lab/a" element={<Suspense fallback={null}><LayoutA /></Suspense>} />
+            <Route path="/lab/b" element={<Suspense fallback={null}><LayoutB /></Suspense>} />
+            <Route path="/lab/c" element={<Suspense fallback={null}><LayoutC /></Suspense>} />
+            <Route path="/lab/heroes" element={<Suspense fallback={null}><Heroes /></Suspense>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </motion.div>

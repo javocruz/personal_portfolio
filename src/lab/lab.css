@@ -1,0 +1,12 @@
+.lab{background:#050407;color:#efe7d8;min-height:100vh}
+.lab a{color:inherit}
+.lab-bar{position:fixed;z-index:30;left:0;right:0;top:0;display:flex;gap:18px;align-items:center;padding:12px 20px;background:rgba(5,4,7,.82);backdrop-filter:blur(10px);border-bottom:1px solid #2a2430;font:400 12px var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.lab-bar a{opacity:.7}.lab-bar a:hover,.lab-bar a[aria-current]{opacity:1;color:#e8b04a}
+.lab-bar b{font-weight:400;color:#e8b04a;margin-right:6px}
+.frame{position:relative;height:100svh;min-height:560px;overflow:hidden;border-bottom:1px solid #1c1822;background:#050407}
+.frame>.fill{position:absolute;inset:0}
+.tag{position:absolute;z-index:5;left:20px;bottom:18px;padding:8px 12px;border:1px solid rgba(239,231,216,.3);border-radius:99px;background:rgba(5,4,7,.55);backdrop-filter:blur(6px);font:400 11px var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.title-over{position:absolute;z-index:4;left:0;right:0;text-align:center;pointer-events:none}
+.title-over h1{font:400 clamp(48px,9vw,140px)/.95 var(--serif);letter-spacing:-.03em}
+.title-over p{font:400 12px var(--mono);letter-spacing:.14em;text-transform:uppercase;opacity:.8;margin-top:14px}
+.grain{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:.22;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1.4 -.2'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
