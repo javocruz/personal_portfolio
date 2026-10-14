@@ -1,6 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import { motion } from 'motion/react'
-import { Scene } from '../components/Scene'
+import { plateBySlug, plateSet, plateSrc } from '../content/art'
 import { useI18n } from '../lib/i18n'
 import { useHead } from '../lib/head'
 import { reveal } from '../lib/motion'
@@ -22,14 +22,19 @@ export default function CaseStudy() {
   ]
   return (
     <main className="case">
-      <header className="case-hero stage">
-        <Scene name={p.cover} className="case-bg" />
-        <div className="case-hero-inner">
+      <header className="case-room">
+        <div className="case-room-text">
           <Link to="/work" className="mono back">← {t('case.back')}</Link>
           <p className="mono">{l(p.kind)} · <span className="badge">{l(p.badge)}</span></p>
           <h1>{p.title}</h1>
           <p className="case-tag">{l(p.tagline)}</p>
         </div>
+        {plateSrc(p.slug) && (
+          <figure className="plate case-plate">
+            <div className="frame-art"><img src={plateSrc(p.slug, 1200)} srcSet={plateSet(p.slug)} sizes="(max-width: 900px) 92vw, 40vw" alt="" width={600} height={750} /></div>
+            <figcaption className="wall"><b>{p.title}</b> · {plateBySlug[p.slug]?.caption}</figcaption>
+          </figure>
+        )}
       </header>
       <div className="case-body">
         <dl className="case-meta">

@@ -1,44 +1,70 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
-import Lenis from 'lenis'
 import { I18nProvider } from './lib/i18n'
 import { ThemeProvider } from './lib/theme'
 import { FxProvider } from './lib/fx'
+import { ModeProvider, useMode } from './lib/mode'
 import { Nav } from './components/Nav'
 import { CommandPalette } from './components/CommandPalette'
-import Home from './pages/Home'
-import Work from './pages/Work'
-import CaseStudy from './pages/CaseStudy'
-import Cv from './pages/Cv'
+import Gate from './pages/Gate'
+import CoreHome from './pages/CoreHome'
 import NotFound from './pages/NotFound'
-import { BlogIndex, BlogPost } from './pages/Blog'
 
+// Everything heavier than Core loads on demand.
+const CompleteHome = lazy(() => import('./pages/CompleteHome'))
+const Gallery = lazy(() => import('./pages/Gallery'))
+const CaseStudy = lazy(() => import('./pages/CaseStudy'))
+const Cv = lazy(() => import('./pages/Cv'))
+const BlogIndex = lazy(() => import('./pages/Blog').then((m) => ({ default: m.BlogIndex })))
+const BlogPost = lazy(() => import('./pages/Blog').then((m) => ({ default: m.BlogPost })))
+const CoreWork = lazy(() => import('./pages/CoreWork'))
+// Design lab (prototypes)
 const LabIndex = lazy(() => import('./lab/LabIndex'))
 const Heroes = lazy(() => import('./lab/Heroes'))
 const Plates = lazy(() => import('./lab/Plates'))
 const Cabinet = lazy(() => import('./lab/Cabinet'))
+const Bake = lazy(() => import('./lab/Bake'))
 const LayoutA = lazy(() => import('./lab/layouts/A'))
 const LayoutB = lazy(() => import('./lab/layouts/B'))
 const LayoutC = lazy(() => import('./lab/layouts/C'))
 
+function Home() {
+  const { mode } = useMode()
+  if (!mode) return <Gate />
+  return mode === 'core' ? <CoreHome /> : <CompleteHome />
+}
+function Work() {
+  const { mode } = useMode()
+  return mode === 'complete' ? <Gallery /> : <CoreWork />
+}
+
 function Shell() {
   const location = useLocation()
+  const { mode } = useMode()
   const [palette, setPalette] = useState(false)
   const cursor = useRef<HTMLDivElement>(null)
+  const inLab = location.pathname.startsWith('/lab')
+  const gate = !mode && location.pathname === '/'
+  const rich = mode === 'complete' && !inLab
 
   useEffect(() => {
-    // After a route change, jump to the hash target if there is one, otherwise to the top.
-    if (location.hash) setTimeout(() => document.querySelector(location.hash)?.scrollIntoView(), 60)
+    if (location.hash) setTimeout(() => document.querySelector(location.hash)?.scrollIntoView(), 80)
     else scrollTo(0, 0)
-  }, [location.pathname, location.hash])
+  }, [location.pathname, location.hash, mode])
 
+  // Smooth scrolling only in Complete; Core keeps native scrolling.
   useEffect(() => {
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const lenis = new Lenis({ lerp: 0.09 })
-    let raf = requestAnimationFrame(function tick(t) { lenis.raf(t); raf = requestAnimationFrame(tick) })
-    return () => { cancelAnimationFrame(raf); lenis.destroy() }
-  }, [])
+    if (!rich || matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    let dead = false, raf = 0, destroy = () => {}
+    import('lenis').then(({ default: Lenis }) => {
+      if (dead) return
+      const lenis = new Lenis({ lerp: 0.09 })
+      raf = requestAnimationFrame(function tick(t) { lenis.raf(t); raf = requestAnimationFrame(tick) })
+      destroy = () => { cancelAnimationFrame(raf); lenis.destroy() }
+    })
+    return () => { dead = true; destroy() }
+  }, [rich])
 
   useEffect(() => {
     const on = (e: KeyboardEvent) => {
@@ -52,38 +78,41 @@ function Shell() {
 
   useEffect(() => {
     const el = cursor.current
-    if (!el || !matchMedia('(hover: hover)').matches) return
+    if (!rich || !el || !matchMedia('(hover: hover)').matches) return
     let x = 0, y = 0, cx = 0, cy = 0, raf = 0
     const move = (e: MouseEvent) => {
       x = e.clientX; y = e.clientY; el.dataset.on = '1'
-      el.dataset.big = (e.target as HTMLElement).closest('a,button,.work,.xp-row,.cv-card') ? '1' : '0'
+      el.dataset.big = (e.target as HTMLElement).closest('a,button,.plate,.xp-row') ? '1' : '0'
     }
     const loop = () => { cx += (x - cx) * 0.18; cy += (y - cy) * 0.18; el.style.transform = `translate(${cx}px,${cy}px)`; raf = requestAnimationFrame(loop) }
     addEventListener('mousemove', move); raf = requestAnimationFrame(loop)
-    return () => { removeEventListener('mousemove', move); cancelAnimationFrame(raf) }
-  }, [])
+    return () => { removeEventListener('mousemove', move); cancelAnimationFrame(raf); el.dataset.on = '0' }
+  }, [rich])
+
+  const lz = (el: React.ReactNode) => <Suspense fallback={<div className="page-loading" />}>{el}</Suspense>
 
   return (
     <>
-      <div ref={cursor} className="cursor" aria-hidden />
-      {!location.pathname.startsWith('/lab') && <Nav openPalette={() => setPalette(true)} />}
+      {rich && <div ref={cursor} className="cursor" aria-hidden />}
+      {!inLab && !gate && <Nav openPalette={() => setPalette(true)} />}
       <CommandPalette open={palette} onClose={() => setPalette(false)} />
       <AnimatePresence mode="wait" initial={false}>
-        <motion.div key={location.pathname} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}>
+        <motion.div key={location.pathname + (mode ?? '')} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
           <Routes location={location}>
             <Route path="/" element={<Home />} />
-            <Route path="/work" element={<Work />} />
-            <Route path="/work/:slug" element={<CaseStudy />} />
-            <Route path="/blog" element={<BlogIndex />} />
-            <Route path="/blog/:slug" element={<BlogPost />} />
-            <Route path="/cv" element={<Cv />} />
-            <Route path="/lab" element={<Suspense fallback={null}><LabIndex /></Suspense>} />
-            <Route path="/lab/plates" element={<Suspense fallback={null}><Plates /></Suspense>} />
-            <Route path="/lab/cabinet" element={<Suspense fallback={null}><Cabinet /></Suspense>} />
-            <Route path="/lab/a" element={<Suspense fallback={null}><LayoutA /></Suspense>} />
-            <Route path="/lab/b" element={<Suspense fallback={null}><LayoutB /></Suspense>} />
-            <Route path="/lab/c" element={<Suspense fallback={null}><LayoutC /></Suspense>} />
-            <Route path="/lab/heroes" element={<Suspense fallback={null}><Heroes /></Suspense>} />
+            <Route path="/work" element={lz(<Work />)} />
+            <Route path="/work/:slug" element={lz(<CaseStudy />)} />
+            <Route path="/blog" element={lz(<BlogIndex />)} />
+            <Route path="/blog/:slug" element={lz(<BlogPost />)} />
+            <Route path="/cv" element={lz(<Cv />)} />
+            <Route path="/lab" element={lz(<LabIndex />)} />
+            <Route path="/lab/heroes" element={lz(<Heroes />)} />
+            <Route path="/lab/plates" element={lz(<Plates />)} />
+            <Route path="/lab/cabinet" element={lz(<Cabinet />)} />
+            <Route path="/lab/bake" element={lz(<Bake />)} />
+            <Route path="/lab/a" element={lz(<LayoutA />)} />
+            <Route path="/lab/b" element={lz(<LayoutB />)} />
+            <Route path="/lab/c" element={lz(<LayoutC />)} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </motion.div>
@@ -97,9 +126,11 @@ export default function App() {
     <BrowserRouter>
       <I18nProvider>
         <ThemeProvider>
-          <FxProvider>
-            <Shell />
-          </FxProvider>
+          <ModeProvider>
+            <FxProvider>
+              <Shell />
+            </FxProvider>
+          </ModeProvider>
         </ThemeProvider>
       </I18nProvider>
     </BrowserRouter>

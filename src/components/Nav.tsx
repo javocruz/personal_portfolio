@@ -1,23 +1,31 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useI18n } from '../lib/i18n'
 import { useTheme } from '../lib/theme'
+import { useMode } from '../lib/mode'
 
 export function Nav({ openPalette }: { openPalette: () => void }) {
   const { t, lang, setLang } = useI18n()
   const { theme, toggle } = useTheme()
   const { pathname } = useLocation()
+  const { mode, setMode } = useMode()
   const cur = (p: string) => (pathname === p || (p !== '/' && pathname.startsWith(p + '/')) ? 'page' : undefined)
   return (
     <header className="nav">
       <Link to="/" className="logo" aria-label="Javier Cruz Villarreal, home">JCV</Link>
       <nav aria-label="Main">
-        <Link to="/work" aria-current={cur('/work')}>{t('nav.work')}</Link>
-        <a className="hide-sm" href="/#experience">{t('nav.experience')}</a>
+        <Link to="/work" aria-current={cur('/work')}>{mode === 'complete' ? (lang === 'es' ? 'Galería' : 'Gallery') : t('nav.work')}</Link>
+        <a className="hide-sm" href={mode === 'complete' ? '/#about' : '/#experience'}>{mode === 'complete' ? t('about.title') : t('nav.experience')}</a>
         <Link to="/blog" aria-current={cur('/blog')}>{t('nav.writing')}</Link>
         <Link className="hide-sm" to="/cv" aria-current={cur('/cv')}>{t('nav.cv')}</Link>
         <a className="hide-xs" href="/#contact">{t('nav.contact')}</a>
       </nav>
       <div className="tools">
+        {mode && (
+          <div className="mode-switch" role="group" aria-label="Site mode">
+            <button aria-pressed={mode === 'core'} onClick={() => setMode('core')}>Core</button>
+            <button aria-pressed={mode === 'complete'} onClick={() => setMode('complete')}>Complete</button>
+          </div>
+        )}
         <button className="tool" onClick={openPalette} aria-label={t('search')} title={`${t('search')} (⌘K)`}>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="7" cy="7" r="4.5" /><path d="m10.5 10.5 3 3" /></svg>
           <kbd className="hide-sm">⌘K</kbd>

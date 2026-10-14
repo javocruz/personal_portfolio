@@ -57,3 +57,5 @@ export function BlogPost() {
     </main>
   )
 }
+
+export default BlogIndex
