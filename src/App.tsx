@@ -94,7 +94,7 @@ function Shell() {
   return (
     <>
       {rich && <div ref={cursor} className="cursor" aria-hidden />}
-      {!inLab && !gate && <Nav openPalette={() => setPalette(true)} />}
+      {!inLab && !gate && !(mode === 'core' && location.pathname === '/') && <Nav openPalette={() => setPalette(true)} />}
       <CommandPalette open={palette} onClose={() => setPalette(false)} />
       <AnimatePresence mode="wait" initial={false}>
         <motion.div key={location.pathname + (mode ?? '')} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
