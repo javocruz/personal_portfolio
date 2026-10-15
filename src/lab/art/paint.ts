@@ -7,7 +7,15 @@ import * as brush from 'p5.brush/standalone'
  */
 export type B = typeof brush
 export type Sketch = (b: B, W: number, H: number) => void
-export type PaintOpts = { W: number; H: number; bg?: string; seed?: number }
+export type PaintOpts = { W: number; H: number; bg?: string; seed?: number; layers?: number }
+
+// layer('name') marks the start of a step in a sketch. When painting with `layers: k`, the sketch stops at the
+// (k+1)th marker, which leaves the painting as it stood after k steps. Without `layers` it is a no-op.
+const STOP = Symbol('stop')
+let stopAt = Infinity, seen = 0
+export function layer(_name: string) { if (++seen > stopAt) throw STOP }
+/** How many layer() steps the last painting went through. */
+export const lastLayerCount = () => seen
 
 const MW = 2000, MH = 1500
 let master: HTMLCanvasElement | null = null
@@ -24,7 +32,7 @@ function init() {
   return master
 }
 
-export function paintToImage(key: string, sketch: Sketch, { W, H, bg = '#efe6d4', seed = 1 }: PaintOpts): Promise<string> {
+export function paintToImage(key: string, sketch: Sketch, { W, H, bg = '#efe6d4', seed = 1, layers = Infinity }: PaintOpts): Promise<string> {
   const hit = cache.get(key)
   if (hit) return Promise.resolve(hit)
   const run = busy.then(() => new Promise<string>((resolve, reject) => {
@@ -37,7 +45,9 @@ export function paintToImage(key: string, sketch: Sketch, { W, H, bg = '#efe6d4'
       brush.translate(-MW / 2, -MH / 2)
       brush.scale(s)
       brush.noField(); brush.noFill(); brush.noHatch(); brush.noMass(); brush.noWash(); brush.noClip()
-      sketch(brush, W, H)
+      seen = 0; stopAt = layers
+      try { sketch(brush, W, H) } catch (e) { if (e !== STOP) throw e }
+      stopAt = Infinity
       brush.pop()
       brush.render()
       // crop the painted region out of the master canvas

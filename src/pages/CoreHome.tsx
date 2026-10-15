@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ContactForm } from '../components/ContactForm'
 import { InkTrail } from '../components/InkTrail'
@@ -10,29 +10,84 @@ import { projects, builds } from '../content/projects'
 import { paintingSrc, plateSrc, plateSet, plateBySlug } from '../content/art'
 import { posts } from '../posts'
 
-/** "Recipe" for the paintings: steps, plus the real source of each plate, fetched only when opened. */
+/** Splits a plate's source at its layer('…') calls: a header, then one block of code per step. */
+function steps(src: string) {
+  const out: { label: string; code: string }[] = [{ label: '', code: '' }]
+  for (const line of src.split('\n')) {
+    const m = line.match(/^\s*layer\('(.+?)'\)/)
+    if (m) out.push({ label: m[1], code: line })
+    else out[out.length - 1].code += (out[out.length - 1].code ? '\n' : '') + line
+  }
+  return out
+}
+
+/**
+ * "Recipe" for the paintings: the steps in words, then each plate's real source beside the painting as it stood after
+ * every layer() step. Those in-between paintings were pre-rendered too, so nothing paints in the browser. The source
+ * and images load only when the recipe is opened.
+ */
 function Recipe() {
   const { l } = useI18n()
   const [code, setCode] = useState('')
   const [pick, setPick] = useState(projects[0].slug)
-  const load = () => { if (!code) import('../lab/art/plates.ts?raw').then((m) => setCode(m.default)) }
+  const [step, setStep] = useState(0)
+  const [playing, setPlaying] = useState(false)
+  const codeBox = useRef<HTMLDivElement>(null)
+  const load = () => { if (!code) import('../lab/art/plates.ts?raw').then((m) => { setCode(m.default); setStep(0); setPlaying(true) }) }
   const id = plateBySlug[pick]?.id
   const src = (code.match(new RegExp(`// <plate:${id}>([\\s\\S]*?)// </plate:${id}>`)) ?? [])[1]?.trim() ?? ''
+  const blocks = steps(src)
+  const n = blocks.length - 1
+  const img = (k: number) => (k === n ? paintingSrc(`plate-${id}`, 600) : `/art/paintings/plate-${id}-l${k}-600.jpg`)
+
+  // play through the layers one by one
+  useEffect(() => {
+    if (!playing) return
+    if (step >= n) { setPlaying(false); return }
+    const t = setTimeout(() => setStep((s) => s + 1), step === 0 ? 500 : 1300)
+    return () => clearTimeout(t)
+  }, [playing, step, n])
+  // keep the current block in view inside the code panel (without scrolling the page)
+  useEffect(() => {
+    const box = codeBox.current, cur = box?.querySelector<HTMLElement>('[data-cur]')
+    if (box && cur) box.scrollTo({ top: cur.offsetTop - 40, behavior: 'smooth' })
+  }, [step, pick])
+
+  const choose = (slug: string) => { setPick(slug); setStep(0); setPlaying(true) }
   return (
     <details className="one-recipe" onToggle={(e) => (e.currentTarget as HTMLDetailsElement).open && load()}>
       <summary>{l({ en: 'Every painting above was generated with JavaScript. ', es: 'Cada pintura de arriba se generó con JavaScript. ' })}<u>{l({ en: 'The recipe', es: 'La receta' })}</u></summary>
       <ol>
         <li>{l({ en: 'Pick one real number from the project: a fire spreading with the wind, a cost falling from $633 to $29, a score from deepfake to authentic.', es: 'Elige un número real del proyecto: un fuego que avanza con el viento, un coste que cae de 633 $ a 29 $, una puntuación de deepfake a auténtico.' })}</li>
-        <li>{l({ en: 'Draw it with p5.brush: watercolour washes, charcoal, pastel and pen on one WebGL canvas.', es: 'Dibújalo con p5.brush: aguadas de acuarela, carboncillo, pastel y pluma sobre un único lienzo WebGL.' })}</li>
+        <li>{l({ en: 'Draw it with p5.brush: watercolour washes, charcoal, pastel and pen on one WebGL canvas, one layer at a time.', es: 'Dibújalo con p5.brush: aguadas de acuarela, carboncillo, pastel y pluma sobre un único lienzo WebGL, capa a capa.' })}</li>
         <li>{l({ en: 'Seed the randomness so the same code paints the same picture every time.', es: 'Fija la semilla del azar para que el mismo código pinte siempre el mismo cuadro.' })}</li>
         <li>{l({ en: 'Paint once, save it as a JPG, and serve the image. Nothing is painted in your browser.', es: 'Píntalo una vez, guárdalo como JPG y sirve la imagen. Nada se pinta en tu navegador.' })}</li>
       </ol>
       <div className="one-recipe-tabs" role="tablist">
         {projects.filter((p) => plateBySlug[p.slug]).map((p) => (
-          <button key={p.slug} role="tab" aria-selected={pick === p.slug} onClick={() => setPick(p.slug)}>{p.title}</button>
+          <button key={p.slug} role="tab" aria-selected={pick === p.slug} onClick={() => choose(p.slug)}>{p.title}</button>
         ))}
       </div>
-      <pre className="one-recipe-code">{code ? src : '…'}</pre>
+      {code && (
+        <div className="one-split">
+          <div className="one-split-code" ref={codeBox}>
+            {blocks.map((b, k) => (
+              <button key={pick + k} className="one-block" data-state={k === 0 || k < step ? 'done' : k === step ? 'cur' : 'todo'} data-cur={k === step || undefined}
+                onClick={() => { setPlaying(false); setStep(k) }} disabled={k === 0}>
+                {b.label && <span className="one-block-label">{String(k).padStart(2, '0')} · {b.label}</span>}
+                <code>{b.code}</code>
+              </button>
+            ))}
+          </div>
+          <div className="one-split-art">
+            {blocks.slice(1).map((_, i) => <img key={pick + i} src={img(i + 1)} alt="" style={{ opacity: i + 1 <= step ? 1 : 0 }} />)}
+            <div className="one-split-bar">
+              <span>{step ? `${l({ en: 'Layer', es: 'Capa' })} ${step}/${n} · ${blocks[step].label}` : l({ en: 'Blank paper', es: 'Papel en blanco' })}</span>
+              <button onClick={() => { setStep(0); setPlaying(true) }}>{l({ en: 'Replay', es: 'Repetir' })}</button>
+            </div>
+          </div>
+        </div>
+      )}
     </details>
   )
 }
@@ -126,11 +181,14 @@ export default function CoreHome() {
       <section className="one-sec" id="contact">
         <h2>{l({ en: 'Contact', es: 'Contacto' })}</h2>
         <a className="one-mail" href={`mailto:${profile.email}`}>{profile.email}</a>
-        <p className="one-after"><a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>, <a href={profile.github} target="_blank" rel="noreferrer">GitHub</a></p>
-        <details className="one-form">
-          <summary>{l({ en: 'Or write here', es: 'O escribe aquí' })}</summary>
+        <div className="one-social">
+          <a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn <span aria-hidden>↗</span></a>
+          <a href={profile.github} target="_blank" rel="noreferrer">GitHub <span aria-hidden>↗</span></a>
+        </div>
+        <div className="one-form">
+          <p className="one-dim">{l({ en: 'Or write here', es: 'O escribe aquí' })}</p>
           <ContactForm />
-        </details>
+        </div>
       </section>
 
       <footer className="one-foot"><span>© 2026</span><span>{l({ en: 'Hand-made in Madrid', es: 'Hecho a mano en Madrid' })}</span></footer>

@@ -298,12 +298,15 @@ html[data-mode=core],html[data-mode=core][data-theme]{--bg:#fff;--fg:#111;--dim:
 .one-d{color:var(--dim)}
 .one-m{text-align:right;color:var(--dim)}
 .one-after{margin:14px 0 0;color:var(--soft)}
-.one-after a,.one-form summary{text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.one-after a{text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
 .one-after a:hover{text-decoration-color:currentColor}
 .one-mail{display:inline-block;font:400 clamp(28px,5vw,64px)/1 var(--sans);letter-spacing:-.04em;text-decoration:none;margin-top:6px}
 .one-mail:hover{opacity:.55}
-.one-form{margin-top:22px;max-width:560px}
-.one-form summary{cursor:pointer;color:var(--dim);list-style:none}
+.one-form{margin-top:40px;max-width:560px}
+.one-form>p{margin:0}
+.one-social{display:flex;gap:10px;margin-top:22px}
+.one-social a{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border:1px solid var(--fg);border-radius:999px;text-decoration:none;font-size:14px;transition:background .2s,color .2s}
+.one-social a:hover{background:var(--fg);color:var(--bg)}
 .one-form .form{margin:14px 0 0}
 .one-form .form label{color:var(--dim);text-shadow:none}
 .one-form .form input,.one-form .form textarea{background:var(--bg);border-color:var(--line);border-radius:0;backdrop-filter:none}
@@ -336,4 +339,18 @@ html[data-mode=core],html[data-mode=core][data-theme]{--bg:#fff;--fg:#111;--dim:
 .one-recipe-tabs{display:flex;flex-wrap:wrap;gap:4px 16px;margin:22px 0 10px}
 .one-recipe-tabs button{font:inherit;font-size:13px;background:none;border:0;padding:0;color:var(--dim);cursor:pointer}
 .one-recipe-tabs button[aria-selected=true]{color:var(--fg);text-decoration:underline;text-underline-offset:3px}
-.one-recipe-code{font:12px/1.55 var(--mono);background:var(--card);color:var(--fg);padding:16px 18px;max-height:340px;overflow:auto;white-space:pre;margin:0}
+/* recipe: code on the left, the painting building up on the right */
+.one-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.8fr);border:1px solid var(--line)}
+.one-split-code{position:relative;overflow:auto;height:0;min-height:100%;background:var(--card);padding:10px 0}
+.one-block{display:block;width:100%;text-align:left;font:inherit;color:inherit;background:none;border:0;border-left:2px solid transparent;padding:6px 16px;cursor:pointer;transition:opacity .4s,border-color .4s,background .4s}
+.one-block:disabled{cursor:default}
+.one-block code{display:block;font:12px/1.6 var(--mono);font-variant-ligatures:none;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--fg)}
+.one-block-label{display:block;font:11px var(--sans);color:var(--dim);margin-bottom:2px}
+.one-block[data-state=todo]{opacity:.28}
+.one-block[data-state=todo]:hover{opacity:.6}
+.one-block[data-state=cur]{border-left-color:var(--fg);background:var(--bg)}
+.one-split-art{position:relative;aspect-ratio:4/5;background:#efe6d4;align-self:start}
+.one-split-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .9s ease}
+.one-split-bar{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;gap:12px;padding:10px 14px;font-size:12px;color:#3a332a;background:linear-gradient(transparent,rgba(239,230,212,.95) 40%)}
+.one-split-bar button{font:inherit;background:none;border:0;padding:0;color:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+@media(max-width:720px){.one-split{grid-template-columns:1fr}.one-split-art{order:-1}.one-split-code{height:auto;min-height:0;max-height:50vh}}
