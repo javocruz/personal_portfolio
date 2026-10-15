@@ -7,8 +7,35 @@ import { useHead } from '../lib/head'
 import { useMode } from '../lib/mode'
 import { profile, experience } from '../content/profile'
 import { projects, builds } from '../content/projects'
-import { paintingSrc, plateSrc, plateSet } from '../content/art'
+import { paintingSrc, plateSrc, plateSet, plateBySlug } from '../content/art'
 import { posts } from '../posts'
+
+/** "Recipe" for the paintings: steps, plus the real source of each plate, fetched only when opened. */
+function Recipe() {
+  const { l } = useI18n()
+  const [code, setCode] = useState('')
+  const [pick, setPick] = useState(projects[0].slug)
+  const load = () => { if (!code) import('../lab/art/plates.ts?raw').then((m) => setCode(m.default)) }
+  const id = plateBySlug[pick]?.id
+  const src = (code.match(new RegExp(`// <plate:${id}>([\\s\\S]*?)// </plate:${id}>`)) ?? [])[1]?.trim() ?? ''
+  return (
+    <details className="one-recipe" onToggle={(e) => (e.currentTarget as HTMLDetailsElement).open && load()}>
+      <summary>{l({ en: 'Every painting above was generated with JavaScript. ', es: 'Cada pintura de arriba se generó con JavaScript. ' })}<u>{l({ en: 'The recipe', es: 'La receta' })}</u></summary>
+      <ol>
+        <li>{l({ en: 'Pick one real number from the project: a fire spreading with the wind, a cost falling from $633 to $29, a score from deepfake to authentic.', es: 'Elige un número real del proyecto: un fuego que avanza con el viento, un coste que cae de 633 $ a 29 $, una puntuación de deepfake a auténtico.' })}</li>
+        <li>{l({ en: 'Draw it with p5.brush: watercolour washes, charcoal, pastel and pen on one WebGL canvas.', es: 'Dibújalo con p5.brush: aguadas de acuarela, carboncillo, pastel y pluma sobre un único lienzo WebGL.' })}</li>
+        <li>{l({ en: 'Seed the randomness so the same code paints the same picture every time.', es: 'Fija la semilla del azar para que el mismo código pinte siempre el mismo cuadro.' })}</li>
+        <li>{l({ en: 'Paint once, save it as a JPG, and serve the image. Nothing is painted in your browser.', es: 'Píntalo una vez, guárdalo como JPG y sirve la imagen. Nada se pinta en tu navegador.' })}</li>
+      </ol>
+      <div className="one-recipe-tabs" role="tablist">
+        {projects.filter((p) => plateBySlug[p.slug]).map((p) => (
+          <button key={p.slug} role="tab" aria-selected={pick === p.slug} onClick={() => setPick(p.slug)}>{p.title}</button>
+        ))}
+      </div>
+      <pre className="one-recipe-code">{code ? src : '…'}</pre>
+    </details>
+  )
+}
 
 /** Madrid time, ticking once a minute. */
 function useMadridTime() {
@@ -70,6 +97,7 @@ export default function CoreHome() {
           ))}
         </div>
         <p className="one-after">{l({ en: 'Also: ', es: 'También: ' })}{builds.map((b, i) => <span key={b.title}>{i ? ', ' : ''}{b.href ? <a href={b.href} target="_blank" rel="noreferrer">{b.title}</a> : b.title}</span>)}.</p>
+        <Recipe />
       </section>
 
       <section className="one-sec" id="experience">
