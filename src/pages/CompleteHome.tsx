@@ -1,0 +1,105 @@
+import { Link } from 'react-router-dom'
+import { motion } from 'motion/react'
+import { IsleHero } from '../components/IsleHero'
+import { EyeOfNature } from '../components/EyeOfNature'
+import { ContactForm } from '../components/ContactForm'
+import { useI18n } from '../lib/i18n'
+import { useHead } from '../lib/head'
+import { reveal } from '../lib/motion'
+import { profile, summary, heroLine, experience, leadership, skills, education, certs, now } from '../content/profile'
+import { projects } from '../content/projects'
+import { paintingSrc, paintingSet, plateSet, plateSrc, ROMAN } from '../content/art'
+
+/** Complete: the hero and home are about Javier; the projects live as paintings in the gallery (/work). */
+export default function CompleteHome() {
+  const { t, l } = useI18n()
+  useHead('Javier Cruz Villarreal — CS & AI', l(summary))
+  const featured = projects.filter((p) => p.featured).slice(0, 3)
+  return (
+    <main id="top" className="complete">
+      <IsleHero>
+        <div className="isle-text">
+          <motion.p className="mono" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3, duration: 1 }}>{t('hero.kicker')}</motion.p>
+          <h1>
+            {['Javier', 'Cruz', 'Villarreal'].map((w, i) => (
+              <span className="line" key={w}><motion.span initial={{ y: '110%' }} animate={{ y: 0 }} transition={{ delay: 0.15 + i * 0.12, duration: 1.1, ease: [0.16, 1, 0.3, 1] }}>{i === 2 ? <em>{w}</em> : w}</motion.span></span>
+            ))}
+          </h1>
+          <motion.p className="isle-sub" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9, duration: 1 }}>{l(heroLine)}</motion.p>
+          <motion.div className="cta" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.1, duration: 1 }}>
+            <Link className="btn solid" to="/work">{l({ en: 'Enter the gallery', es: 'Entrar a la galería' })}</Link>
+            <a className="btn" href="#contact">{t('hero.cta2')}</a>
+          </motion.div>
+        </div>
+      </IsleHero>
+
+      <section id="about" className="block about">
+        <div className="about-grid">
+          <motion.div {...reveal}>
+            <p className="kicker">{t('about.title')}</p>
+            <p className="lead big" style={{ marginTop: 18 }}>{l(summary)}</p>
+            <p className="kicker" style={{ marginTop: 40 }}>{t('now.title')}</p>
+            <ul className="now-list">{now.map((n, i) => <li key={i}>{l(n)}</li>)}</ul>
+          </motion.div>
+          <motion.figure {...reveal} className="plate">
+            <div className="frame-art"><img src={paintingSrc('portrait', 600)} srcSet={paintingSet('portrait')} sizes="(max-width: 900px) 92vw, 40vw" alt={l({ en: 'Self-portrait of Javier, painted in code', es: 'Autorretrato de Javier, pintado con código' })} loading="lazy" width={600} height={662} /></div>
+            <figcaption className="wall"><b>{l({ en: 'Self-portrait', es: 'Autorretrato' })}</b> · {l({ en: 'watercolour and 8,000 pen strokes, in code', es: 'acuarela y 8.000 trazos, en código' })}</figcaption>
+          </motion.figure>
+        </div>
+      </section>
+
+      <section id="experience" className="block">
+        <motion.h2 {...reveal}>{t('xp.title')}</motion.h2>
+        <div className="xp">
+          {experience.map((x) => (
+            <motion.div className="xp-row" key={x.org + x.role.en} {...reveal}>
+              <span className="mono dim xp-when">{l(x.when)}</span>
+              <div><h3>{l(x.role)}</h3><p className="mono dim">{x.org}</p></div>
+              <ul className="xp-note">{x.bullets.map((b, i) => <li key={i}>{l(b)}</li>)}</ul>
+            </motion.div>
+          ))}
+        </div>
+        <div className="lead-grid" style={{ marginTop: 80 }}>
+          {leadership.map((x) => (
+            <motion.div key={x.title} {...reveal}>
+              <p className="mono dim">{l(x.when)}</p><h3>{x.title}</h3><p className="mono dim">{x.org}</p><p className="lead">{l(x.text)}</p>
+            </motion.div>
+          ))}
+        </div>
+        <div className="edu">
+          {skills.slice(0, 3).map((s) => <motion.div key={s.group.en} {...reveal}><p className="mono dim">{l(s.group)}</p><p>{s.items.join(' · ')}</p></motion.div>)}
+          {education.map((e) => <motion.div key={e.place} {...reveal}><h3>{l(e.title)}</h3><p className="mono dim">{e.place} · {l(e.when)}</p></motion.div>)}
+          <motion.div {...reveal}><p className="mono dim">{t('certs.title')}</p><p>{certs.join('  /  ')}</p></motion.div>
+        </div>
+      </section>
+
+      <section className="block">
+        <motion.h2 {...reveal}>{l({ en: 'From the', es: 'De la' })} <em>{l({ en: 'gallery', es: 'galería' })}</em></motion.h2>
+        <div className="teaser">
+          {featured.map((p, i) => (
+            <motion.figure key={p.slug} className="plate" {...reveal}>
+              <Link to={`/work/${p.slug}`} className="frame-art"><img src={plateSrc(p.slug)} srcSet={plateSet(p.slug)} sizes="(max-width: 900px) 92vw, 30vw" alt={p.title} loading="lazy" width={600} height={750} /></Link>
+              <figcaption className="wall"><b>{l({ en: 'Plate', es: 'Lámina' })} {ROMAN[i]}</b> · {p.title}<br /><span className="dim">{l(p.badge)}</span></figcaption>
+            </motion.figure>
+          ))}
+        </div>
+        <Link className="btn wide-btn" to="/work">{l({ en: 'Enter the gallery', es: 'Entrar a la galería' })} →</Link>
+      </section>
+
+      <section id="contact" className="contact stage">
+        <div className="contact-eye" aria-hidden><EyeOfNature rays={620} eyeSize={0.06} reach={0.55} palette="copper" seed={5} /></div>
+        <div className="contact-inner">
+          <p className="mono">{t('contact.kicker')}</p>
+          <ContactForm />
+          <p className="mono contact-or">{t('contact.or')} <a className="mail" href={`mailto:${profile.email}`}>{profile.email}</a></p>
+          <div className="links">
+            <a href={profile.github} target="_blank" rel="noreferrer">GitHub ↗</a>
+            <a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn ↗</a>
+            <Link to="/cv">{t('nav.cv')} →</Link>
+          </div>
+        </div>
+        <footer className="mono dim">© {new Date().getFullYear()} {profile.name} · {t('footer.built')} · {l({ en: 'Hero: Arnold Böcklin, Isle of the Dead (1883), public domain', es: 'Portada: Arnold Böcklin, La isla de los muertos (1883), dominio público' })}</footer>
+      </section>
+    </main>
+  )
+}
