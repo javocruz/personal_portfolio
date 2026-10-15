@@ -1,12 +1,13 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ContactForm } from '../components/ContactForm'
+import { InkTrail } from '../components/InkTrail'
 import { useI18n } from '../lib/i18n'
 import { useHead } from '../lib/head'
 import { useMode } from '../lib/mode'
 import { profile, experience } from '../content/profile'
 import { projects, builds } from '../content/projects'
-import { paintingSrc, plateSrc } from '../content/art'
+import { paintingSrc, plateSrc, plateSet } from '../content/art'
 import { posts } from '../posts'
 
 /** Madrid time, ticking once a minute. */
@@ -19,21 +20,14 @@ function useMadridTime() {
 
 /**
  * Core: everything on one page (the dimden.dev idea), set like a studio index: white, small type, hairlines.
- * No canvas, no shaders. Project paintings only load when you hover a row.
+ * No shaders; the project paintings are pre-rendered images, lazy-loaded.
  */
 export default function CoreHome() {
   const { l, lang, setLang } = useI18n()
   const { setMode } = useMode()
   const time = useMadridTime()
-  const peek = useRef<HTMLImageElement>(null)
-  const pos = useRef('translate(-999px, 0)')
-  const [hover, setHover] = useState<string | null>(null)
   useHead('Javier Cruz Villarreal — CS & AI', l({ en: 'Computer Science & AI student in Madrid who builds AI products from idea to demo.', es: 'Estudiante de Ciencias de la Computación e IA en Madrid que construye productos de IA de la idea a la demo.' }))
   const date = (d: string) => new Date(d).toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
-  const move = (e: React.PointerEvent) => {
-    pos.current = `translate(${e.clientX + 24}px, ${e.clientY - 90}px)`
-    if (peek.current) peek.current.style.transform = pos.current
-  }
 
   const facts: [string, string][] = [
     [l({ en: 'Based', es: 'Base' }), 'Madrid'],
@@ -65,17 +59,16 @@ export default function CoreHome() {
 
       <section className="one-sec" id="work">
         <h2>{l({ en: 'Projects', es: 'Proyectos' })} <sup>{projects.length}</sup></h2>
-        <ul className="one-rows" onPointerMove={move} onPointerLeave={() => setHover(null)}>
+        <div className="one-grid">
           {projects.map((p) => (
-            <li key={p.slug} onPointerEnter={(e) => { move(e); setHover(p.slug) }}>
-              <Link to={`/work/${p.slug}`}>
-                <span className="one-t">{p.title}</span>
-                <span className="one-d">{l(p.tagline)}</span>
-                <span className="one-m">{l(p.badge)}</span>
-              </Link>
-            </li>
+            <Link to={`/work/${p.slug}`} className="one-card" key={p.slug}>
+              <div className="one-art"><img src={plateSrc(p.slug)} srcSet={plateSet(p.slug)} sizes="(max-width: 720px) 100vw, 340px" alt="" loading="lazy" width={600} height={750} /></div>
+              <span className="one-t">{p.title}</span>
+              <span className="one-d">{l(p.tagline)}</span>
+              <span className="one-m">{l(p.badge)} · {l(p.when)}</span>
+            </Link>
           ))}
-        </ul>
+        </div>
         <p className="one-after">{l({ en: 'Also: ', es: 'También: ' })}{builds.map((b, i) => <span key={b.title}>{i ? ', ' : ''}{b.href ? <a href={b.href} target="_blank" rel="noreferrer">{b.title}</a> : b.title}</span>)}.</p>
       </section>
 
@@ -114,7 +107,7 @@ export default function CoreHome() {
 
       <footer className="one-foot"><span>© 2026</span><span>{l({ en: 'Hand-made in Madrid', es: 'Hecho a mano en Madrid' })}</span></footer>
 
-      {hover && plateSrc(hover) && <img ref={peek} className="one-peek" style={{ transform: pos.current }} src={plateSrc(hover)} alt="" aria-hidden />}
+      <InkTrail />
     </main>
   )
 }
