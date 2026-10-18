@@ -264,12 +264,12 @@ html[data-mode=core] .form-note.err{color:#b42318}
 .case-room .back{margin-bottom:30px}
 .contact-eye{position:absolute;inset:0;opacity:.85}
 @media(max-width:900px){.teaser,.case-room{grid-template-columns:1fr}.teaser .plate:nth-child(2){margin-top:0}.hall>figure{grid-column:1/-1!important;margin-top:0!important}}
-/* Complete palette: gold accent to sit with the blue/gold isle */
-html[data-mode=complete]{--accent:#f0b955}
-html[data-mode=complete][data-theme=light]{--accent:#8a5a00}
-html[data-mode=complete] .stage{--accent:#f0b955}
-html[data-mode=complete] .btn.solid{color:#120c02}
-.isle-hero::before{content:'';position:absolute;z-index:3;left:0;right:0;top:0;height:150px;background:linear-gradient(180deg,rgba(5,6,15,.72),rgba(5,6,15,0));pointer-events:none}
+/* Complete palette: red accent to sit with the red/blue/black isle */
+html[data-mode=complete]{--accent:#ff3b2f}
+html[data-mode=complete][data-theme=light]{--accent:#d0261b}
+html[data-mode=complete] .stage{--accent:#ff3b2f}
+html[data-mode=complete] .btn.solid{color:#fff}
+.isle-hero::before{content:'';position:absolute;z-index:3;left:0;right:0;top:0;height:150px;background:linear-gradient(180deg,rgba(0,0,0,.72),rgba(0,0,0,0));pointer-events:none}
 /* Core: one page, studio-index style. White, small type, hairlines, no ornament. */
 html[data-mode=core],html[data-mode=core][data-theme]{--bg:#fff;--fg:#111;--dim:#8a8a8a;--line:#e6e6e6;--card:#f4f4f4;--accent:#111;--soft:#444;color-scheme:light}
 .one{max-width:1080px;margin:0 auto;padding:22px 24px 40px;font:400 14px/1.45 var(--sans);color:var(--fg);letter-spacing:-.005em}
@@ -354,3 +354,18 @@ html[data-mode=core],html[data-mode=core][data-theme]{--bg:#fff;--fg:#111;--dim:
 .one-split-bar{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;gap:12px;padding:10px 14px;font-size:12px;color:#3a332a;background:linear-gradient(transparent,rgba(239,230,212,.95) 40%)}
 .one-split-bar button{font:inherit;background:none;border:0;padding:0;color:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 @media(max-width:720px){.one-split{grid-template-columns:1fr}.one-split-art{order:-1}.one-split-code{height:auto;min-height:0;max-height:50vh}}
+
+/* ============ one type system (Core's): Inter Tight everywhere, sentence case, no italic serif ============ */
+:root{--serif:var(--sans)}
+body{font-weight:400;letter-spacing:-.005em}
+h1,h2,h3{font-family:var(--sans);font-weight:400;letter-spacing:-.035em;line-height:1.02}
+em,.logo,.marquee-track,.work-index,.testis blockquote,.prose blockquote,.case-next strong,.form-note.ok,.gate-complete .gate-word{font-style:normal}
+h1 em,h2 em,h3 em{font-style:normal;color:inherit}
+.logo{font:500 18px var(--sans);letter-spacing:-.02em}
+.mono,.kicker,.nav nav,.tool,.btn,.enter,.arrow-link,.form label,.links,.tags span,.tags button,.mode-switch button,.wall,.gate-name,.gate-foot,.gate-kicker,.gate-meta,.core-num,.core-meta,.toast,.pal .pal-group,.pal li small,.gh-list span,.prose .anchor{font-family:var(--sans);text-transform:none;letter-spacing:0}
+.mono,.kicker,.wall,.gh-list span{font-size:13px}
+.nav nav{font-size:14px}
+.btn,.enter,.arrow-link,.links{font-size:14px;font-weight:400}
+.form label{font-size:13px;text-shadow:none;color:var(--dim)}
+.tags span,.tags button,.tool,.mode-switch button{font-size:12px}
+.stats b,.mail{letter-spacing:-.04em}
