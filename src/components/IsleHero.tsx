@@ -23,7 +23,7 @@ export function IsleHero({ children }: { children?: ReactNode }) {
 
   return (
     <section className="isle-hero stage" ref={box}>
-      <img className="isle-img" src={isle.dusk.src} srcSet={isle.dusk.set} sizes="100vw" alt="Arnold Böcklin, Isle of the Dead (1883), recoloured" fetchPriority="high" />
+      <img className="isle-img" src={isle.dusk.src} srcSet={isle.dusk.set} sizes="100vw" alt="Arnold Böcklin, Isle of the Dead (1883), recoloured" {...{ fetchpriority: 'high' }} />
       <img className="isle-img isle-lens" src={isle.dither.src} srcSet={isle.dither.set} sizes="100vw" alt="" aria-hidden />
       <div className="grain" aria-hidden />
       <div className="isle-hint mono" aria-hidden>Move to develop the plate</div>

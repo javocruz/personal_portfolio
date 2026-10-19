@@ -191,7 +191,7 @@ html[data-mode=gate] body{overflow:hidden}
 .gate-kicker{font:400 12px var(--mono);letter-spacing:.14em;opacity:.6}
 .gate-word{font:500 clamp(64px,10vw,150px)/.9 var(--sans);letter-spacing:-.04em}
 .gate-complete .gate-word{font:400 clamp(64px,10vw,150px)/.9 var(--serif)}
-.gate-complete .gate-word em{color:#f0b955}
+.gate-complete .gate-word em{color:#fff}
 .gate-line{max-width:420px;font-size:clamp(16px,1.4vw,20px);opacity:.85}
 .gate-meta{font:400 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;opacity:.55}
 .gate-name{position:fixed;z-index:5;top:22px;left:50%;transform:translateX(-50%);font:400 12px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:#fff;mix-blend-mode:difference;white-space:nowrap}
@@ -369,3 +369,26 @@ h1 em,h2 em,h3 em{font-style:normal;color:inherit}
 .form label{font-size:13px;text-shadow:none;color:var(--dim)}
 .tags span,.tags button,.tool,.mode-switch button{font-size:12px}
 .stats b,.mail{letter-spacing:-.04em}
+
+/* ============ texture: dither, smoke, ascii, grain ============ */
+@property --dr{syntax:'<length>';inherits:false;initial-value:0px}
+.dither-reveal{position:relative;display:block;overflow:hidden}
+.dither-reveal>img{display:block;width:100%;height:auto}
+.dither-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;image-rendering:pixelated;
+  -webkit-mask:radial-gradient(circle var(--dr) at var(--dx,50%) var(--dy,50%),transparent 98%,#000 100%);
+  mask:radial-gradient(circle var(--dr) at var(--dx,50%) var(--dy,50%),transparent 98%,#000 100%);
+  transition:--dr .9s cubic-bezier(.3,.7,.2,1)}
+.dither-reveal:hover .dither-layer,a:focus-visible .dither-layer{--dr:1400px}
+@media(hover:none){.dither-layer{display:none}}
+.gate-smoke{position:absolute;inset:0;width:100%;height:100%;z-index:0;mix-blend-mode:screen;opacity:.55;transition:opacity 1s}
+.gate-complete:hover .gate-smoke{opacity:.85}
+.ascii-art{display:block;width:100%;height:auto;background:#000}
+.lost{position:relative;min-height:100vh;overflow:hidden}
+.lost{background:#000}
+.lost-art{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:max(100%,calc(100vh * 1.88));z-index:0}
+.lost .blog-head{position:relative;z-index:1;color:#f1ece4;max-width:560px;background:rgba(0,0,0,.78);padding:28px 32px;margin-top:22vh}
+html[data-mode=complete] body::after{content:'';position:fixed;inset:-50%;z-index:90;pointer-events:none;opacity:.07;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain 1s steps(6) infinite}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-3%)}60%{transform:translate(-2%,-2%)}80%{transform:translate(3%,3%)}100%{transform:translate(0,0)}}
+@media(prefers-reduced-motion:reduce){html[data-mode=complete] body::after{animation:none}}

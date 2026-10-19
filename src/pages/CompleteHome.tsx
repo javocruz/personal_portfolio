@@ -8,7 +8,12 @@ import { useHead } from '../lib/head'
 import { reveal } from '../lib/motion'
 import { profile, summary, heroLine, experience, leadership, skills, education, certs, now } from '../content/profile'
 import { projects } from '../content/projects'
-import { paintingSrc, paintingSet, plateSet, plateSrc, ROMAN } from '../content/art'
+import { paintingSrc, plateSet, plateSrc, plateDither, ROMAN } from '../content/art'
+import { DitherReveal } from '../components/DitherReveal'
+import { AsciiArt } from '../components/AsciiArt'
+
+// portrait as text: pale blue strokes, the darkest marks in red
+const inkTint = (v: number) => (v > 0.8 ? '#ff3b2f' : v > 0.45 ? '#9db4ff' : '#4a5fd0')
 
 /** Complete: the hero and home are about Javier; the projects live as paintings in the gallery (/work). */
 export default function CompleteHome() {
@@ -42,8 +47,8 @@ export default function CompleteHome() {
             <ul className="now-list">{now.map((n, i) => <li key={i}>{l(n)}</li>)}</ul>
           </motion.div>
           <motion.figure {...reveal} className="plate">
-            <div className="frame-art"><img src={paintingSrc('portrait', 600)} srcSet={paintingSet('portrait')} sizes="(max-width: 900px) 92vw, 40vw" alt={l({ en: 'Self-portrait of Javier, painted in code', es: 'Autorretrato de Javier, pintado con código' })} loading="lazy" width={600} height={662} /></div>
-            <figcaption className="wall"><b>{l({ en: 'Self-portrait', es: 'Autorretrato' })}</b> · {l({ en: 'watercolour and 8,000 pen strokes, in code', es: 'acuarela y 8.000 trazos, en código' })}</figcaption>
+            <div className="frame-art"><AsciiArt reveal paper tint={inkTint} cols={84} src={paintingSrc('portrait', 600)} alt={l({ en: 'Self-portrait of Javier, painted in code', es: 'Autorretrato de Javier, pintado con código' })} /></div>
+            <figcaption className="wall"><b>{l({ en: 'Self-portrait', es: 'Autorretrato' })}</b> · {l({ en: 'watercolour and 8,000 pen strokes, in code. Hover to see it as text.', es: 'acuarela y 8.000 trazos, en código. Pasa el cursor para verlo como texto.' })}</figcaption>
           </motion.figure>
         </div>
       </section>
@@ -78,7 +83,7 @@ export default function CompleteHome() {
         <div className="teaser">
           {featured.map((p, i) => (
             <motion.figure key={p.slug} className="plate" {...reveal}>
-              <Link to={`/work/${p.slug}`} className="frame-art"><img src={plateSrc(p.slug)} srcSet={plateSet(p.slug)} sizes="(max-width: 900px) 92vw, 30vw" alt={p.title} loading="lazy" width={600} height={750} /></Link>
+              <Link to={`/work/${p.slug}`} className="frame-art"><DitherReveal dither={plateDither(p.slug)}><img src={plateSrc(p.slug)} srcSet={plateSet(p.slug)} sizes="(max-width: 900px) 92vw, 30vw" alt={p.title} loading="lazy" width={600} height={750} /></DitherReveal></Link>
               <figcaption className="wall"><b>{l({ en: 'Plate', es: 'Lámina' })} {ROMAN[i]}</b> · {p.title}<br /><span className="dim">{l(p.badge)}</span></figcaption>
             </motion.figure>
           ))}

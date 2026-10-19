@@ -11,6 +11,8 @@ export const plateBySlug: Record<string, { id: string; caption: string }> = {
 export const paintingSrc = (name: string, w: 600 | 1200 = 600) => `/art/paintings/${name}-${w}.jpg`
 export const paintingSet = (name: string) => `${paintingSrc(name, 600)} 600w, ${paintingSrc(name, 1200)} 1200w`
 export const plateSrc = (slug: string, w: 600 | 1200 = 600) => (plateBySlug[slug] ? paintingSrc(`plate-${plateBySlug[slug].id}`, w) : '')
+/** 1-bit blue dither version, shown before hover in Complete's gallery. */
+export const plateDither = (slug: string) => (plateBySlug[slug] ? `/art/paintings/plate-${plateBySlug[slug].id}-dither.png` : '')
 export const plateSet = (slug: string) => (plateBySlug[slug] ? paintingSet(`plate-${plateBySlug[slug].id}`) : '')
 
 export const isle = {
