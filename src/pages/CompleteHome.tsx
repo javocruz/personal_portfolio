@@ -1,7 +1,7 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { IsleHero } from '../components/IsleHero'
-import { EyeOfNature } from '../components/EyeOfNature'
 import { ContactForm } from '../components/ContactForm'
 import { useI18n } from '../lib/i18n'
 import { useHead } from '../lib/head'
@@ -18,6 +18,8 @@ const inkTint = (v: number) => (v > 0.8 ? '#ff3b2f' : v > 0.45 ? '#9db4ff' : '#4
 /** Complete: the hero and home are about Javier; the projects live as paintings in the gallery (/work). */
 export default function CompleteHome() {
   const { t, l } = useI18n()
+  const [copied, setCopied] = useState(false)
+  const copy = () => navigator.clipboard?.writeText(profile.email).then(() => { setCopied(true); setTimeout(() => setCopied(false), 1800) })
   useHead('Javier Cruz Villarreal — CS & AI', l(summary))
   const featured = projects.filter((p) => p.featured).slice(0, 3)
   return (
@@ -91,19 +93,30 @@ export default function CompleteHome() {
         <Link className="btn wide-btn" to="/work">{l({ en: 'Enter the gallery', es: 'Entrar a la galería' })} →</Link>
       </section>
 
-      <section id="contact" className="contact stage">
-        <div className="contact-eye" aria-hidden><EyeOfNature rays={620} eyeSize={0.06} reach={0.55} palette="copper" seed={5} /></div>
-        <div className="contact-inner">
-          <p className="mono">{t('contact.kicker')}</p>
-          <ContactForm />
-          <p className="mono contact-or">{t('contact.or')} <a className="mail" href={`mailto:${profile.email}`}>{profile.email}</a></p>
-          <div className="links">
-            <a href={profile.github} target="_blank" rel="noreferrer">GitHub ↗</a>
-            <a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn ↗</a>
-            <Link to="/cv">{t('nav.cv')} →</Link>
+      <section id="contact" className="reach">
+        <div className="reach-text">
+          <p className="kicker">{l({ en: 'Contact', es: 'Contacto' })}</p>
+          <h2 className="reach-title">{l({ en: 'Let’s talk.', es: 'Hablemos.' })}</h2>
+          <p className="reach-lead">{l({ en: 'Have a project, a role or an idea? Write to me. Every message comes straight to my inbox.', es: '¿Tienes un proyecto, un puesto o una idea? Escríbeme. Cada mensaje llega directo a mi correo.' })}</p>
+          <div className="reach-mail">
+            <a href={`mailto:${profile.email}`}>{profile.email}</a>
+            <button onClick={copy}>{copied ? l({ en: 'Copied', es: 'Copiado' }) : l({ en: 'Copy', es: 'Copiar' })}</button>
+          </div>
+          <div className="reach-actions">
+            <a className="btn solid" href={`mailto:${profile.email}`}>{l({ en: 'Email me', es: 'Escríbeme' })}</a>
+            <a className="btn" href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn ↗</a>
+            <a className="btn" href={profile.github} target="_blank" rel="noreferrer">GitHub ↗</a>
+            <Link className="btn" to="/cv">{t('nav.cv')}</Link>
+          </div>
+          <div className="reach-form">
+            <p className="kicker">{l({ en: 'Or send a message from here', es: 'O envía un mensaje desde aquí' })}</p>
+            <ContactForm />
           </div>
         </div>
-        <footer className="mono dim">© {new Date().getFullYear()} {profile.name} · {t('footer.built')} · {l({ en: 'Hero: Arnold Böcklin, Isle of the Dead (1883), public domain', es: 'Portada: Arnold Böcklin, La isla de los muertos (1883), dominio público' })}</footer>
+        <figure className="reach-eye" aria-hidden>
+          <img src="/art/eye-900.webp" srcSet="/art/eye-900.webp 900w, /art/eye-1350.webp 1350w" sizes="(max-width: 900px) 100vw, 45vw" alt="" loading="lazy" decoding="async" width={900} height={1100} />
+        </figure>
+        <footer className="reach-foot dim">© {new Date().getFullYear()} {profile.name} · {t('footer.built')} · {l({ en: 'Hero: Arnold Böcklin, Isle of the Dead (1883), public domain', es: 'Portada: Arnold Böcklin, La isla de los muertos (1883), dominio público' })}</footer>
       </section>
     </main>
   )

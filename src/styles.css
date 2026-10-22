@@ -392,3 +392,34 @@ html[data-mode=complete] body::after{content:'';position:fixed;inset:-50%;z-inde
   animation:grain 1s steps(6) infinite}
 @keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-3%,2%)}40%{transform:translate(2%,-3%)}60%{transform:translate(-2%,-2%)}80%{transform:translate(3%,3%)}100%{transform:translate(0,0)}}
 @media(prefers-reduced-motion:reduce){html[data-mode=complete] body::after{animation:none}}
+
+/* ============ Complete contact: big, obvious, the still eye on the right ============ */
+html[data-mode=complete] .nav-cta{color:#fff;background:var(--accent);padding:6px 14px;border-radius:99px;margin:-6px 0}
+html[data-mode=complete] .nav-cta:hover{background:#fff;color:#000}
+.reach{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);background:#000;color:#f1ece4;margin-top:clamp(80px,12vw,180px);overflow:hidden}
+.reach-text{position:relative;z-index:2;padding:clamp(72px,10vw,140px) var(--pad) 56px}
+.reach-title{font-size:clamp(64px,10vw,160px);line-height:.92;letter-spacing:-.05em;margin:14px 0 22px}
+.reach-lead{font-size:clamp(18px,1.6vw,22px);color:#cfc8bd;max-width:34ch;margin:0 0 36px}
+.reach-mail{display:flex;flex-wrap:wrap;align-items:baseline;gap:14px 20px;margin-bottom:28px}
+.reach-mail a{font-size:clamp(28px,3.6vw,52px);letter-spacing:-.035em;line-height:1.05;border-bottom:2px solid var(--accent);padding-bottom:4px;overflow-wrap:anywhere}
+.reach-mail a:hover{color:var(--accent)}
+.reach-mail button{font:inherit;font-size:14px;color:#cfc8bd;background:none;border:1px solid rgba(241,236,228,.35);border-radius:99px;padding:6px 14px;cursor:pointer}
+.reach-mail button:hover{border-color:#fff;color:#fff}
+.reach-actions{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:clamp(48px,6vw,80px)}
+.reach-actions .btn{border-color:rgba(241,236,228,.4);color:#f1ece4;padding:14px 24px;font-size:15px}
+.reach-actions .btn:hover{border-color:#fff}
+.reach-actions .btn.solid{background:var(--accent);border-color:var(--accent);color:#fff}
+.reach-actions .btn.solid:hover{background:#fff;border-color:#fff;color:#000}
+.reach-form{max-width:560px;padding-top:28px;border-top:1px solid rgba(241,236,228,.16)}
+.reach-form .form{margin-top:14px}
+.reach-form .form input,.reach-form .form textarea{background:#0b0b0d;backdrop-filter:none}
+.reach-eye{margin:0;position:relative;min-height:100%}
+.reach-eye img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 46%}
+.reach-eye::before{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#000,rgba(0,0,0,0) 30%),linear-gradient(0deg,#000,rgba(0,0,0,0) 22%)}
+.reach-foot{grid-column:1/-1;position:relative;z-index:2;padding:22px var(--pad) 28px;font-size:13px;border-top:1px solid rgba(241,236,228,.12)}
+@media(max-width:900px){
+  .reach{grid-template-columns:1fr}
+  .reach-eye{grid-row:1;height:62vw;max-height:520px}
+  .reach-eye::before{background:linear-gradient(0deg,#000,rgba(0,0,0,0) 40%)}
+  .reach-text{padding-top:8px}
+}

@@ -3,6 +3,7 @@ import { paintToImage, lastLayerCount } from './art/paint'
 import { PLATES } from './art/plates'
 import { faceSheet } from './art/faces'
 import { loadRef, makePortrait } from './art/portrait'
+import { EyeOfNature } from '../components/EyeOfNature'
 
 /** Dev tool: renders every code painting once and saves it via the dev server, so production serves plain JPEGs. */
 export default function Bake() {
@@ -10,6 +11,13 @@ export default function Bake() {
   useEffect(() => {
     const say = (s: string) => setLog((l) => [...l, s])
     ;(async () => {
+      if (location.search.includes('eye')) {
+        // the still eye for Complete's contact section: let the rays settle, then grab the canvas
+        await new Promise((r) => setTimeout(r, 1800))
+        const c = document.querySelector<HTMLCanvasElement>('#bake-eye canvas')!
+        const r = await fetch('/__bake?name=eye', { method: 'POST', body: c.toDataURL('image/jpeg', 0.9) })
+        return say(`eye: ${r.ok ? 'saved' : 'FAILED'} (${c.width}x${c.height})`)
+      }
       const save = async (name: string, url: string) => {
         const r = await fetch(`/__bake?name=${name}`, { method: 'POST', body: url })
         say(`${name}: ${r.ok ? 'saved' : 'FAILED ' + r.status} (${Math.round(url.length / 1365)} KB)`)
@@ -28,5 +36,11 @@ export default function Bake() {
       say('done')
     })().catch((e) => say('error: ' + e))
   }, [])
+  if (location.search.includes('eye')) return (
+    <>
+      <div id="bake-eye" style={{ width: 900, height: 1100, background: '#000' }}><EyeOfNature rays={900} eyeSize={0.13} reach={0.62} cy={0.46} palette="dusk" follow={false} seed={5} /></div>
+      <pre>{log.join('\n')}</pre>
+    </>
+  )
   return <pre id="bake-log" style={{ padding: 24, color: '#eee', background: '#111', minHeight: '100vh' }}>{log.join('\n')}</pre>
 }

@@ -15,7 +15,7 @@ export type EyeProps = {
   cy?: number
   /** Ray length as a fraction of the shortest canvas side. */
   reach?: number
-  palette?: 'copper' | 'gold' | 'ice'
+  palette?: 'copper' | 'gold' | 'ice' | 'dusk'
   follow?: boolean
   seed?: number
   className?: string
@@ -25,6 +25,7 @@ const PALETTES = {
   copper: { inner: [150, 58, 20], mid: [226, 122, 46], tip: [255, 205, 140] },
   gold: { inner: [160, 104, 18], mid: [236, 184, 64], tip: [255, 236, 170] },
   ice: { inner: [40, 70, 150], mid: [110, 170, 230], tip: [220, 244, 255] },
+  dusk: { inner: [42, 60, 196], mid: [255, 59, 47], tip: [255, 196, 178] },
 } as const
 
 function rng(seed: number) {

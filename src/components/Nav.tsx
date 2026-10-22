@@ -17,7 +17,7 @@ export function Nav({ openPalette }: { openPalette: () => void }) {
         <a className="hide-sm" href={mode === 'complete' ? '/#about' : '/#experience'}>{mode === 'complete' ? t('about.title') : t('nav.experience')}</a>
         <Link to="/blog" aria-current={cur('/blog')}>{t('nav.writing')}</Link>
         <Link className="hide-sm" to="/cv" aria-current={cur('/cv')}>{t('nav.cv')}</Link>
-        <a className="hide-xs" href="/#contact">{t('nav.contact')}</a>
+        <a className="nav-cta" href="/#contact">{t('nav.contact')}</a>
       </nav>
       <div className="tools">
         {mode && (
