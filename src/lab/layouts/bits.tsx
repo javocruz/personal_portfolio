@@ -10,7 +10,7 @@ export const plateFor = (i: number) => ({ plate: PLATES[i], project: projects.fi
 
 export function PlateImage({ i, className }: { i: number; className?: string }) {
   const { plate } = plateFor(i)
-  return <Painting id={plate.id} sketch={plate.sketch} opts={{ W: 800, H: 1000, seed: i + 1 }} className={className} alt="" />
+  return <Painting id={plate.id} sketch={plate.sketch} opts={{ W: 800, H: 1000, seed: plate.seed }} className={className} alt="" />
 }
 
 export function BackToLab() {

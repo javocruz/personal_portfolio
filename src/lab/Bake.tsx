@@ -24,10 +24,10 @@ export default function Bake() {
       }
       for (let i = 0; i < PLATES.length; i++) {
         const p = PLATES[i]
-        await save(`plate-${p.id}`, await paintToImage(`bake-${p.id}`, p.sketch, { W: 800, H: 1000, seed: i + 1 }))
+        await save(`plate-${p.id}`, await paintToImage(`bake-${p.id}`, p.sketch, { W: 800, H: 1000, seed: p.seed }))
         // the recipe on Core shows the painting after each layer() step; the last step is the full plate
         const n = lastLayerCount()
-        for (let k = 1; k < n; k++) await save(`plate-${p.id}-l${k}`, await paintToImage(`bake-${p.id}-${k}`, p.sketch, { W: 800, H: 1000, seed: i + 1, layers: k }))
+        for (let k = 1; k < n; k++) await save(`plate-${p.id}-l${k}`, await paintToImage(`bake-${p.id}-${k}`, p.sketch, { W: 800, H: 1000, seed: p.seed, layers: k }))
       }
       if (location.search.includes('plates')) return say('done')
       await save('faces', await paintToImage('bake-faces', faceSheet, { W: 720, H: 960, bg: '#e8dfc9', seed: 77 }))

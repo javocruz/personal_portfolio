@@ -1,10 +1,9 @@
 /** Pre-baked artwork. Everything here is a plain image so pages load instantly. */
 export const plateBySlug: Record<string, { id: string; caption: string }> = {
-  'los-panaderos': { id: 'fire', caption: 'Fire front · wind lean 16° · 340 strokes' },
-  'iata-saf-datathon': { id: 'cost', caption: '$633/t → $29/t · −95%' },
-  pharmable: { id: 'chain', caption: '7 blocks · 1 critical finding · SHA-256 chained' },
-  streamscope: { id: 'stream', caption: '84 intervals · 4 moments worth surfacing' },
+  snapfrost: { id: 'frost', caption: '358 nights · forecast error 1.50 → 1.29 °C' },
+  'los-panaderos': { id: 'maps', caption: 'The truth and what the system knows, 12 steps apart' },
   'sybol-compliance-engine': { id: 'iris', caption: 'Authenticity 1.0 → 0.0, left to right' },
+  pharmable: { id: 'chain', caption: '7 blocks · 1 critical finding · SHA-256 chained' },
   'frutas-prohibidas': { id: 'hills', caption: 'CO₂ · land · water' },
 }
 

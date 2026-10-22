@@ -67,7 +67,7 @@ export default function LayoutC() {
       </section>
 
       <div ref={plate} className="hoverplate" style={{ opacity: hover === null ? 0 : 1 }}>
-        {PLATES.map((pl, i) => <div key={pl.id} style={{ display: hover === i ? 'block' : 'none' }}><Painting id={pl.id} sketch={pl.sketch} opts={{ W: 800, H: 1000, seed: i + 1 }} /></div>)}
+        {PLATES.map((pl, i) => <div key={pl.id} style={{ display: hover === i ? 'block' : 'none' }}><Painting id={pl.id} sketch={pl.sketch} opts={{ W: 800, H: 1000, seed: pl.seed }} /></div>)}
       </div>
     </div>
   )

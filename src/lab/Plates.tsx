@@ -30,7 +30,7 @@ export default function Plates() {
             return (
               <figure key={pl.id} style={{ margin: 0 }}>
                 <div style={{ boxShadow: '0 30px 60px -30px #000', border: '10px solid #14111a', outline: '1px solid #3a3342' }}>
-                  <Painting id={pl.id} sketch={pl.sketch} opts={{ W: 800, H: 1000, seed: i + 1 }} />
+                  <Painting id={pl.id} sketch={pl.sketch} opts={{ W: 800, H: 1000, seed: pl.seed }} />
                 </div>
                 <figcaption style={{ marginTop: 12, font: '400 11px/1.6 var(--mono)', letterSpacing: '.06em', textTransform: 'uppercase' }}>
                   <b style={{ color: '#e8b04a', fontWeight: 400 }}>Plate {['I', 'II', 'III', 'IV', 'V', 'VI'][i]}</b> · {p.title}<br />
