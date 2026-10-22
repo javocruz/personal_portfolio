@@ -131,7 +131,6 @@ export default function CoreHome() {
       </header>
 
       <section className="one-intro">
-        <img src={paintingSrc('portrait', 600)} alt={l({ en: 'Painted portrait of Javier', es: 'Retrato pintado de Javier' })} width={120} height={150} />
         <p>{l({ en: 'I study Computer Science and AI in Madrid and build AI products from idea to demo. Mostly compliance, vision and agents, usually as the person closest to the customer.', es: 'Estudio Ciencias de la Computación e IA en Madrid y construyo productos de IA de la idea a la demo. Sobre todo cumplimiento normativo, visión y agentes, normalmente como la persona más cerca del cliente.' })}</p>
       </section>
 

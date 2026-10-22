@@ -50,10 +50,12 @@ function Shell() {
     else scrollTo(0, 0)
   }, [location.pathname, location.hash, mode])
 
-  // Once the page is idle, fetch the other Complete pages so clicking through feels instant.
+  // Once the page is idle, fetch the pages a visitor is likely to open next so clicking through feels instant.
   useEffect(() => {
-    if (mode !== 'complete' || inLab) return
-    const go = () => { import('./pages/Gallery'); import('./pages/CaseStudy'); import('./pages/CompleteHome') }
+    if (!mode || inLab) return
+    const go = mode === 'complete'
+      ? () => { import('./pages/Gallery'); import('./pages/CaseStudy'); import('./pages/CompleteHome') }
+      : () => { import('./pages/CaseStudy'); import('./pages/Blog') }
     const id = 'requestIdleCallback' in window ? requestIdleCallback(go, { timeout: 3000 }) : setTimeout(go, 2000)
     return () => { 'cancelIdleCallback' in window ? cancelIdleCallback(id as number) : clearTimeout(id as number) }
   }, [mode, inLab])

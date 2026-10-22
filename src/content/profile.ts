@@ -66,9 +66,9 @@ export const experience: Experience[] = [
   {
     role: { en: 'Content Specialist, Bump Mexico', es: 'Especialista de contenido, Bump México' },
     org: 'amo (Bump)',
-    when: { en: 'Sep 2026 – Present', es: 'Sep 2026 – Presente' },
+    when: { en: 'Sep 2026', es: 'Sep 2026' },
     bullets: [
-      { en: 'Own creative strategy for Mexico, managing UGC creators and local TikTok/IG accounts toward ~10% weekly growth.', es: 'Dirijo la estrategia creativa para México, gestionando creadores UGC y cuentas locales de TikTok/IG con un objetivo de ~10% de crecimiento semanal.' },
+      { en: 'Owned creative strategy for Mexico, managing UGC creators and local TikTok/IG accounts toward ~10% weekly growth.', es: 'Dirigí la estrategia creativa para México, gestionando creadores UGC y cuentas locales de TikTok/IG con un objetivo de ~10% de crecimiento semanal.' },
       { en: 'Produced short-form content reaching 5M+ organic views on Instagram Reels and 20M+ distributed views on TikTok.', es: 'Produje contenido corto con más de 5M de vistas orgánicas en Instagram Reels y más de 20M de vistas distribuidas en TikTok.' },
     ],
     tags: ['Growth', 'UGC', 'Content'],
