@@ -4,7 +4,7 @@ export const tr = (l: L, lang: Lang) => l[lang]
 
 export type Link = { label: L; href: string }
 
-export type CoverKind = 'fire' | 'shield' | 'pharma' | 'stream' | 'aero' | 'fruit'
+export type CoverKind = 'frost' | 'fire' | 'shield' | 'pharma' | 'stream' | 'aero' | 'fruit'
 
 export type Project = {
   slug: string

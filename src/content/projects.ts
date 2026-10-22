@@ -2,47 +2,101 @@ import type { Build, Project } from './types'
 
 export const projects: Project[] = [
   {
-    slug: 'los-panaderos',
+    slug: 'snapfrost',
     index: '01',
-    title: 'Los Panaderos',
+    title: 'SnapFrost',
     tagline: {
-      en: 'Multi-agent wildfire coordination, from the first smoke report to a coordinated response.',
-      es: 'Coordinación multiagente de incendios, del primer aviso de humo a una respuesta coordinada.',
+      en: 'Frost early-warning system that texts Andean potato farmers before a damaging night.',
+      es: 'Sistema de alerta temprana de heladas que avisa por SMS a agricultores de papa andinos antes de una noche dañina.',
     },
-    badge: { en: '1st place · HappyRobot track', es: '1.er puesto · track HappyRobot' },
-    kind: { en: 'Hackathon · Agentic systems', es: 'Hackathon · Sistemas agénticos' },
-    when: { en: 'Sep 2026', es: 'Sep 2026' },
-    role: { en: 'Architecture & operator UI/UX', es: 'Arquitectura y UI/UX del operador' },
-    team: { en: '4 people · 48 hours', es: '4 personas · 48 horas' },
-    cover: 'fire',
+    badge: { en: '1st place Madrid · 2nd place EMEA final', es: '1.er puesto Madrid · 2.º puesto final EMEA' },
+    kind: { en: 'Hackathon · BCG Platinion × Welthungerhilfe', es: 'Hackathon · BCG Platinion × Welthungerhilfe' },
+    when: { en: '16–17 Oct 2026', es: '16–17 oct 2026' },
+    role: { en: 'Team member · hardware, ML and demo', es: 'Miembro del equipo · hardware, ML y demo' },
+    team: {
+      en: 'Clara Gómez Montero (lead), Jaume, Álvaro García Olivares, Marcos Arribas and me',
+      es: 'Clara Gómez Montero (líder), Jaume, Álvaro García Olivares, Marcos Arribas y yo',
+    },
+    cover: 'frost',
     featured: true,
     problem: {
-      en: 'In the first minutes of a wildfire the bottleneck is not only the fire. It is the dispatch center: filtering reports, prioritizing people, and coordinating the fleet and communications at once. A fixed protocol falls behind at the first change of the fire front, and the information is incomplete by design.',
-      es: 'En los primeros minutos de un incendio el cuello de botella no es solo el fuego. Es la centralita: filtrar avisos, priorizar a la población y coordinar a la vez la flota y las comunicaciones. Un protocolo fijo se queda atrás en el primer cambio de frente, y la información es incompleta por diseño.',
+      en: 'A single frost night can wipe out a potato harvest in the Bolivian Andes, along with the farmer’s income and next year’s seed. Regional forecasts measure air at 2 m, but on clear, calm nights the air at the leaves is colder. Farmers have basic phones, so the warning has to be an SMS.',
+      es: 'Una sola noche de helada puede acabar con una cosecha de papa en los Andes bolivianos, y con ella los ingresos del agricultor y la semilla del año siguiente. Las previsiones regionales miden el aire a 2 m, pero en noches despejadas y en calma el aire junto a las hojas está más frío. Los agricultores tienen teléfonos básicos, así que el aviso tiene que ser un SMS.',
     },
     built: [
       {
-        en: 'A multi-agent system on HappyRobot’s platform paired with a simulation engine that models fire, wind, sensors, vehicles and population. The agents reason and decide; the engine owns the physics and checks every order.',
-        es: 'Un sistema multiagente sobre la plataforma de HappyRobot junto a un motor de simulación que modela fuego, viento, sensores, vehículos y población. Los agentes razonan y deciden; el motor lleva la física y comprueba cada orden.',
+        en: 'A Raspberry Pi 5 field station with temperature, pressure and humidity sensors, plus an LCD, a risk LED and a buzzer.',
+        es: 'Una estación de campo con Raspberry Pi 5 y sensores de temperatura, presión y humedad, además de una pantalla LCD, un LED de riesgo y un zumbador.',
       },
       {
-        en: 'Specialised agents: Central Dispatch decides what to verify, whom to warn and which mission to assign; Los Panaderos turns that into one order per vehicle across scouting, containment and trucks; calls and Telegram reach contacts and districts; Marina answers residents’ questions.',
-        es: 'Agentes especializados: Despacho Central decide qué verificar, a quién avisar y qué misión asignar; Los Panaderos lo convierte en una orden por vehículo (exploración, contención y camiones); llamadas y Telegram llegan a contactos y distritos; Marina atiende las consultas de los vecinos.',
+        en: 'The station works offline: it raises the alarm locally and buffers readings if the network drops.',
+        es: 'La estación funciona sin conexión: da la alarma en local y guarda las lecturas si se cae la red.',
       },
       {
-        en: 'Scoped the problem with active firefighters and turned real dispatch workflows into product requirements and agent logic.',
-        es: 'Definimos el problema con bomberos en activo y convertimos flujos reales de despacho en requisitos de producto y lógica de agentes.',
+        en: 'A quantile gradient-boosting model that predicts the night’s minimum temperature and corrects it with live sensor readings.',
+        es: 'Un modelo de gradient boosting por cuantiles que predice la temperatura mínima de la noche y la corrige con las lecturas del sensor en vivo.',
       },
       {
-        en: 'I co-designed the architecture and built the operator UI/UX used to monitor and direct the drone agents, keeping human responders in the loop.',
-        es: 'Co-diseñé la arquitectura y construí la UI/UX del operador para monitorizar y dirigir a los agentes dron, manteniendo a los equipos humanos en el circuito.',
+        en: 'SMS alerts through Twilio/Vonage when the risk is moderate or higher.',
+        es: 'Alertas por SMS con Twilio/Vonage cuando el riesgo es moderado o mayor.',
+      },
+      {
+        en: 'A live demo where judges scanned a QR code, played the farmers and watched the real sensor get cooled.',
+        es: 'Una demo en vivo en la que el jurado escaneaba un QR, hacía de agricultor y veía cómo se enfriaba el sensor real.',
       },
     ],
     outcome: {
-      en: 'Won the HappyRobot track at HackSpain 2026: a working, demoable prototype shipped in 48 hours.',
-      es: 'Ganamos el track de HappyRobot en HackSpain 2026: un prototipo funcional y demostrable entregado en 48 horas.',
+      en: '14% lower forecast error than the raw ECMWF forecast on 358 unseen nights (1.50 to 1.29 °C). Built in two days; 1st in Madrid, then 2nd in the EMEA final against the winners of the other BCG Platinion hubs. A prototype, with a pilot proposed.',
+      es: 'Un 14% menos de error de previsión que la previsión ECMWF sin corregir en 358 noches no vistas (de 1,50 a 1,29 °C). Hecho en dos días; 1.º en Madrid y después 2.º en la final EMEA frente a los ganadores de los demás hubs de BCG Platinion. Un prototipo, con un piloto propuesto.',
     },
-    stack: ['HappyRobot', 'Agentic systems', 'Simulation', 'Telegram', 'Voice calls', 'Operator UI'],
+    stack: ['Python', 'FastAPI', 'SQLite', 'scikit-learn', 'pandas', 'React', 'TypeScript', 'Vite', 'Three.js', 'Raspberry Pi 5', 'I2C', 'Open-Meteo / ERA5-Land', 'Twilio', 'Pytest', 'Playwright'],
+    links: [],
+  },
+  {
+    slug: 'los-panaderos',
+    index: '02',
+    title: 'Los Panaderos',
+    tagline: {
+      en: 'AI agents run a wildfire crisis room, dispatching drones and trucks with incomplete information.',
+      es: 'Agentes de IA dirigen una sala de crisis de incendios y despachan drones y camiones con información incompleta.',
+    },
+    badge: { en: '1st place · HappyRobot track', es: '1.er puesto · track HappyRobot' },
+    kind: { en: 'Hackathon · HackSpain 2026', es: 'Hackathon · HackSpain 2026' },
+    when: { en: '18–20 Sep 2026', es: '18–20 sep 2026' },
+    role: { en: 'Team member · product and interface', es: 'Miembro del equipo · producto e interfaz' },
+    team: {
+      en: 'Federico Lozano Cuadra, Guillermo Villar Sánchez, Juan Camacho Mohedano and me',
+      es: 'Federico Lozano Cuadra, Guillermo Villar Sánchez, Juan Camacho Mohedano y yo',
+    },
+    cover: 'fire',
+    featured: true,
+    problem: {
+      en: 'The first smoke call arrives before anyone has confirmed the fire. Wind shifts, there are more fronts than vehicles, and warning the wrong district is as bad as not warning. A control room has to decide on incomplete information, and a fixed protocol falls behind at the first wind change.',
+      es: 'La primera llamada por humo llega antes de que nadie haya confirmado el fuego. El viento cambia, hay más frentes que vehículos y avisar al distrito equivocado es tan malo como no avisar. Una sala de control tiene que decidir con información incompleta, y un protocolo fijo se queda atrás en el primer cambio de viento.',
+    },
+    built: [
+      {
+        en: 'A custom wildfire simulator of Brunete where the agents only see what the sensors and delayed satellite data show.',
+        es: 'Un simulador de incendios propio de Brunete en el que los agentes solo ven lo que muestran los sensores y los datos de satélite con retraso.',
+      },
+      {
+        en: 'HappyRobot agents that prioritise incidents and send scout drones, extinguisher drones and fire trucks.',
+        es: 'Agentes de HappyRobot que priorizan incidentes y envían drones de exploración, drones extintores y camiones de bomberos.',
+      },
+      {
+        en: 'A bilingual (ES/EN) control-room interface with a dual map: the ground truth next to what the system actually knows.',
+        es: 'Una interfaz de sala de control bilingüe (ES/EN) con doble mapa: la realidad junto a lo que el sistema sabe de verdad.',
+      },
+      {
+        en: 'A live demo: ignite a fire, send the first smoke call, and watch the agents assign missions as the two maps drift apart.',
+        es: 'Una demo en vivo: provocar un incendio, enviar la primera llamada por humo y ver cómo los agentes asignan misiones mientras los dos mapas se separan.',
+      },
+    ],
+    outcome: {
+      en: '1st place in the HappyRobot track, one of five tracks, at HackSpain 2026: 36 hours, about 250 builders. A prototype.',
+      es: '1.er puesto en el track de HappyRobot, uno de cinco tracks, en HackSpain 2026: 36 horas y unos 250 participantes. Un prototipo.',
+    },
+    stack: ['Python', 'Custom simulation engine', 'JavaScript', 'Canvas', 'HappyRobot', 'MCP'],
     links: [
       { label: { en: 'Live demo', es: 'Demo en vivo' }, href: 'https://hackspain.g-villar.tech' },
       { label: { en: 'Code (team repo)', es: 'Código (repo del equipo)' }, href: 'https://github.com/Fedeloz/Los_Panaderos' },
@@ -50,7 +104,7 @@ export const projects: Project[] = [
   },
   {
     slug: 'sybol-compliance-engine',
-    index: '02',
+    index: '03',
     title: 'Sybol Compliance Engine',
     tagline: {
       en: 'An AI engine that scores media authenticity against EU regulation and issues signed Verifiable Credentials.',
@@ -94,19 +148,19 @@ export const projects: Project[] = [
   },
   {
     slug: 'pharmable',
-    index: '03',
+    index: '04',
     title: 'Pharmable',
     tagline: {
       en: 'AI validation that catches non-compliant regulatory documents before they reach human review.',
       es: 'Validación con IA que detecta documentos regulatorios no conformes antes de que lleguen a revisión humana.',
     },
-    badge: { en: 'Co-founder & CTO', es: 'Cofundador y CTO' },
+    badge: { en: 'Co-founder & CTO · building the MVP', es: 'Cofundador y CTO · construyendo el MVP' },
     kind: { en: 'Startup · AI compliance', es: 'Startup · Cumplimiento con IA' },
     when: { en: '2026 – now', es: '2026 – hoy' },
     role: { en: 'Co-founder & CTO', es: 'Cofundador y CTO' },
     team: { en: 'Founding team', es: 'Equipo fundador' },
     cover: 'pharma',
-    featured: true,
+    featured: false,
     problem: {
       en: 'Biotechs preparing FDA/EMA filings review documents late and by hand. Quality-management platforms validate workflow and metadata, not whether the content of a document actually satisfies the regulation it is meant to meet.',
       es: 'Las biotecnológicas que preparan solicitudes ante la FDA y la EMA revisan los documentos tarde y a mano. Las plataformas de gestión de calidad validan el flujo y los metadatos, no si el contenido del documento cumple de verdad la regulación.',
@@ -117,8 +171,8 @@ export const projects: Project[] = [
         es: 'Un motor de validación que contrasta el contenido del documento con una biblioteca de reglas (21 CFR Part 11/211/820, EU GMP, ICH Q9/Q10/E3/M4, EMA eCTD) y clasifica los hallazgos como críticos, mayores o menores, con cita y corrección recomendada.',
       },
       {
-        en: 'A compliance dashboard with a live score, upload-and-scan with streamed findings, and document control with version history.',
-        es: 'Un panel de cumplimiento con puntuación en vivo, carga y análisis con hallazgos en streaming, y control documental con historial de versiones.',
+        en: 'A compliance dashboard with a running score, upload-and-scan with streamed findings, and document control with version history.',
+        es: 'Un panel de cumplimiento con puntuación continua, carga y análisis con hallazgos en streaming, y control documental con historial de versiones.',
       },
       {
         en: 'An append-only, tamper-evident audit trail built on a SHA-256 hash chain, designed around EU GMP Annex 11 and 21 CFR Part 11, plus AI-assisted Clinical Study Report drafting.',
@@ -126,97 +180,15 @@ export const projects: Project[] = [
       },
     ],
     outcome: {
-      en: 'A working MVP demo. Pre-revenue and building toward Series A–C biotech customers.',
-      es: 'Un MVP funcional en demo. Todavía sin ingresos y construyendo hacia clientes biotecnológicos en Series A–C.',
+      en: 'In development: we are building the MVP. Pre-revenue, aimed at Series A–C biotechs.',
+      es: 'En desarrollo: estamos construyendo el MVP. Todavía sin ingresos, orientado a biotecnológicas en Series A–C.',
     },
     stack: ['Next.js', 'Fastify', 'tRPC', 'FastAPI', 'Turborepo', 'Hash-chained audit log'],
     links: [],
   },
   {
-    slug: 'streamscope',
-    index: '04',
-    title: 'StreamScope',
-    tagline: {
-      en: 'Real-time Twitch chat intelligence that surfaces the messages a streamer actually needs.',
-      es: 'Inteligencia de chat de Twitch en tiempo real que destaca los mensajes que un streamer realmente necesita.',
-    },
-    badge: { en: '2nd of 25 teams', es: '2.º de 25 equipos' },
-    kind: { en: 'Venture bootcamp · Full-stack ML', es: 'Venture bootcamp · ML full-stack' },
-    when: { en: 'Feb 2026', es: 'Feb 2026' },
-    role: { en: 'Product lead & system architect', es: 'Líder de producto y arquitecto del sistema' },
-    team: { en: '4 people · developers + business lead', es: '4 personas · desarrolladores + líder de negocio' },
-    cover: 'stream',
-    featured: true,
-    problem: {
-      en: 'On a busy stream, chat moves faster than anyone can read, so streamers miss the questions, feedback and moments that matter.',
-      es: 'En un stream concurrido el chat va más rápido de lo que nadie puede leer, así que los streamers se pierden las preguntas, el feedback y los momentos importantes.',
-    },
-    built: [
-      {
-        en: 'Real-time ingestion of Twitch chat with an NLP pipeline (sentence embeddings with a FastText fallback classifier) that sorts messages into categorised buckets.',
-        es: 'Ingesta en tiempo real del chat de Twitch con un pipeline de NLP (embeddings de frases con un clasificador FastText de respaldo) que ordena los mensajes en categorías.',
-      },
-      {
-        en: 'Speech-to-text of the streamer’s audio and LLM topic extraction, so chat can be matched to what is being talked about.',
-        es: 'Transcripción del audio del streamer y extracción de temas con un LLM, para relacionar el chat con lo que se está hablando.',
-      },
-      {
-        en: 'An analytics dashboard, overlay editor and collaboration features on a Flask REST API with 40+ endpoints, Supabase (PostgreSQL) and WebSockets.',
-        es: 'Un panel de analítica, un editor de overlays y funciones de colaboración sobre una API REST en Flask con más de 40 endpoints, Supabase (PostgreSQL) y WebSockets.',
-      },
-      {
-        en: 'I led product vision and directed the cross-functional team, defining features, roadmap and system architecture.',
-        es: 'Lideré la visión de producto y dirigí al equipo multidisciplinar, definiendo funcionalidades, hoja de ruta y arquitectura.',
-      },
-    ],
-    outcome: {
-      en: 'Placed 2nd of 25 teams, mostly Master’s students, at the IE Tech Venture Bootcamp. Development continued toward a commercial launch.',
-      es: 'Segundo puesto entre 25 equipos, la mayoría de máster, en el IE Tech Venture Bootcamp. El desarrollo continuó hacia un lanzamiento comercial.',
-    },
-    stack: ['Flask', 'Supabase', 'FastText', 'sentence-transformers', 'Whisper', 'WebSockets', 'React'],
-    links: [{ label: { en: 'IE project page', es: 'Página del proyecto en IE' }, href: 'https://www.ie.edu/school-science-technology/student-projects/streamscope/' }],
-  },
-  {
-    slug: 'iata-saf-datathon',
-    index: '05',
-    title: 'IATA × Infosys Datathon',
-    tagline: {
-      en: 'A levy mechanism that cuts the cost of decarbonizing aviation fuel from $633 to $29 per ton.',
-      es: 'Un mecanismo de tasa que reduce el coste de descarbonizar el combustible de aviación de 633 $ a 29 $ por tonelada.',
-    },
-    badge: { en: 'Top 5 of 38 teams', es: 'Top 5 de 38 equipos' },
-    kind: { en: 'Datathon · Data science & policy', es: 'Datathon · Ciencia de datos y política' },
-    when: { en: 'Oct – Dec 2025', es: 'Oct – Dic 2025' },
-    cover: 'aero',
-    featured: false,
-    problem: {
-      en: 'Sustainable Aviation Fuel (SAF) is limited by physical supply, which keeps the marginal abatement cost high, and current EU mandates add a logistics penalty.',
-      es: 'El combustible sostenible de aviación (SAF) está limitado por la oferta física, lo que mantiene alto el coste marginal de reducción, y los mandatos actuales de la UE añaden una penalización logística.',
-    },
-    built: [
-      {
-        en: 'Modeled SAF adoption across EU27 aviation using IATA, EUROCONTROL and Eurostat data.',
-        es: 'Modelamos la adopción de SAF en la aviación de la UE-27 con datos de IATA, EUROCONTROL y Eurostat.',
-      },
-      {
-        en: 'Proposed a proprietary, government-backed SAF levy, validated through consultations with Qatar Airways leadership.',
-        es: 'Propusimos una tasa SAF propia respaldada por el gobierno, validada en consultas con la dirección de Qatar Airways.',
-      },
-      {
-        en: 'A predictive model showing that pairing the levy with the Global Book & Claim mechanism eliminates the 15% logistics penalty in current EU mandates.',
-        es: 'Un modelo predictivo que muestra que combinar la tasa con el mecanismo Global Book & Claim elimina la penalización logística del 15% de los mandatos actuales de la UE.',
-      },
-    ],
-    outcome: {
-      en: 'Top 5 of 38 teams, with a design that improves capital efficiency by 95%, cutting marginal abatement cost from $633/t to $29/t.',
-      es: 'Top 5 de 38 equipos, con un diseño que mejora la eficiencia del capital un 95% y reduce el coste marginal de reducción de 633 $/t a 29 $/t.',
-    },
-    stack: ['Python', 'Predictive modeling', 'Data analysis', 'Policy design'],
-    links: [{ label: { en: 'Code', es: 'Código' }, href: 'https://github.com/javocruz/iata-datathon' }],
-  },
-  {
     slug: 'frutas-prohibidas',
-    index: '06',
+    index: '05',
     title: 'Frutas Prohibidas',
     tagline: {
       en: 'A sustainability dashboard that turns every restaurant transaction into CO₂, water and land impact.',
@@ -257,6 +229,24 @@ export const projects: Project[] = [
 ]
 
 export const builds: Build[] = [
+  {
+    title: 'StreamScope',
+    when: '2025/26 · IE Tech Venture Bootcamp',
+    text: {
+      en: 'A real-time Twitch chat intelligence platform. 2nd of 25 teams at the IE Tech Venture Bootcamp.',
+      es: 'Una plataforma de inteligencia de chat de Twitch en tiempo real. 2.º de 25 equipos en el IE Tech Venture Bootcamp.',
+    },
+    href: 'https://github.com/javocruz/Stream-Scope',
+  },
+  {
+    title: 'IATA × Infosys Sustainability Datathon',
+    when: 'Oct – Dec 2025 · Datathon',
+    text: {
+      en: 'A cost-benefit model for sustainable aviation fuel; a proposed levy brings the cost per ton of CO₂ from $633 to $29. Top 5 of 38 teams.',
+      es: 'Un modelo coste-beneficio del combustible sostenible de aviación; una tasa propuesta reduce el coste por tonelada de CO₂ de 633 $ a 29 $. Top 5 de 38 equipos.',
+    },
+    href: 'https://github.com/javocruz/iata-datathon',
+  },
   {
     title: 'My ASL Teacher',
     when: 'Apr 2026 · Runway hackathon',

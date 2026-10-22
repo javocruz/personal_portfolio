@@ -20,6 +20,7 @@ export const heroLine: L = {
 }
 
 export const stats: { value: string; label: L }[] = [
+  { value: '1st · 2nd', label: { en: 'Madrid and EMEA final, BCG Platinion × Welthungerhilfe', es: 'Madrid y final EMEA, BCG Platinion × Welthungerhilfe' } },
   { value: '1st', label: { en: 'HappyRobot track, HackSpain 2026', es: 'Track HappyRobot, HackSpain 2026' } },
   { value: '2nd/25', label: { en: 'IE Tech Venture Bootcamp', es: 'IE Tech Venture Bootcamp' } },
   { value: 'Top 5/38', label: { en: 'IATA × Infosys Datathon', es: 'Datathon IATA × Infosys' } },
@@ -27,12 +28,23 @@ export const stats: { value: string; label: L }[] = [
 ]
 
 export const workedWith = [
-  'Sybol', 'HappyRobot', 'Outamation', 'IE University', 'Extern', 'amo (Bump)', 'IATA', 'Infosys', 'Frutas Prohibidas', 'Innovis VC',
+  'BCG Platinion', 'Welthungerhilfe', 'HappyRobot', 'Hospitia', 'Sybol', 'Outamation', 'IE University', 'Extern', 'IATA', 'Infosys', 'Frutas Prohibidas',
 ]
 
 export type Experience = { role: L; org: string; when: L; bullets: L[]; tags: string[] }
 
 export const experience: Experience[] = [
+  {
+    role: { en: 'CTO', es: 'CTO' },
+    org: 'Hospitia · AI hotel inspection platform',
+    when: { en: 'Sep 2026 – Present', es: 'Sep 2026 – Presente' },
+    bullets: [
+      { en: 'Lead the technology for an AI vision platform that automates hotel brand-compliance inspections.', es: 'Lidero la tecnología de una plataforma de visión por IA que automatiza las inspecciones de cumplimiento de marca en hoteles.' },
+      { en: 'Taking it to production on AWS and benchmarking open-weight vision models.', es: 'La estoy llevando a producción en AWS y comparando modelos de visión de pesos abiertos.' },
+      { en: 'Planning team growth and the build vs. outsource split.', es: 'Planifico el crecimiento del equipo y qué construir dentro y qué externalizar.' },
+    ],
+    tags: ['Startup', 'Computer vision', 'AWS'],
+  },
   {
     role: { en: 'Software Engineer & Team Lead', es: 'Ingeniero de software y líder de equipo' },
     org: 'IEU Labs × Sybol · AI Compliance Engine',
@@ -49,19 +61,10 @@ export const experience: Experience[] = [
     org: 'Pharmable · AI compliance platform for biotech',
     when: { en: '2026 – Present', es: '2026 – Presente' },
     bullets: [
-      { en: 'Building an AI compliance platform for Series A–C biotechs preparing FDA/EMA filings.', es: 'Construyo una plataforma de cumplimiento con IA para biotecnológicas en Series A–C que preparan solicitudes ante la FDA y la EMA.' },
-      { en: 'Architected the MVP: a validation engine for 21 CFR Part 11/211/820 and ICH Q10/E3, a SHA-256 hash-chained audit trail, and AI-assisted Clinical Study Report drafting.', es: 'Diseñé el MVP: motor de validación para 21 CFR Part 11/211/820 e ICH Q10/E3, trazabilidad con cadena de hashes SHA-256 y redacción asistida por IA de Informes de Estudio Clínico.' },
+      { en: 'Building the MVP of an AI compliance platform for Series A–C biotechs preparing FDA/EMA filings.', es: 'Construyo el MVP de una plataforma de cumplimiento con IA para biotecnológicas en Series A–C que preparan solicitudes ante la FDA y la EMA.' },
+      { en: 'Designing a validation engine for 21 CFR Part 11/211/820 and ICH Q10/E3, a SHA-256 hash-chained audit trail, and AI-assisted Clinical Study Report drafting.', es: 'Diseño un motor de validación para 21 CFR Part 11/211/820 e ICH Q10/E3, una trazabilidad con cadena de hashes SHA-256 y redacción asistida por IA de Informes de Estudio Clínico.' },
     ],
     tags: ['Startup', 'Compliance', 'Next.js', 'AI'],
-  },
-  {
-    role: { en: 'CTO', es: 'CTO' },
-    org: 'Hospitia · AI hotel inspection platform (stealth)',
-    when: { en: 'Sep 2026 – Present', es: 'Sep 2026 – Presente' },
-    bullets: [
-      { en: 'Own the technical side of a four-stage AI vision pipeline that automates hotel brand-compliance inspections.', es: 'Responsable técnico de un pipeline de visión por IA de cuatro etapas que automatiza las inspecciones de cumplimiento de marca en hoteles.' },
-    ],
-    tags: ['Startup', 'Computer vision', 'Stealth'],
   },
   {
     role: { en: 'Content Specialist, Bump Mexico', es: 'Especialista de contenido, Bump México' },
@@ -100,8 +103,8 @@ export const leadership: { title: string; org: string; when: L; text: L }[] = [
     org: 'IE Technology & Innovation Club',
     when: { en: 'Jan 2026 – Present', es: 'Ene 2026 – Presente' },
     text: {
-      en: 'Helped organize TechIE Day, leading the Cursor hackathon from sponsor coordination to participant experience. Driving outreach to tech companies and startups for partnerships, sponsorships and speakers.',
-      es: 'Ayudé a organizar TechIE Day, liderando el hackathon de Cursor, desde la coordinación de patrocinadores hasta la experiencia de los participantes. Dirijo el contacto con empresas tecnológicas y startups para alianzas, patrocinios y ponentes.',
+      en: 'Helped organize TechIE Day, leading the Cursor hackathon from sponsor coordination to participant experience. Driving outreach to tech companies and startups for partnerships, sponsorships and speakers, and bringing HappyRobot in as a partner for the next edition.',
+      es: 'Ayudé a organizar TechIE Day, liderando el hackathon de Cursor, desde la coordinación de patrocinadores hasta la experiencia de los participantes. Dirijo el contacto con empresas tecnológicas y startups para alianzas, patrocinios y ponentes, y estoy sumando a HappyRobot como socio para la próxima edición.',
     },
   },
   {
@@ -116,15 +119,16 @@ export const leadership: { title: string; org: string; when: L; text: L }[] = [
   {
     title: 'Startup Sourcing & Deal Flow',
     org: 'Innovis VC (student-led venture fund)',
-    when: { en: 'Ongoing', es: 'En curso' },
+    when: { en: 'Past', es: 'Anterior' },
     text: {
-      en: 'Source and evaluate early-stage startups, producing structured deal-flow assessments on market, product and team.',
-      es: 'Identifico y evalúo startups en fase inicial, elaborando análisis estructurados de mercado, producto y equipo.',
+      en: 'Sourced and evaluated early-stage startups, producing structured deal-flow assessments on market, product and team.',
+      es: 'Identifiqué y evalué startups en fase inicial, elaborando análisis estructurados de mercado, producto y equipo.',
     },
   },
 ]
 
 export const skills: { group: L; items: string[] }[] = [
+  { group: { en: 'Areas', es: 'Áreas' }, items: ['Applied ML', 'Forecasting', 'Agentic systems', 'IoT / hardware prototyping', 'Full-stack development', 'Product & project management'] },
   { group: { en: 'AI & ML', es: 'IA y ML' }, items: ['LLMs', 'RAG', 'Agentic systems', 'Prompt engineering', 'OCR', 'Vector search', 'NLP'] },
   { group: { en: 'Engineering', es: 'Ingeniería' }, items: ['Python', 'SQL', 'TypeScript', 'React', 'Node.js / Express', 'Flask', 'Supabase / PostgreSQL', 'C / C++'] },
   { group: { en: 'Cloud & data', es: 'Nube y datos' }, items: ['AWS (Bedrock, S3)', 'Google Cloud Platform', 'Docker', 'CI/CD', 'Git', 'BigQuery', 'Looker'] },
@@ -143,7 +147,8 @@ export const testimonials: { quote: L; name: string; role: string }[] = []
 
 // Short, hand-edited "now" list shown next to live GitHub activity.
 export const now: L[] = [
-  { en: 'Building Pharmable, an AI compliance platform for biotech filings.', es: 'Construyendo Pharmable, una plataforma de cumplimiento con IA para solicitudes biotecnológicas.' },
-  { en: 'CTO at Hospitia, an AI vision pipeline for hotel inspections.', es: 'CTO en Hospitia, un pipeline de visión por IA para inspecciones hoteleras.' },
-  { en: 'Studying CS & AI at IE University (class of 2028).', es: 'Estudiando Ciencias de la Computación e IA en IE University (promoción 2028).' },
+  { en: 'CTO at Hospitia, taking an AI inspection platform to production.', es: 'CTO en Hospitia, llevando a producción una plataforma de inspección con IA.' },
+  { en: 'Co-founder at Pharmable, building toward the MVP.', es: 'Cofundador de Pharmable, construyendo el MVP.' },
+  { en: '3rd year of CS & AI at IE University.', es: '3.er año de Ciencias de la Computación e IA en IE University.' },
+  { en: 'Partnerships Officer at IE’s Technology & Innovation Club, bringing HappyRobot in as a partner for the next edition.', es: 'Responsable de alianzas del Technology & Innovation Club de IE, sumando a HappyRobot como socio para la próxima edición.' },
 ]
