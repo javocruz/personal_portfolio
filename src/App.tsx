@@ -1,6 +1,5 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
-import { AnimatePresence, motion } from 'motion/react'
 import { I18nProvider } from './lib/i18n'
 import { ThemeProvider } from './lib/theme'
 import { FxProvider } from './lib/fx'
@@ -43,28 +42,21 @@ function Shell() {
   const location = useLocation()
   const { mode } = useMode()
   const [palette, setPalette] = useState(false)
-  const cursor = useRef<HTMLDivElement>(null)
   const inLab = location.pathname.startsWith('/lab')
   const gate = !mode && location.pathname === '/'
-  const rich = mode === 'complete' && !inLab
 
   useEffect(() => {
     if (location.hash) setTimeout(() => document.querySelector(location.hash)?.scrollIntoView(), 80)
     else scrollTo(0, 0)
   }, [location.pathname, location.hash, mode])
 
-  // Smooth scrolling only in Complete; Core keeps native scrolling.
+  // Once the page is idle, fetch the other Complete pages so clicking through feels instant.
   useEffect(() => {
-    if (!rich || matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    let dead = false, raf = 0, destroy = () => {}
-    import('lenis').then(({ default: Lenis }) => {
-      if (dead) return
-      const lenis = new Lenis({ lerp: 0.09 })
-      raf = requestAnimationFrame(function tick(t) { lenis.raf(t); raf = requestAnimationFrame(tick) })
-      destroy = () => { cancelAnimationFrame(raf); lenis.destroy() }
-    })
-    return () => { dead = true; destroy() }
-  }, [rich])
+    if (mode !== 'complete' || inLab) return
+    const go = () => { import('./pages/Gallery'); import('./pages/CaseStudy'); import('./pages/CompleteHome') }
+    const id = 'requestIdleCallback' in window ? requestIdleCallback(go, { timeout: 3000 }) : setTimeout(go, 2000)
+    return () => { 'cancelIdleCallback' in window ? cancelIdleCallback(id as number) : clearTimeout(id as number) }
+  }, [mode, inLab])
 
   useEffect(() => {
     const on = (e: KeyboardEvent) => {
@@ -76,28 +68,14 @@ function Shell() {
     return () => removeEventListener('keydown', on)
   }, [])
 
-  useEffect(() => {
-    const el = cursor.current
-    if (!rich || !el || !matchMedia('(hover: hover)').matches) return
-    let x = 0, y = 0, cx = 0, cy = 0, raf = 0
-    const move = (e: MouseEvent) => {
-      x = e.clientX; y = e.clientY; el.dataset.on = '1'
-      el.dataset.big = (e.target as HTMLElement).closest('a,button,.plate,.xp-row') ? '1' : '0'
-    }
-    const loop = () => { cx += (x - cx) * 0.18; cy += (y - cy) * 0.18; el.style.transform = `translate(${cx}px,${cy}px)`; raf = requestAnimationFrame(loop) }
-    addEventListener('mousemove', move); raf = requestAnimationFrame(loop)
-    return () => { removeEventListener('mousemove', move); cancelAnimationFrame(raf); el.dataset.on = '0' }
-  }, [rich])
-
   const lz = (el: React.ReactNode) => <Suspense fallback={<div className="page-loading" />}>{el}</Suspense>
 
   return (
     <>
-      {rich && <div ref={cursor} className="cursor" aria-hidden />}
       {!inLab && !gate && !(mode === 'core' && location.pathname === '/') && <Nav openPalette={() => setPalette(true)} />}
       <CommandPalette open={palette} onClose={() => setPalette(false)} />
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div key={location.pathname + (mode ?? '')} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
+      {/* new pages fade in; nothing waits for the old page to fade out */}
+      <div className="page" key={location.pathname + (mode ?? '')}>
           <Routes location={location}>
             <Route path="/" element={lz(<Home />)} />
             <Route path="/work" element={lz(<Work />)} />
@@ -115,8 +93,7 @@ function Shell() {
             <Route path="/lab/c" element={lz(<LayoutC />)} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </motion.div>
-      </AnimatePresence>
+      </div>
     </>
   )
 }
