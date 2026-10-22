@@ -58,7 +58,7 @@ function Recipe() {
     <details className="one-recipe" onToggle={(e) => (e.currentTarget as HTMLDetailsElement).open && load()}>
       <summary>{l({ en: 'Every painting above was generated with JavaScript. ', es: 'Cada pintura de arriba se generó con JavaScript. ' })}<u>{l({ en: 'The recipe', es: 'La receta' })}</u></summary>
       <ol>
-        <li>{l({ en: 'Pick one real number from the project: a fire spreading with the wind, a cost falling from $633 to $29, a score from deepfake to authentic.', es: 'Elige un número real del proyecto: un fuego que avanza con el viento, un coste que cae de 633 $ a 29 $, una puntuación de deepfake a auténtico.' })}</li>
+        <li>{l({ en: 'Pick one real number or idea from the project: a forecast error falling from 1.50 to 1.29 °C, the same fire on two maps 12 steps apart, a score from deepfake to authentic.', es: 'Elige un número o una idea real del proyecto: un error de previsión que baja de 1,50 a 1,29 °C, el mismo incendio en dos mapas con 12 pasos de diferencia, una puntuación de deepfake a auténtico.' })}</li>
         <li>{l({ en: 'Draw it with p5.brush: watercolour washes, charcoal, pastel and pen on one WebGL canvas, one layer at a time.', es: 'Dibújalo con p5.brush: aguadas de acuarela, carboncillo, pastel y pluma sobre un único lienzo WebGL, capa a capa.' })}</li>
         <li>{l({ en: 'Seed the randomness so the same code paints the same picture every time.', es: 'Fija la semilla del azar para que el mismo código pinte siempre el mismo cuadro.' })}</li>
         <li>{l({ en: 'Paint once, save it as a JPG, and serve the image. Nothing is painted in your browser.', es: 'Píntalo una vez, guárdalo como JPG y sirve la imagen. Nada se pinta en tu navegador.' })}</li>
