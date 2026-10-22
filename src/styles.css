@@ -394,36 +394,37 @@ html[data-mode=complete] body::after{content:'';position:fixed;inset:0;z-index:9
 html[data-mode=complete] .nav-cta{color:#fff;background:var(--accent);padding:6px 14px;border-radius:99px;margin:-6px 0}
 html[data-mode=complete] .nav-cta:hover{background:#fff;color:#000}
 /* two equal halves: the eye sets the height, the text sits centred beside it in the eye's colours */
-.reach{--ray:#ff3b2f;--glow:#6a4fe0;position:relative;display:grid;grid-template-columns:1fr 1fr;align-items:center;background:#000;color:#f1ece4;margin-top:clamp(80px,12vw,180px);overflow:hidden;isolation:isolate}
+.reach{--ray:#e07a3f;--glow:#9a4a24;position:relative;display:grid;grid-template-columns:1fr 1fr;align-items:center;background:#000;color:#f1ece4;margin-top:clamp(80px,12vw,180px);overflow:hidden;isolation:isolate}
 /* the rays carry on faintly behind the text, fading out to the left */
 .reach::before{content:'';position:absolute;inset:0;z-index:-1;
-  background:repeating-conic-gradient(from 0deg at 75% 46%,rgba(255,59,47,.07) 0 .35deg,transparent .35deg 1.6deg),radial-gradient(ellipse 60% 70% at 75% 46%,rgba(106,79,224,.28),transparent 70%);
+  background:repeating-conic-gradient(from 0deg at 75% 38%,rgba(224,122,63,.06) 0 .35deg,transparent .35deg 1.6deg),radial-gradient(ellipse 55% 60% at 75% 38%,rgba(224,122,63,.16),transparent 70%);
   -webkit-mask:linear-gradient(90deg,transparent 0%,#000 75%);mask:linear-gradient(90deg,transparent 0%,#000 75%)}
 .reach-text{position:relative;z-index:2;padding:clamp(56px,7vw,110px) clamp(24px,5vw,80px) clamp(56px,7vw,110px) var(--pad)}
 .reach .kicker{color:var(--ray)}
-.reach-title{font-size:clamp(56px,8.4vw,140px);line-height:.92;letter-spacing:-.05em;margin:12px 0 20px;text-shadow:0 0 60px rgba(106,79,224,.55)}
-.reach-lead{font-size:clamp(17px,1.5vw,21px);color:#cbc3d9;max-width:34ch;margin:0 0 30px}
+.reach-title{font-size:clamp(56px,8.4vw,140px);line-height:.92;letter-spacing:-.05em;margin:12px 0 20px;text-shadow:0 0 60px rgba(224,122,63,.55)}
+.reach-lead{font-size:clamp(17px,1.5vw,21px);color:#cfc5bc;max-width:34ch;margin:0 0 30px}
 .reach-mail{display:flex;flex-wrap:wrap;align-items:baseline;gap:12px 18px;margin-bottom:24px}
 .reach-mail a{font-size:clamp(26px,3.2vw,48px);letter-spacing:-.035em;line-height:1.05;padding-bottom:6px;overflow-wrap:anywhere;
   background:linear-gradient(90deg,var(--ray),var(--glow)) left bottom/100% 2px no-repeat}
-.reach-mail a:hover{color:#ffb4a8}
-.reach-mail button{font:inherit;font-size:14px;color:#cbc3d9;background:none;border:1px solid rgba(106,79,224,.6);border-radius:99px;padding:6px 14px;cursor:pointer}
+.reach-mail a:hover{color:#f3b48c}
+.reach-mail button{font:inherit;font-size:14px;color:#cfc5bc;background:none;border:1px solid rgba(224,122,63,.6);border-radius:99px;padding:6px 14px;cursor:pointer}
 .reach-mail button:hover{border-color:#fff;color:#fff}
 .reach-actions{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:clamp(36px,4vw,56px)}
-.reach-actions .btn{border-color:rgba(106,79,224,.6);color:#f1ece4;padding:13px 22px;font-size:15px;background:rgba(106,79,224,.08)}
-.reach-actions .btn:hover{border-color:#fff;background:rgba(106,79,224,.2)}
-.reach-actions .btn.solid{background:var(--ray);border-color:var(--ray);color:#fff;box-shadow:0 0 34px rgba(255,59,47,.45)}
+.reach-actions .btn{border-color:rgba(224,122,63,.6);color:#f1ece4;padding:13px 22px;font-size:15px;background:rgba(224,122,63,.08)}
+.reach-actions .btn:hover{border-color:#fff;background:rgba(224,122,63,.2)}
+.reach-actions .btn.solid{background:var(--ray);border-color:var(--ray);color:#140a04;box-shadow:0 0 34px rgba(224,122,63,.4)}
 .reach-actions .btn.solid:hover{background:#fff;border-color:#fff;color:#000}
-.reach-form{max-width:560px;padding-top:24px;border-top:1px solid rgba(106,79,224,.35)}
+.reach-form{max-width:560px;padding-top:24px;border-top:1px solid rgba(224,122,63,.35)}
 .reach-form .form{margin-top:12px}
-.reach-form .form input,.reach-form .form textarea{background:rgba(10,8,22,.8);border-color:rgba(106,79,224,.4);backdrop-filter:none}
+.reach-form .form input,.reach-form .form textarea{background:rgba(16,11,8,.85);border-color:rgba(224,122,63,.4);backdrop-filter:none}
 .reach-form .form input:focus,.reach-form .form textarea:focus{border-color:var(--ray);outline:none}
 .reach-form .form textarea{min-height:110px}
-.reach-form .btn.solid{background:var(--ray);border-color:var(--ray);color:#fff}
-.reach-eye{margin:0;position:relative;align-self:stretch;aspect-ratio:900/1100;min-height:100%}
-.reach-eye img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 46%}
+.reach-form .btn.solid{background:var(--ray);border-color:var(--ray);color:#140a04}
+.reach-eye{margin:0;position:relative;align-self:stretch;aspect-ratio:719/861;min-height:100%}
+.reach-eye img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%}
 .reach-eye::before{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#000,rgba(0,0,0,0) 22%),linear-gradient(0deg,#000,rgba(0,0,0,0) 14%),linear-gradient(180deg,#000,rgba(0,0,0,0) 10%)}
-.reach-foot{grid-column:1/-1;position:relative;z-index:2;padding:22px var(--pad) 28px;font-size:13px;border-top:1px solid rgba(106,79,224,.25)}
+.reach-foot{grid-column:1/-1;position:relative;z-index:2;padding:22px var(--pad) 28px;font-size:13px;border-top:1px solid rgba(224,122,63,.25)}
+.reach-eye figcaption{position:absolute;right:16px;bottom:14px;z-index:2;font-size:12px;color:#8c827a}
 @media(max-width:900px){
   .reach{grid-template-columns:1fr}
   .reach-eye{grid-row:1;aspect-ratio:auto;height:62vw;max-height:520px}

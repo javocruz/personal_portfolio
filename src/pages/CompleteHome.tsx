@@ -113,10 +113,11 @@ export default function CompleteHome() {
             <ContactForm />
           </div>
         </div>
-        <figure className="reach-eye" aria-hidden>
-          <img src="/art/eye-900.webp" srcSet="/art/eye-900.webp 900w, /art/eye-1350.webp 1350w" sizes="(max-width: 900px) 100vw, 45vw" alt="" loading="lazy" decoding="async" width={900} height={1100} />
+        <figure className="reach-eye">
+          <img src="/art/eye-of-nature.jpg" alt="Eye of Nature by Dan Hillier" loading="lazy" decoding="async" width={719} height={861} />
+          <figcaption>Eye of Nature · Dan Hillier</figcaption>
         </figure>
-        <footer className="reach-foot dim">© {new Date().getFullYear()} {profile.name} · {t('footer.built')} · {l({ en: 'Hero: Arnold Böcklin, Isle of the Dead (1883), public domain', es: 'Portada: Arnold Böcklin, La isla de los muertos (1883), dominio público' })}</footer>
+        <footer className="reach-foot dim">© {new Date().getFullYear()} {profile.name} · {t('footer.built')} · {l({ en: 'Hero: Arnold Böcklin, Isle of the Dead (1883), public domain · Eye of Nature by Dan Hillier', es: 'Portada: Arnold Böcklin, La isla de los muertos (1883), dominio público · Eye of Nature de Dan Hillier' })}</footer>
       </section>
     </main>
   )
