@@ -114,7 +114,7 @@ export default function CoreHome() {
   const facts: [string, string][] = [
     [l({ en: 'Based', es: 'Base' }), 'Madrid'],
     [l({ en: 'Studying', es: 'Estudio' }), l({ en: 'CS & AI, IE University, ’28', es: 'CC e IA, IE University, ’28' })],
-    [l({ en: 'Building', es: 'Construyo' }), 'Pharmable'],
+    [l({ en: 'Latest', es: 'Último' }), l({ en: 'SnapFrost, 1st Madrid', es: 'SnapFrost, 1.º Madrid' })],
     [l({ en: 'CTO', es: 'CTO' }), 'Hospitia'],
     [l({ en: 'Speaks', es: 'Hablo' }), l({ en: 'Spanish, English', es: 'Español, inglés' })],
   ]

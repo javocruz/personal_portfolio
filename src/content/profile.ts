@@ -59,10 +59,10 @@ export const experience: Experience[] = [
   {
     role: { en: 'Co-founder & CTO', es: 'Cofundador y CTO' },
     org: 'Pharmable · AI compliance platform for biotech',
-    when: { en: '2026 – Present', es: '2026 – Presente' },
+    when: { en: '2026 · on hold', es: '2026 · en pausa' },
     bullets: [
-      { en: 'Building the MVP of an AI compliance platform for Series A–C biotechs preparing FDA/EMA filings.', es: 'Construyo el MVP de una plataforma de cumplimiento con IA para biotecnológicas en Series A–C que preparan solicitudes ante la FDA y la EMA.' },
-      { en: 'Designing a validation engine for 21 CFR Part 11/211/820 and ICH Q10/E3, a SHA-256 hash-chained audit trail, and AI-assisted Clinical Study Report drafting.', es: 'Diseño un motor de validación para 21 CFR Part 11/211/820 e ICH Q10/E3, una trazabilidad con cadena de hashes SHA-256 y redacción asistida por IA de Informes de Estudio Clínico.' },
+      { en: 'Co-founded an AI compliance platform for Series A–C biotechs preparing FDA/EMA filings; the MVP is on hold.', es: 'Cofundé una plataforma de cumplimiento con IA para biotecnológicas en Series A–C que preparan solicitudes ante la FDA y la EMA; el MVP está en pausa.' },
+      { en: 'Designed a validation engine for 21 CFR Part 11/211/820 and ICH Q10/E3, a SHA-256 hash-chained audit trail, and AI-assisted Clinical Study Report drafting.', es: 'Diseñé un motor de validación para 21 CFR Part 11/211/820 e ICH Q10/E3, una trazabilidad con cadena de hashes SHA-256 y redacción asistida por IA de Informes de Estudio Clínico.' },
     ],
     tags: ['Startup', 'Compliance', 'Next.js', 'AI'],
   },
@@ -119,7 +119,7 @@ export const leadership: { title: string; org: string; when: L; text: L }[] = [
   {
     title: 'Startup Sourcing & Deal Flow',
     org: 'Innovis VC (student-led venture fund)',
-    when: { en: 'Past', es: 'Anterior' },
+    when: { en: 'Until Oct 2026', es: 'Hasta oct 2026' },
     text: {
       en: 'Sourced and evaluated early-stage startups, producing structured deal-flow assessments on market, product and team.',
       es: 'Identifiqué y evalué startups en fase inicial, elaborando análisis estructurados de mercado, producto y equipo.',
@@ -148,7 +148,6 @@ export const testimonials: { quote: L; name: string; role: string }[] = []
 // Short, hand-edited "now" list shown next to live GitHub activity.
 export const now: L[] = [
   { en: 'CTO at Hospitia, taking an AI inspection platform to production.', es: 'CTO en Hospitia, llevando a producción una plataforma de inspección con IA.' },
-  { en: 'Co-founder at Pharmable, building toward the MVP.', es: 'Cofundador de Pharmable, construyendo el MVP.' },
   { en: '3rd year of CS & AI at IE University.', es: '3.er año de Ciencias de la Computación e IA en IE University.' },
   { en: 'Partnerships Officer at IE’s Technology & Innovation Club, bringing HappyRobot in as a partner for the next edition.', es: 'Responsable de alianzas del Technology & Innovation Club de IE, sumando a HappyRobot como socio para la próxima edición.' },
 ]
