@@ -45,6 +45,16 @@ export default function CaseStudy() {
           <h2>{t('case.built')}</h2>
           <ul className="case-list">{p.built.map((b, k) => <li key={k}>{l(b)}</li>)}</ul>
         </motion.section>
+        {p.photos && (
+          <motion.section {...reveal} className="case-photos">
+            {p.photos.map((ph) => (
+              <figure key={ph.name}>
+                <img src={`/art/photos/${ph.name}-1600.jpg`} srcSet={`/art/photos/${ph.name}-800.jpg 800w, /art/photos/${ph.name}-1600.jpg 1600w`} sizes="(max-width: 900px) 92vw, 45vw" alt={l(ph.alt)} loading="lazy" width={1600} height={1067} />
+                <figcaption className="dim">{l(ph.alt)}</figcaption>
+              </figure>
+            ))}
+          </motion.section>
+        )}
         <motion.section {...reveal}><h2>{t('case.outcome')}</h2><p className="lead big outcome">{l(p.outcome)}</p></motion.section>
         <motion.section {...reveal}>
           <h2>{t('case.stack')}</h2>

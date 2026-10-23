@@ -432,3 +432,9 @@ html[data-mode=complete] .nav-cta:hover{background:#fff;color:#000}
 .page{animation:page-in .22s ease-out}
 @keyframes page-in{from{opacity:0}to{opacity:1}}
 @media(prefers-reduced-motion:reduce){.page{animation:none}}
+/* real photos on a case page, two up */
+.case-photos{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.case-photos figure{margin:0}
+.case-photos img{display:block;width:100%;height:auto;border-radius:4px}
+.case-photos figcaption{font-size:13px;margin-top:8px}
+@media(max-width:700px){.case-photos{grid-template-columns:1fr}}

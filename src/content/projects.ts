@@ -51,6 +51,10 @@ export const projects: Project[] = [
     },
     stack: ['Python', 'FastAPI', 'SQLite', 'scikit-learn', 'pandas', 'React', 'TypeScript', 'Vite', 'Three.js', 'Raspberry Pi 5', 'I2C', 'Open-Meteo / ERA5-Land', 'Twilio', 'Pytest', 'Playwright'],
     links: [],
+    photos: [
+      { name: 'snapfrost-station', alt: { en: 'Wiring the field station: a Raspberry Pi and sensors inside a BCG-branded box', es: 'Montando la estación de campo: una Raspberry Pi y sensores dentro de una caja de BCG' } },
+      { name: 'snapfrost-app', alt: { en: 'The interactive 3D model of the field unit, used in the live demo', es: 'El modelo 3D interactivo de la estación, usado en la demo en vivo' } },
+    ],
   },
   {
     slug: 'los-panaderos',

@@ -23,6 +23,8 @@ export type Project = {
   outcome: L
   stack: string[]
   links: Link[]
+  /** real photos from the project; `name` maps to /art/photos/{name}-{800|1600}.jpg */
+  photos?: { name: string; alt: L }[]
 }
 
 export type Build = { title: string; when: string; text: L; href?: string }
