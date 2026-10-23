@@ -1,6 +1,12 @@
 import { createRoot } from 'react-dom/client'
 import App from './App'
 import './styles.css'
+// Complete's type (only @font-face rules here; the files download only when a Complete page uses them)
+import '@fontsource/cormorant-garamond/latin-300.css'
+import '@fontsource/cormorant-garamond/latin-400.css'
+import '@fontsource/cormorant-garamond/latin-500.css'
+import '@fontsource/cormorant-garamond/latin-300-italic.css'
+import '@fontsource/cormorant-garamond/latin-400-italic.css'
 
 // After a redeploy, a tab that loaded the old page can ask for code files that no longer exist, which used to leave
 // a black screen. Reload once to pick up the new build (the timestamp stops a reload loop if the server is down).
