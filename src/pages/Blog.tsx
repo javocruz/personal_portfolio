@@ -6,7 +6,7 @@ import { renderMarkdown } from '../lib/markdown'
 import { posts } from '../posts'
 import NotFound from './NotFound'
 
-const fmt = (d: string, lang: string) => new Date(d).toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+const fmt = (d: string, lang: string) => new Date(d).toLocaleDateString(lang === 'es' ? 'es-MX' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
 
 export function BlogIndex() {
   const { t, lang } = useI18n()
