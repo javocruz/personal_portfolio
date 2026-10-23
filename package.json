@@ -9,7 +9,8 @@
     "build": "tsc && vite build && tsx scripts/prerender.ts",
     "preview": "vite preview",
     "new-post": "node scripts/new-post.mjs",
-    "typecheck": "tsc && tsc -p tsconfig.worker.json"
+    "typecheck": "tsc && tsc -p tsconfig.worker.json",
+    "make-cycle": "tsx scripts/make-cycle.mjs"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +28,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20261009.1",
+    "@fontsource/cormorant-garamond": "^5.3.0",
     "@fontsource/instrument-serif": "^5.3.0",
     "@fontsource/inter-tight": "^5.3.0",
     "@resvg/resvg-js": "^2.6.2",
@@ -34,6 +36,7 @@
     "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react": "^4.7.0",
     "satori": "^0.44.3",
+    "sharp": "^0.33.5",
     "tsx": "^4.23.15",
     "typescript": "^5.9.3",
     "vite": "^5.4.21",

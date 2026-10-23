@@ -8,14 +8,17 @@ import { useHead } from '../lib/head'
 import { reveal } from '../lib/motion'
 import { profile, summary, heroLine, experience, leadership, skills, education, certs, now } from '../content/profile'
 import { projects } from '../content/projects'
-import { paintingSrc, plateSet, plateSrc, plateDither, ROMAN } from '../content/art'
+import { plateSet, plateSrc, plateDither, ROMAN } from '../content/art'
 import { DitherReveal } from '../components/DitherReveal'
-import { AsciiArt } from '../components/AsciiArt'
+import { Cycle } from '../components/Cycle'
+import { stages } from '../content/cycle'
 
-// portrait as text: pale blue strokes, the darkest marks in red
-const inkTint = (v: number) => (v > 0.8 ? '#ff3b2f' : v > 0.45 ? '#9db4ff' : '#4a5fd0')
+const side = (i: number) => stages[i].textSide
 
-/** Complete: the hero and home are about Javier; the projects live as paintings in the gallery (/work). */
+/**
+ * Complete: the hero and home are about Javier; the projects live as paintings in the gallery (/work).
+ * Behind it all, Cole's The Course of Empire plays out as you scroll (see Cycle), ending on the hero's isle of the dead.
+ */
 export default function CompleteHome() {
   const { t, l } = useI18n()
   const [copied, setCopied] = useState(false)
@@ -23,7 +26,8 @@ export default function CompleteHome() {
   useHead('Javier Cruz Villarreal — CS & AI', l(summary))
   const featured = projects.filter((p) => p.featured).slice(0, 3)
   return (
-    <main id="top" className="complete">
+    <main id="top" className="complete cyc-home">
+      <Cycle />
       <IsleHero>
         <div className="isle-text">
           <motion.p className="mono" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3, duration: 1 }}>{t('hero.kicker')}</motion.p>
@@ -40,60 +44,69 @@ export default function CompleteHome() {
         </div>
       </IsleHero>
 
-      <section id="about" className="block about">
-        <div className="about-grid">
+      <section id="about" className="cyc-sec" data-cycle="1" data-side={side(1)}>
+        <div className="cyc-panel">
           <motion.div {...reveal}>
             <p className="kicker">{t('about.title')}</p>
             <p className="lead big" style={{ marginTop: 18 }}>{l(summary)}</p>
             <p className="kicker" style={{ marginTop: 40 }}>{t('now.title')}</p>
             <ul className="now-list">{now.map((n, i) => <li key={i}>{l(n)}</li>)}</ul>
           </motion.div>
-          <motion.figure {...reveal} className="plate">
-            <div className="frame-art"><AsciiArt reveal paper tint={inkTint} cols={84} src={paintingSrc('portrait', 600)} alt={l({ en: 'Self-portrait of Javier, painted in code', es: 'Autorretrato de Javier, pintado con código' })} /></div>
-            <figcaption className="wall"><b>{l({ en: 'Self-portrait', es: 'Autorretrato' })}</b> · {l({ en: 'watercolour and 8,000 pen strokes, in code. Hover to see it as text.', es: 'acuarela y 8.000 trazos, en código. Pasa el cursor para verlo como texto.' })}</figcaption>
-          </motion.figure>
         </div>
       </section>
 
-      <section id="experience" className="block">
-        <motion.h2 {...reveal}>{t('xp.title')}</motion.h2>
-        <div className="xp">
-          {experience.map((x) => (
-            <motion.div className="xp-row" key={x.org + x.role.en} {...reveal}>
-              <span className="mono dim xp-when">{l(x.when)}</span>
-              <div><h3>{l(x.role)}</h3><p className="mono dim">{x.org}</p></div>
-              <ul className="xp-note">{x.bullets.map((b, i) => <li key={i}>{l(b)}</li>)}</ul>
-            </motion.div>
-          ))}
-        </div>
-        <div className="lead-grid" style={{ marginTop: 80 }}>
-          {leadership.map((x) => (
-            <motion.div key={x.title} {...reveal}>
-              <p className="mono dim">{l(x.when)}</p><h3>{x.title}</h3><p className="mono dim">{x.org}</p><p className="lead">{l(x.text)}</p>
-            </motion.div>
-          ))}
-        </div>
-        <div className="edu">
-          {skills.slice(0, 3).map((s) => <motion.div key={s.group.en} {...reveal}><p className="mono dim">{l(s.group)}</p><p>{s.items.join(' · ')}</p></motion.div>)}
-          {education.map((e) => <motion.div key={e.place} {...reveal}><h3>{l(e.title)}</h3><p className="mono dim">{e.place} · {l(e.when)}</p></motion.div>)}
-          <motion.div {...reveal}><p className="mono dim">{t('certs.title')}</p><p>{certs.join('  /  ')}</p></motion.div>
+      <section id="experience" className="cyc-sec" data-cycle="2" data-side={side(2)}>
+        <div className="cyc-panel">
+          <motion.h2 {...reveal}>{t('xp.title')}</motion.h2>
+          <div className="xp">
+            {experience.map((x) => (
+              <motion.div className="xp-row" key={x.org + x.role.en} {...reveal}>
+                <span className="mono dim xp-when">{l(x.when)}</span>
+                <div><h3>{l(x.role)}</h3><p className="mono dim">{x.org}</p></div>
+                <ul className="xp-note">{x.bullets.map((b, i) => <li key={i}>{l(b)}</li>)}</ul>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
-      <section className="block">
-        <motion.h2 {...reveal}>{l({ en: 'From the', es: 'De la' })} <em>{l({ en: 'gallery', es: 'galería' })}</em></motion.h2>
-        <div className="teaser">
-          {featured.map((p, i) => (
-            <motion.figure key={p.slug} className="plate" {...reveal}>
-              <Link to={`/work/${p.slug}`} className="frame-art"><DitherReveal dither={plateDither(p.slug)}><img src={plateSrc(p.slug)} srcSet={plateSet(p.slug)} sizes="(max-width: 900px) 92vw, 30vw" alt={p.title} loading="lazy" width={600} height={750} /></DitherReveal></Link>
-              <figcaption className="wall"><b>{l({ en: 'Plate', es: 'Lámina' })} {ROMAN[i]}</b> · {p.title}<br /><span className="dim">{l(p.badge)}</span></figcaption>
-            </motion.figure>
-          ))}
+      <section className="cyc-sec cyc-wide" data-cycle="3" data-side={side(3)}>
+        <div className="cyc-panel">
+          <motion.h2 {...reveal}>{l({ en: 'From the', es: 'De la' })} <em>{l({ en: 'gallery', es: 'galería' })}</em></motion.h2>
+          <div className="teaser">
+            {featured.map((p, i) => (
+              <motion.figure key={p.slug} className="plate" {...reveal}>
+                <Link to={`/work/${p.slug}`} className="frame-art"><DitherReveal dither={plateDither(p.slug)}><img src={plateSrc(p.slug)} srcSet={plateSet(p.slug)} sizes="(max-width: 900px) 92vw, 20vw" alt={p.title} loading="lazy" width={600} height={750} /></DitherReveal></Link>
+                <figcaption className="wall"><b>{l({ en: 'Plate', es: 'Lámina' })} {ROMAN[i]}</b> · {p.title}<br /><span className="dim">{l(p.badge)}</span></figcaption>
+              </motion.figure>
+            ))}
+          </div>
+          <Link className="btn wide-btn" to="/work">{l({ en: 'Enter the gallery', es: 'Entrar a la galería' })} →</Link>
         </div>
-        <Link className="btn wide-btn" to="/work">{l({ en: 'Enter the gallery', es: 'Entrar a la galería' })} →</Link>
       </section>
 
-      <section id="contact" className="reach">
+      <section className="cyc-sec cyc-mid" data-cycle="4" data-side={side(4)}>
+        <div className="cyc-panel">
+          <motion.h2 {...reveal}>{t('lead.title')}</motion.h2>
+          <div className="lead-grid">
+            {leadership.map((x) => (
+              <motion.div key={x.title} {...reveal}>
+                <p className="mono dim">{l(x.when)}</p><h3>{x.title}</h3><p className="mono dim">{x.org}</p><p className="lead">{l(x.text)}</p>
+              </motion.div>
+            ))}
+          </div>
+          <div className="edu">
+            {skills.slice(0, 3).map((s) => <motion.div key={s.group.en} {...reveal}><p className="mono dim">{l(s.group)}</p><p>{s.items.join(' · ')}</p></motion.div>)}
+            {education.map((e) => <motion.div key={e.place} {...reveal}><h3>{l(e.title)}</h3><p className="mono dim">{e.place} · {l(e.when)}</p></motion.div>)}
+            <motion.div {...reveal}><p className="mono dim">{t('certs.title')}</p><p>{certs.join('  /  ')}</p></motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* a quiet beat: the ruins get the screen to themselves */}
+      <section className="cyc-quiet" data-cycle="5" aria-hidden />
+
+      <section id="contact" className="reach" data-cycle="6">
         <div className="reach-text">
           <p className="kicker">{l({ en: 'Contact', es: 'Contacto' })}</p>
           <h2 className="reach-title">{l({ en: 'Let’s talk.', es: 'Hablemos.' })}</h2>
@@ -117,7 +130,7 @@ export default function CompleteHome() {
           <img src="/art/eye-of-nature.jpg" alt="Eye of Nature by Dan Hillier" loading="lazy" decoding="async" width={719} height={861} />
           <figcaption>Eye of Nature · Dan Hillier</figcaption>
         </figure>
-        <footer className="reach-foot dim">© {new Date().getFullYear()} {profile.name} · {t('footer.built')} · {l({ en: 'Hero: Arnold Böcklin, Isle of the Dead (1883), public domain · Eye of Nature by Dan Hillier', es: 'Portada: Arnold Böcklin, La isla de los muertos (1883), dominio público · Eye of Nature de Dan Hillier' })}</footer>
+        <footer className="reach-foot dim">© {new Date().getFullYear()} {profile.name} · {t('footer.built')} · {l({ en: 'Paintings: Thomas Cole, The Course of Empire (1836), and Arnold Böcklin, Isle of the Dead (1883), both public domain · Eye of Nature by Dan Hillier', es: 'Pinturas: Thomas Cole, El curso del imperio (1836), y Arnold Böcklin, La isla de los muertos (1883), ambas de dominio público · Eye of Nature de Dan Hillier' })}</footer>
       </section>
     </main>
   )

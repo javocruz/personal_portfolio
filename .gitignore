@@ -3,3 +3,8 @@ dist
 .DS_Store
 .wrangler
 .dev.vars
+
+# full-size painting originals (scripts/make-cycle.mjs downloads them again if missing)
+art-src/
+# other sessions' worktrees
+.claude/worktrees/

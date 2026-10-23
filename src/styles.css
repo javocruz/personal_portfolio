@@ -459,3 +459,86 @@ html[data-mode] .mode-switch button[aria-pressed=true]{opacity:1;color:var(--bg)
 .one{padding-top:84px}
 /* phones: keep logo, links, Contact, the slider and ES; search and theme step aside */
 @media(max-width:560px){.nav{gap:10px;padding:12px 14px}.nav nav{gap:12px}.search-tool,.theme-tool{display:none!important}}
+
+/* ============ Complete: the Sublime ============
+   Always dark; Cormorant Garamond for display and running text, mono for kickers and wall labels.
+   The accent defaults to the Consummation's gold; on the home it follows the painting behind (Cycle writes it). */
+html[data-mode=complete],html[data-mode=complete][data-theme]{--bg:#0a0908;--fg:#f1ece4;--dim:#8d857a;--line:#2a2623;--card:#120f0c;--soft:#cfc8bd;--accent:#f0d79a;--serif:'Cormorant Garamond',Georgia,serif;color-scheme:dark}
+/* the header stays exactly as it was */
+html[data-mode=complete] .nav-cta{background:#ff3b2f}
+html[data-mode=complete] main{--dim:#a39a8d;font:500 20px/1.5 var(--serif);letter-spacing:0}
+html[data-mode=complete] main :is(h1,h2,h3){font-family:var(--serif);font-weight:300;letter-spacing:-.02em;line-height:.9}
+html[data-mode=complete] main h3{font-weight:400;letter-spacing:-.01em;line-height:1.02}
+html[data-mode=complete] main em,html[data-mode=complete] main :is(h1,h2,h3) em{font-style:italic;color:var(--accent)}
+html[data-mode=complete] main :is(.kicker,.wall,.mono,.gh-list span){font:400 11px/1.6 var(--mono);letter-spacing:.12em;text-transform:uppercase}
+html[data-mode=complete] main :is(.lead){font-size:21px;line-height:1.45}
+html[data-mode=complete] main .lead.big{font-size:clamp(23px,2.3vw,31px);line-height:1.32}
+html[data-mode=complete] main :is(.xp-note,.case-list){font-size:19px}
+html[data-mode=complete] main .now-list li{font-size:22px}
+html[data-mode=complete] main .prose{font-size:21px}
+html[data-mode=complete] main .btn.solid{color:#16110a}
+html[data-mode=complete] main .stage .btn.solid{color:#fff}
+html[data-mode=complete] .reach-title{font-weight:300;letter-spacing:-.03em}
+
+/* ---- the cycle: one fixed canvas behind the whole home, sections scroll over it */
+.cyc{position:fixed;inset:0;z-index:0;pointer-events:none;background:#000}
+.cyc-canvas,.cyc-css img{position:absolute;left:0;top:0;display:block;width:100%;height:100vh;height:100lvh}
+.cyc-canvas{opacity:0;transition:opacity .4s}
+.cyc-canvas[data-ready]{opacity:1}
+.cyc-css img{object-fit:cover;opacity:0;transition:opacity var(--cyc-fade,600ms) ease!important}
+.cyc-css img.on{opacity:1}
+.cyc-home :is(.isle-hero,.cyc-sec,.cyc-quiet,.reach){position:relative;z-index:1}
+/* the hero is a window onto the same fixed isle the canvas starts from, so leaving it has no seam */
+.cyc-home .isle-hero{clip-path:inset(0);background:transparent}
+/* once the canvas is drawing the same isle underneath, the hero's own image (the LCP) steps aside so a dissolve fills the screen */
+.cyc-home .isle-hero>.isle-img:not(.isle-lens){transition:opacity .4s}
+.cyc-home:has(.cyc-canvas[data-ready]) .isle-hero>.isle-img:not(.isle-lens){opacity:0}
+.cyc-home .isle-img{position:fixed;height:100vh;height:100lvh}
+.cyc-home .isle-hero::after{background:linear-gradient(90deg,rgba(5,6,15,.8),rgba(5,6,15,.42) 42%,rgba(5,6,15,0) 68%);opacity:var(--cyc-ui,1);
+  -webkit-mask:linear-gradient(180deg,#000 calc(100% - 22vh),transparent);mask:linear-gradient(180deg,#000 calc(100% - 22vh),transparent)}
+.cyc-home .isle-text{opacity:var(--cyc-ui,1)}
+.cyc-home .reach{margin-top:0}
+/* each section: text on the stage's side, on a gradient scrim tinted by the painting */
+.cyc-sec{min-height:100vh;display:flex;align-items:center;padding:clamp(110px,16vh,180px) var(--pad);isolation:isolate}
+.cyc-sec[data-side=right]{justify-content:flex-end}
+.cyc-sec::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:var(--cyc-ui,1);
+  /* feathered top and bottom, so the painting shows between sections and no scrim ends in a hard line */
+  -webkit-mask:linear-gradient(180deg,transparent,#000 22vh,#000 calc(100% - 22vh),transparent);mask:linear-gradient(180deg,transparent,#000 22vh,#000 calc(100% - 22vh),transparent);
+  background:linear-gradient(90deg,rgb(var(--cyc-smoke,10 9 8) / .92) 0%,rgb(var(--cyc-smoke,10 9 8) / .86) 44%,rgb(var(--cyc-smoke,10 9 8) / .45) 64%,rgb(var(--cyc-smoke,10 9 8) / 0) 84%)}
+.cyc-sec[data-side=right]::before{transform:scaleX(-1)}
+.cyc-panel{width:min(640px,100%);opacity:var(--cyc-ui,1)}
+.cyc-mid .cyc-panel{width:min(860px,58vw)}
+.cyc-wide .cyc-panel{width:min(1040px,66vw)}
+.cyc-wide::before{background:linear-gradient(90deg,rgb(var(--cyc-smoke,10 9 8) / .92) 0%,rgb(var(--cyc-smoke,10 9 8) / .86) 60%,rgb(var(--cyc-smoke,10 9 8) / .4) 78%,rgb(var(--cyc-smoke,10 9 8) / 0) 94%)}
+.cyc-mid::before{background:linear-gradient(90deg,rgb(var(--cyc-smoke,10 9 8) / .92) 0%,rgb(var(--cyc-smoke,10 9 8) / .86) 52%,rgb(var(--cyc-smoke,10 9 8) / .42) 72%,rgb(var(--cyc-smoke,10 9 8) / 0) 90%)}
+.cyc-panel h2{font-size:clamp(56px,7vw,116px);margin-bottom:clamp(28px,4vw,56px)}
+.cyc-panel .xp-row{grid-template-columns:1fr;gap:8px}
+.cyc-panel .xp-row h3{font-size:clamp(28px,2.6vw,38px)}
+.cyc-panel .lead-grid,.cyc-panel .edu{grid-template-columns:1fr 1fr}
+.cyc-panel .edu{margin-top:56px}
+.cyc-panel .teaser .plate:nth-child(2){margin-top:4vw}
+.cyc-quiet{height:100vh}
+.cyc-label{position:fixed;z-index:5;bottom:18px;max-width:min(46vw,520px);margin:0;font:400 10.5px/1.5 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:rgba(241,236,228,.74);text-shadow:0 1px 10px rgba(0,0,0,.9);pointer-events:none;transition:opacity .4s}
+.cyc-label[data-side=left]{left:var(--pad)}
+.cyc-label[data-side=right]{right:var(--pad);text-align:right}
+.cyc-label[data-off],.cyc-label[data-under]{opacity:0}
+.cyc-debug{position:fixed;z-index:95;right:12px;top:72px;width:230px;padding:12px;background:rgba(0,0,0,.82);color:#eee;border:1px solid #333;border-radius:6px;font:11px/1.5 var(--mono)}
+.cyc-debug pre{margin:6px 0;font:inherit;white-space:pre}
+.cyc-debug label{display:block;margin-top:6px}.cyc-debug input{width:100%}
+@media(max-width:900px){
+  .cyc-sec,.cyc-sec[data-side=right]{justify-content:flex-start}
+  .cyc-sec::before,.cyc-wide::before,.cyc-mid::before{background:rgb(var(--cyc-smoke,10 9 8) / .8);transform:none}
+  .cyc-panel,.cyc-mid .cyc-panel,.cyc-wide .cyc-panel{width:100%}
+  .cyc-panel .lead-grid,.cyc-panel .edu{grid-template-columns:1fr}
+  .cyc-label{max-width:70vw}
+}
+
+/* ---- project plates: blue dither until hovered, then a dot dissolve to colour (PlateDissolve draws it) */
+.dither-layer{-webkit-mask:none;mask:none;transition:opacity .2s}
+.dither-reveal[data-live] .dither-layer,a:focus-visible .dither-layer,.dither-reveal[data-fx=fade]:hover .dither-layer{opacity:0}
+.plate-fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;image-rendering:pixelated}
+/* Complete's 404: Desolation as text, full-bleed, the note to one side */
+html[data-mode=complete] .lost{max-width:none;margin:0;display:flex;align-items:center}
+html[data-mode=complete] .lost .blog-head{max-width:520px;margin:0;background:rgba(0,0,0,.72)}
+/* the canvas draws the dither itself while it's on a plate: the static layer goes at once, or it shows through the holes */
+.dither-reveal[data-live] .dither-layer{transition:none}

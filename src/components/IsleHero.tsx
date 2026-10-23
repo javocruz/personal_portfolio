@@ -14,7 +14,8 @@ export function IsleHero({ children }: { children?: ReactNode }) {
     const el = box.current!
     const move = (e: PointerEvent) => {
       setLens(true)
-      const b = el.getBoundingClientRect()
+      // measured from the image itself: on Complete's home it is pinned to the viewport while the hero scrolls
+      const b = (el.querySelector('.isle-img') ?? el).getBoundingClientRect()
       el.style.setProperty('--lx', `${e.clientX - b.left}px`)
       el.style.setProperty('--ly', `${e.clientY - b.top}px`)
       el.style.setProperty('--lr', e.pointerType === 'mouse' ? '170px' : '120px')
