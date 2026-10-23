@@ -9,10 +9,13 @@ export const plateBySlug: Record<string, { id: string; caption: string }> = {
 
 export const paintingSrc = (name: string, w: 600 | 1200 = 600) => `/art/paintings/${name}-${w}.jpg`
 export const paintingSet = (name: string) => `${paintingSrc(name, 600)} 600w, ${paintingSrc(name, 1200)} 1200w`
-export const plateSrc = (slug: string, w: 600 | 1200 = 600) => (plateBySlug[slug] ? paintingSrc(`plate-${plateBySlug[slug].id}`, w) : '')
+/** Core's styles each have their own set of the plates. No style = the original plates, which Complete uses. */
+export type PlateStyle = 'mondrian' | 'rothko'
+export const plateName = (slug: string, style?: PlateStyle) => (plateBySlug[slug] ? `plate-${plateBySlug[slug].id}${style ? '-' + style : ''}` : '')
+export const plateSrc = (slug: string, w: 600 | 1200 = 600, style?: PlateStyle) => (plateBySlug[slug] ? paintingSrc(plateName(slug, style), w) : '')
 /** 1-bit blue dither version, shown before hover in Complete's gallery. */
 export const plateDither = (slug: string) => (plateBySlug[slug] ? `/art/paintings/plate-${plateBySlug[slug].id}-dither.png` : '')
-export const plateSet = (slug: string) => (plateBySlug[slug] ? paintingSet(`plate-${plateBySlug[slug].id}`) : '')
+export const plateSet = (slug: string, style?: PlateStyle) => (plateBySlug[slug] ? paintingSet(plateName(slug, style)) : '')
 
 export const isle = {
   dusk: { src: '/art/isle-dusk-1920.jpg', set: '/art/isle-dusk-960.jpg 960w, /art/isle-dusk-1920.jpg 1920w' },
