@@ -61,7 +61,7 @@ export const experience: Experience[] = [
   {
     role: { en: 'Co-founder & CTO', es: 'Cofundador y CTO' },
     org: 'Pharmable · AI compliance platform for biotech',
-    when: { en: '2026 · on hold', es: '2026 · en pausa' },
+    when: { en: '2026', es: '2026' },
     bullets: [
       { en: 'Co-founded an AI compliance platform for Series A–C biotechs preparing FDA/EMA filings; the MVP is on hold.', es: 'Cofundé una plataforma de cumplimiento con IA para biotecnológicas en Series A–C que preparan solicitudes ante la FDA y la EMA; el MVP está en pausa.' },
       { en: 'Designed a validation engine for 21 CFR Part 11/211/820 and ICH Q10/E3, a SHA-256 hash-chained audit trail, and AI-assisted Clinical Study Report drafting.', es: 'Diseñé un motor de validación para 21 CFR Part 11/211/820 e ICH Q10/E3, una trazabilidad con cadena de hashes SHA-256 y redacción asistida por IA de Informes de Estudio Clínico.' },
