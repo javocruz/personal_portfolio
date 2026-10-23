@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useI18n } from '../lib/i18n'
-import { useTheme } from '../lib/theme'
 import { useFx } from '../lib/fx'
 import { profile } from '../content/profile'
 import { projects } from '../content/projects'
@@ -11,7 +10,6 @@ type Item = { id: string; group: string; label: string; hint?: string; run: () =
 
 export function CommandPalette({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { t, l, lang, setLang } = useI18n()
-  const { toggle } = useTheme()
   const { toggleHyper, say } = useFx()
   const nav = useNavigate()
   const [q, setQ] = useState('')
@@ -29,7 +27,6 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
       { id: 'contact', group: t('pal.g.go'), label: t('nav.contact'), run: hash('/#contact') },
       ...projects.map((p) => ({ id: p.slug, group: t('pal.g.projects'), label: p.title, hint: l(p.badge), run: go(`/work/${p.slug}`) })),
       ...posts.map((p) => ({ id: `post-${p.slug}`, group: t('pal.g.writing'), label: p.title, hint: p.tags.join(', '), run: go(`/blog/${p.slug}`) })),
-      { id: 'theme', group: t('pal.g.actions'), label: t('pal.theme'), run: () => { toggle(); onClose() } },
       { id: 'lang', group: t('pal.g.actions'), label: t('pal.lang'), run: () => { setLang(lang === 'en' ? 'es' : 'en'); onClose() } },
       { id: 'copy', group: t('pal.g.actions'), label: t('pal.copy'), hint: profile.email, run: () => { navigator.clipboard?.writeText(profile.email); say(t('pal.copied')); onClose() } },
       { id: 'cvdl', group: t('pal.g.actions'), label: t('pal.cv'), run: () => { onClose(); window.open(profile.cv, '_blank') } },
@@ -37,7 +34,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
       { id: 'li', group: t('pal.g.actions'), label: t('pal.linkedin'), run: () => { onClose(); window.open(profile.linkedin, '_blank') } },
       { id: 'hyper', group: t('pal.g.actions'), label: 'Engage hyperdrive ✦', run: () => { onClose(); toggleHyper() } },
     ]
-  }, [t, l, lang, setLang, toggle, toggleHyper, say, nav, onClose])
+  }, [t, l, lang, setLang, toggleHyper, say, nav, onClose])
 
   const shown = useMemo(() => {
     const s = q.trim().toLowerCase()

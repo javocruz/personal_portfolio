@@ -1,9 +1,19 @@
 import { useEffect, useState } from 'react'
 import { paintToImage, lastLayerCount } from './art/paint'
 import { PLATES } from './art/plates'
+import { PLATES_MONDRIAN } from './art/plates-mondrian'
+import { PLATES_ROTHKO } from './art/plates-rothko'
 import { faceSheet } from './art/faces'
 import { loadRef, makePortrait } from './art/portrait'
 import { EyeOfNature } from '../components/EyeOfNature'
+
+/** Scales a baked painting to `w` pixels wide and re-encodes it as JPEG. */
+async function resize(url: string, w: number, quality: number) {
+  const img = new Image(); img.src = url; await img.decode()
+  const c = document.createElement('canvas'); c.width = w; c.height = Math.round((img.height / img.width) * w)
+  const g = c.getContext('2d')!; g.imageSmoothingQuality = 'high'; g.drawImage(img, 0, 0, c.width, c.height)
+  return c.toDataURL('image/jpeg', quality)
+}
 
 /** Dev tool: renders every code painting once and saves it via the dev server, so production serves plain JPEGs. */
 export default function Bake() {
@@ -18,9 +28,28 @@ export default function Bake() {
         const r = await fetch('/__bake?name=eye', { method: 'POST', body: c.toDataURL('image/jpeg', 0.9) })
         return say(`eye: ${r.ok ? 'saved' : 'FAILED'} (${c.width}x${c.height})`)
       }
+      const q = new URLSearchParams(location.search)
       const save = async (name: string, url: string) => {
         const r = await fetch(`/__bake?name=${name}`, { method: 'POST', body: url })
         say(`${name}: ${r.ok ? 'saved' : 'FAILED ' + r.status} (${Math.round(url.length / 1365)} KB)`)
+      }
+      if (q.has('core')) {
+        // Core's two styles. Writes the served sizes directly: -1200 and -600 for each plate, -l{k}-600 for every
+        // recipe step. ?core=mondrian|rothko bakes one set, ?only=frost one plate.
+        const sets = { mondrian: { list: PLATES_MONDRIAN, bg: '#f4f1e8' }, rothko: { list: PLATES_ROTHKO, bg: '#efe3d2' } }
+        for (const [style, { list, bg }] of Object.entries(sets)) {
+          if (q.get('core') && q.get('core') !== style) continue
+          for (const p of list) {
+            if (q.get('only') && q.get('only') !== p.id) continue
+            const name = `plate-${p.id}-${style}`, opts = { W: 800, H: 1000, seed: p.seed, bg }
+            const full = await paintToImage(`bake-${name}`, p.sketch, opts)
+            const n = lastLayerCount()
+            await save(`${name}-1200`, await resize(full, 1200, 0.86))
+            await save(`${name}-600`, await resize(full, 600, 0.82))
+            for (let k = 1; k < n; k++) await save(`${name}-l${k}-600`, await resize(await paintToImage(`bake-${name}-${k}`, p.sketch, { ...opts, layers: k }), 600, 0.8))
+          }
+        }
+        return say('done')
       }
       for (let i = 0; i < PLATES.length; i++) {
         const p = PLATES[i]

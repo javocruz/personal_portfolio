@@ -23,11 +23,15 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <script>
-      // Before anything else: set the mode (so colours are right on the first paint) and, for Complete's home,
-      // start downloading the hero image while the JavaScript loads.
+      // Before anything else: set the mode and Core's style (so colours are right on the first paint) and, for
+      // Complete's home, start downloading the hero image while the JavaScript loads.
       try {
-        var m = new URLSearchParams(location.search).get('mode') || localStorage.getItem('mode')
+        var q = new URLSearchParams(location.search)
+        var m = q.get('mode') || localStorage.getItem('mode')
+        var s = q.get('style') || localStorage.getItem('coreStyle')
         document.documentElement.dataset.mode = m === 'core' || m === 'complete' ? m : 'gate'
+        document.documentElement.dataset.coreStyle = s === 'mondrian' ? s : 'rothko'
+        localStorage.removeItem('theme') // the light/dark switch is gone: each mode has one fixed base
         if (m === 'complete' && location.pathname === '/') {
           var l = document.createElement('link')
           l.rel = 'preload'; l.as = 'image'; l.setAttribute('fetchpriority', 'high')

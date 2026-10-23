@@ -1,9 +1,9 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { I18nProvider } from './lib/i18n'
-import { ThemeProvider } from './lib/theme'
 import { FxProvider } from './lib/fx'
 import { ModeProvider, useMode } from './lib/mode'
+import { CoreStyleProvider } from './lib/coreStyle'
 import { Nav } from './components/Nav'
 import { CommandPalette } from './components/CommandPalette'
 import Gate from './pages/Gate'
@@ -104,13 +104,13 @@ export default function App() {
   return (
     <BrowserRouter>
       <I18nProvider>
-        <ThemeProvider>
-          <ModeProvider>
+        <ModeProvider>
+          <CoreStyleProvider>
             <FxProvider>
               <Shell />
             </FxProvider>
-          </ModeProvider>
-        </ThemeProvider>
+          </CoreStyleProvider>
+        </ModeProvider>
       </I18nProvider>
     </BrowserRouter>
   )

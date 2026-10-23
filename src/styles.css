@@ -1,5 +1,4 @@
 :root{--bg:#0a0908;--fg:#f1ece4;--dim:#8d857a;--line:#2a2623;--card:#120f0c;--accent:#ff5b2e;--soft:#cfc8bd;--serif:'Instrument Serif',Georgia,serif;--sans:'Inter Tight',system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;--pad:clamp(20px,4vw,56px);--k:#ff7a52;--s:#9ad17a;--c:#6f675d;--n:#e5b567;--f:#7fb2ff;color-scheme:dark}
-:root[data-theme='light']{--bg:#f5f1ea;--fg:#17120e;--dim:#6f675d;--line:#ddd5c8;--card:#ece6db;--accent:#d2420f;--soft:#443d35;--k:#c2410c;--s:#3f7d20;--c:#8a8176;--n:#9a6a00;--f:#1d5fc4;color-scheme:light}
 .stage{--bg:#0a0908;--fg:#f1ece4;--dim:#9a9288;--line:rgba(241,236,228,.16);--accent:#ff5b2e;--soft:#d6cfc4;color:var(--fg)}
 *{box-sizing:border-box;margin:0}
 html{background:var(--bg)}
@@ -196,7 +195,6 @@ html[data-mode=gate] body{overflow:hidden}
 
 /* ---------- Core: quick and simple ---------- */
 html[data-mode=core]{--bg:#f9f9f9;--fg:#202020;--dim:#737373;--line:#e2e2e2;--card:#ececec;--accent:#202020;--soft:#3a3a3a;--serif:var(--sans);color-scheme:light}
-html[data-mode=core][data-theme=dark]{--bg:#111;--fg:#e9e9e9;--dim:#8a8a8a;--line:#262626;--card:#1c1c1c;--accent:#e9e9e9;--soft:#cfcfcf;color-scheme:dark}
 html[data-mode=core] .nav{mix-blend-mode:normal;color:var(--fg);background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(10px)}
 html[data-mode=core] .tool,html[data-mode=core] .mode-switch{border-color:var(--line)}
 html[data-mode=core] .mode-switch button[aria-pressed=true]{background:var(--card)}
@@ -260,12 +258,15 @@ html[data-mode=core] .form-note.err{color:#b42318}
 @media(max-width:900px){.teaser,.case-room{grid-template-columns:1fr}.teaser .plate:nth-child(2){margin-top:0}.hall>figure{grid-column:1/-1!important;margin-top:0!important}}
 /* Complete palette: red accent to sit with the red/blue/black isle */
 html[data-mode=complete]{--accent:#ff3b2f}
-html[data-mode=complete][data-theme=light]{--accent:#d0261b}
 html[data-mode=complete] .stage{--accent:#ff3b2f}
 html[data-mode=complete] .btn.solid{color:#fff}
 .isle-hero::before{content:'';position:absolute;z-index:3;left:0;right:0;top:0;height:150px;background:linear-gradient(180deg,rgba(0,0,0,.72),rgba(0,0,0,0));pointer-events:none}
 /* Core: one page, studio-index style. White, small type, hairlines, no ornament. */
-html[data-mode=core],html[data-mode=core][data-theme]{--bg:#fff;--fg:#111;--dim:#8a8a8a;--line:#e6e6e6;--card:#f4f4f4;--accent:#111;--soft:#444;color-scheme:light}
+html[data-mode=core]{--bg:#fff;--fg:#111;--dim:#8a8a8a;--line:#e6e6e6;--card:#f4f4f4;--accent:#111;--soft:#444;--sans:'Jost','Inter Tight',system-ui,sans-serif;--rule:var(--line);color-scheme:light}
+/* Core's two styles: same page, two painters. --a1..3 are the style's accents, --rule the row dividers. */
+html[data-mode=core][data-core-style=mondrian]{--bg:#f7f5ef;--fg:#111;--dim:#67635b;--line:#d9d5ca;--card:#eeebe2;--accent:#d4271b;--soft:#35322d;--rule:#111;--a1:#d4271b;--a2:#1d3c8f;--a3:#f2c40c;--sel:#f2c40c;--sel-fg:#111}
+html[data-mode=core][data-core-style=rothko]{--bg:#f8f3ea;--fg:#2a1d17;--dim:#7d6656;--line:rgba(120,60,30,.18);--card:#f1e7d8;--accent:#7a1f1a;--soft:#4a3429;--rule:rgba(120,60,30,.25);--a1:#7a1f1a;--a2:#e0662a;--a3:#d9a441;--sel:#f6c8a4;--sel-fg:#2a1d17}
+html[data-mode=core] ::selection{background:var(--sel);color:var(--sel-fg)}
 .one{max-width:1080px;margin:0 auto;padding:22px 24px 40px;font:400 14px/1.45 var(--sans);color:var(--fg);letter-spacing:-.005em}
 .one a{color:inherit}
 .one-dim{color:var(--dim)}
@@ -343,6 +344,47 @@ html[data-mode=core],html[data-mode=core][data-theme]{--bg:#fff;--fg:#111;--dim:
 .one-split-bar{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;gap:12px;padding:10px 14px;font-size:12px;color:#3a332a;background:linear-gradient(transparent,rgba(239,230,212,.95) 40%)}
 .one-split-bar button{font:inherit;background:none;border:0;padding:0;color:inherit;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 @media(max-width:720px){.one-split{grid-template-columns:1fr}.one-split-art{order:-1}.one-split-code{height:auto;min-height:0;max-height:50vh}}
+/* ---------- Core styles: Mondrian and Rothko. The paintings carry the style; the UI only nods to it. ---------- */
+.one{font-family:var(--sans);font-weight:400;letter-spacing:0}
+.one-intro p{font-weight:400;font-size:clamp(25px,3.4vw,42px);line-height:1.14;letter-spacing:-.02em;max-width:20em}
+.one-mail{font-weight:400;font-size:clamp(26px,4.6vw,58px);letter-spacing:-.03em;transition:color .3s}
+.one-mail:hover{opacity:1;color:var(--a1)}
+.one-rows li>*{border-bottom-color:var(--rule)}
+.one-foot{border-top-color:var(--rule)}
+/* paintings crossfade when the style changes: the old picture stays underneath until the new one is in */
+.one-art,.one-split-art{position:relative}
+.one-art img{transition:transform .9s cubic-bezier(.2,.7,.2,1),opacity .4s ease}
+.one-art img.is-old{position:absolute;inset:0;z-index:0}
+.one-art img.is-new{position:relative;z-index:1}
+.one-art img[data-loading]{opacity:0}
+/* Mondrian: thick black rules, a real grid of facts, a primary block on the card you're on */
+[data-core-style=mondrian] .one-sec{border-top:2px solid #111}
+[data-core-style=mondrian] .one-facts{border:2px solid #111;gap:0;background:#111;grid-gap:2px}
+[data-core-style=mondrian] .one-facts div{background:var(--bg);padding:12px 14px 14px;transition:background .6s,color .6s}
+[data-core-style=mondrian] .one-facts div[data-hot]{color:#fff}
+[data-core-style=mondrian] .one-facts div[data-hot] dt{color:inherit;opacity:.78}
+[data-core-style=mondrian] .one-facts div[data-hot=red]{background:var(--a1)}
+[data-core-style=mondrian] .one-facts div[data-hot=blue]{background:var(--a2)}
+[data-core-style=mondrian] .one-facts div[data-hot=yellow]{background:var(--a3);color:#111}
+[data-core-style=mondrian] .one-art::after{content:'';position:absolute;z-index:2;width:22px;height:22px;background:var(--a1);opacity:0;transition:opacity .25s}
+[data-core-style=mondrian] .one-card[data-c='1'] .one-art::after{background:var(--a2)}
+[data-core-style=mondrian] .one-card[data-c='2'] .one-art::after{background:var(--a3)}
+[data-core-style=mondrian] .one-card[data-k='0'] .one-art::after{top:0;left:0}
+[data-core-style=mondrian] .one-card[data-k='1'] .one-art::after{top:0;right:0}
+[data-core-style=mondrian] .one-card[data-k='2'] .one-art::after{bottom:0;right:0}
+[data-core-style=mondrian] .one-card[data-k='3'] .one-art::after{bottom:0;left:0}
+[data-core-style=mondrian] .one-card:hover .one-art::after,[data-core-style=mondrian] .one-card:focus-visible .one-art::after{opacity:1}
+/* Rothko: blurred bands of colour for dividers, a warm glow behind the card you're on */
+[data-core-style=rothko] .one-sec{position:relative;border-top:0;padding-top:18px}
+[data-core-style=rothko] .one-sec::before{content:'';position:absolute;left:0;right:0;top:-3px;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--a1),var(--a2) 55%,var(--a3));opacity:.42;filter:blur(2.5px)}
+[data-core-style=rothko] .one-facts{border-top:0;position:relative}
+[data-core-style=rothko] .one-facts::before{content:'';position:absolute;left:0;right:0;top:-1px;height:2px;background:linear-gradient(90deg,var(--a3),var(--a2));opacity:.3;filter:blur(1px)}
+[data-core-style=rothko] .one-art{transition:box-shadow .5s}
+[data-core-style=rothko] .one-card:hover .one-art,[data-core-style=rothko] .one-card:focus-visible .one-art{box-shadow:0 18px 46px -14px rgba(224,102,42,.42),0 0 0 1px rgba(217,164,65,.12)}
+.one-card:focus-visible{outline:2px solid var(--fg);outline-offset:4px}
+@media(max-width:720px){[data-core-style=mondrian] .one-facts div:last-child{grid-column:1/-1}}
+@media(max-width:480px){[data-core-style=mondrian] .one-facts{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.one-art img{transition:none}}
 
 /* ============ one type system (Core's): Inter Tight everywhere, sentence case, no italic serif ============ */
 :root{--serif:var(--sans)}
@@ -446,8 +488,6 @@ body{transition:background-color .5s,color .5s}
 .nav-cta,html[data-mode=complete] .nav-cta{color:var(--bg)!important;background:var(--fg);padding:6px 14px;border-radius:99px;margin:-6px 0;opacity:1!important;transition:background-color .5s,color .5s}
 html[data-mode=complete] .nav-cta{background:var(--accent);color:#fff!important}
 .nav-cta:hover{opacity:.8!important}
-/* Core is always white, so its theme button would do nothing: keep its space so nothing shifts between modes */
-html[data-mode=core] .theme-tool{visibility:hidden}
 /* the mode slider */
 .mode-switch,html[data-mode=core] .mode-switch{position:relative;display:inline-grid;grid-template-columns:1fr 1fr;padding:3px;border:1px solid color-mix(in srgb,var(--fg) 22%,transparent);border-radius:99px;overflow:visible;margin-right:4px;transition:border-color .5s}
 .mode-switch::before{content:'';position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);border-radius:99px;background:var(--fg);transition:transform .45s cubic-bezier(.65,0,.35,1),background-color .5s}
@@ -457,8 +497,30 @@ html[data-mode] .mode-switch button[aria-pressed=true]{opacity:1;color:var(--bg)
 @media(max-width:560px){.mode-switch button,html[data-mode=core] .mode-switch button[aria-pressed=true]{min-width:62px;padding:5px 8px}}
 /* Core sits under the fixed bar now */
 .one{padding-top:84px}
-/* phones: keep logo, links, Contact, the slider and ES; search and theme step aside */
-@media(max-width:560px){.nav{gap:10px;padding:12px 14px}.nav nav{gap:12px}.search-tool,.theme-tool{display:none!important}}
+/* phones: keep logo, links, Contact, the sliders and ES; search steps aside */
+@media(max-width:560px){.nav{gap:10px;padding:12px 14px}.nav nav{gap:12px}.search-tool{display:none!important}}
+/* Core's style switch: the mode slider's look and thumb, an icon and a name per painter; icons only on phones */
+.style-switch[data-on=rothko]::before{transform:translateX(100%)}
+.style-switch button,html[data-mode=core] .style-switch button[aria-pressed=true]{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:0}
+.style-switch svg{width:12px;height:12px;flex:none;display:block}
+.mode-switch button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:99px}
+@media(max-width:720px){.style-switch span{display:none}.style-switch button,html[data-mode=core] .style-switch button[aria-pressed=true]{padding:5px 9px}}
+/* Core's Technique section, set like a museum wall placard: small monospace under a thin rule */
+.one-recipe{margin-top:28px;padding-top:12px;border-top:1px solid var(--rule);font:12px/1.65 var(--mono);color:var(--soft);max-width:none}
+.one-recipe summary{font:inherit}
+.one-recipe ol{font:inherit;max-width:78ch}
+.one-recipe-tabs button{font:12px var(--mono)}
+.one-recipe-tabs button:focus-visible,.one-recipe summary:focus-visible,.one-block:focus-visible,.one-split-bar button:focus-visible{outline:2px solid var(--fg);outline-offset:3px}
+.one-block-label{font:11px var(--mono);letter-spacing:.02em}
+.one-split{border-color:var(--rule)}
+.one-split-art{background:var(--card)}
+.one-foot{flex-wrap:wrap;gap:6px 24px}
+.trail-picker{position:fixed;left:10px;bottom:10px;z-index:70;font:11px var(--mono);color:var(--dim);background:var(--bg);border:1px solid var(--rule);padding:4px 6px}
+.trail-picker select{font:inherit;color:var(--fg);background:none;border:0}
+/* phones: Core's header carries one extra control, so it tightens up; below 440px its plain Projects link (the section
+   is right below) makes room for the style switch */
+@media(max-width:560px){html[data-mode=core] .nav{padding:12px 14px;gap:8px}html[data-mode=core] .nav nav{gap:10px}.style-switch button,html[data-mode=core] .style-switch button[aria-pressed=true]{padding:5px 7px}}
+@media(max-width:440px){html[data-mode=core] .nav nav a:not(.nav-cta){display:none}}
 
 /* ============ Complete: the Sublime ============
    Always dark; Cormorant Garamond for display and running text, mono for kickers and wall labels.
