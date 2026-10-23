@@ -19,8 +19,8 @@ const en = {
   'blog.title1': 'Notes &', 'blog.title2': 'essays', 'blog.sub': 'Things I’m building, learning and figuring out.', 'blog.empty': 'First post coming soon.', 'blog.all': 'All writing', 'blog.min': 'min read', 'blog.filter': 'Filter by tag', 'blog.clear': 'Clear', 'blog.notfound': 'Post not found', 'blog.rss': 'RSS feed',
   'pal.placeholder': 'Search pages, projects and actions…', 'pal.empty': 'Nothing found', 'pal.hint': 'Type to search',
   'pal.g.go': 'Go to', 'pal.g.projects': 'Projects', 'pal.g.writing': 'Writing', 'pal.g.actions': 'Actions',
-  'pal.home': 'Home', 'pal.theme': 'Toggle light / dark theme', 'pal.lang': 'Switch to Spanish (Español)', 'pal.copy': 'Copy email address', 'pal.copied': 'Email copied', 'pal.github': 'Open GitHub', 'pal.linkedin': 'Open LinkedIn', 'pal.cv': 'Download CV (PDF)',
-  'theme.toggle': 'Toggle theme', 'lang.toggle': 'Switch language to Spanish', 'search': 'Search',
+  'pal.home': 'Home', 'pal.lang': 'Switch to Spanish (Español)', 'pal.copy': 'Copy email address', 'pal.copied': 'Email copied', 'pal.github': 'Open GitHub', 'pal.linkedin': 'Open LinkedIn', 'pal.cv': 'Download CV (PDF)',
+  'lang.toggle': 'Switch language to Spanish', 'search': 'Search',
   'egg.on': 'Hyperdrive engaged', 'egg.off': 'Back to normal',
   'footer.built': 'Designed & built by Javier', '404.title': 'Page not found', '404.text': 'That page doesn’t exist, but the work does.', '404.home': 'Back home',
 } as const
@@ -46,8 +46,8 @@ const es: Record<UIKey, string> = {
   'blog.title1': 'Notas y', 'blog.title2': 'ensayos', 'blog.sub': 'Lo que estoy construyendo, aprendiendo y descubriendo.', 'blog.empty': 'Pronto, la primera entrada.', 'blog.all': 'Todas las entradas', 'blog.min': 'min de lectura', 'blog.filter': 'Filtrar por etiqueta', 'blog.clear': 'Quitar', 'blog.notfound': 'Entrada no encontrada', 'blog.rss': 'Feed RSS',
   'pal.placeholder': 'Busca páginas, proyectos y acciones…', 'pal.empty': 'Sin resultados', 'pal.hint': 'Escribe para buscar',
   'pal.g.go': 'Ir a', 'pal.g.projects': 'Proyectos', 'pal.g.writing': 'Blog', 'pal.g.actions': 'Acciones',
-  'pal.home': 'Inicio', 'pal.theme': 'Cambiar tema claro / oscuro', 'pal.lang': 'Switch to English', 'pal.copy': 'Copiar correo', 'pal.copied': 'Correo copiado', 'pal.github': 'Abrir GitHub', 'pal.linkedin': 'Abrir LinkedIn', 'pal.cv': 'Descargar CV (PDF)',
-  'theme.toggle': 'Cambiar tema', 'lang.toggle': 'Cambiar idioma a inglés', 'search': 'Buscar',
+  'pal.home': 'Inicio', 'pal.lang': 'Switch to English', 'pal.copy': 'Copiar correo', 'pal.copied': 'Correo copiado', 'pal.github': 'Abrir GitHub', 'pal.linkedin': 'Abrir LinkedIn', 'pal.cv': 'Descargar CV (PDF)',
+  'lang.toggle': 'Cambiar idioma a inglés', 'search': 'Buscar',
   'egg.on': 'Hiperimpulso activado', 'egg.off': 'De vuelta a la normalidad',
   'footer.built': 'Diseñado y construido por Javier', '404.title': 'Página no encontrada', '404.text': 'Esa página no existe, pero el trabajo sí.', '404.home': 'Volver al inicio',
 }
