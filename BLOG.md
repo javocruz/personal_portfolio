@@ -28,4 +28,7 @@ Your text in Markdown...
 ```
 
 - `draft: true` hides the post from the live site (it still shows in `npm run dev`).
+- `tags` are comma-separated and become filters on the blog page.
+- Headings get link anchors, code blocks are syntax-highlighted (python, typescript, javascript, bash, json, css, html, sql, yaml).
 - Images: put the file in `public/blog/` and use `![alt](/blog/photo.jpg)`.
+- Every published post automatically gets its own link-preview image, an entry in the sitemap and in the RSS feed (`/rss.xml`).

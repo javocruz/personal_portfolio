@@ -1,0 +1,9 @@
+# Built JS/CSS have a content hash in the name, so they never change: cache for a year.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Art and fonts change rarely: cache for a week, then check again.
+/art/*
+  Cache-Control: public, max-age=604800, stale-while-revalidate=86400
+/og/*
+  Cache-Control: public, max-age=86400
