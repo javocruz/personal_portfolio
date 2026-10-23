@@ -73,7 +73,7 @@ function Shell() {
 
   return (
     <>
-      {!inLab && !gate && !(mode === 'core' && location.pathname === '/') && <Nav openPalette={() => setPalette(true)} />}
+      {!inLab && !gate && <Nav openPalette={() => setPalette(true)} />}
       <CommandPalette open={palette} onClose={() => setPalette(false)} />
       {/* new pages fade in; nothing waits for the old page to fade out */}
       <div className="page" key={location.pathname + (mode ?? '')}>

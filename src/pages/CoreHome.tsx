@@ -4,7 +4,6 @@ import { ContactForm } from '../components/ContactForm'
 import { InkTrail } from '../components/InkTrail'
 import { useI18n } from '../lib/i18n'
 import { useHead } from '../lib/head'
-import { useMode } from '../lib/mode'
 import { profile, experience } from '../content/profile'
 import { projects, builds } from '../content/projects'
 import { paintingSrc, plateSrc, plateSet, plateBySlug } from '../content/art'
@@ -105,8 +104,7 @@ function useMadridTime() {
  * No shaders; the project paintings are pre-rendered images, lazy-loaded.
  */
 export default function CoreHome() {
-  const { l, lang, setLang } = useI18n()
-  const { setMode } = useMode()
+  const { l, lang } = useI18n()
   const time = useMadridTime()
   useHead('Javier Cruz Villarreal — CS & AI', l({ en: 'Computer Science & AI student in Madrid who builds AI products from idea to demo.', es: 'Estudiante de Ciencias de la Computación e IA en Madrid que construye productos de IA de la idea a la demo.' }))
   const date = (d: string) => new Date(d).toLocaleDateString(lang === 'es' ? 'es-ES' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
@@ -121,16 +119,8 @@ export default function CoreHome() {
 
   return (
     <main className="one">
-      <header className="one-top">
-        <span>Javier Cruz Villarreal</span>
-        <span className="one-dim">{l({ en: 'Madrid', es: 'Madrid' })} {time}</span>
-        <nav>
-          <button onClick={() => setLang(lang === 'en' ? 'es' : 'en')}>{lang === 'en' ? 'Español' : 'English'}</button>
-          <button onClick={() => setMode('complete')}>{l({ en: 'Complete version', es: 'Versión completa' })}</button>
-        </nav>
-      </header>
 
-      <section className="one-intro">
+      <section className="one-intro" id="about">
         <p>{l({ en: 'I study Computer Science and AI in Madrid and build AI products from idea to demo. Mostly compliance, vision and agents, usually as the person closest to the customer.', es: 'Estudio Ciencias de la Computación e IA en Madrid y construyo productos de IA de la idea a la demo. Sobre todo cumplimiento normativo, visión y agentes, normalmente como la persona más cerca del cliente.' })}</p>
       </section>
 
@@ -190,7 +180,7 @@ export default function CoreHome() {
         </div>
       </section>
 
-      <footer className="one-foot"><span>© 2026</span><span>{l({ en: 'Hand-made in Madrid', es: 'Hecho a mano en Madrid' })}</span></footer>
+      <footer className="one-foot"><span>© 2026</span><span>{l({ en: 'Hand-made in Madrid', es: 'Hecho a mano en Madrid' })} · {time}</span></footer>
 
       <InkTrail />
     </main>
