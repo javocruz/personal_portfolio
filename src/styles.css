@@ -269,10 +269,6 @@ html[data-mode=core],html[data-mode=core][data-theme]{--bg:#fff;--fg:#111;--dim:
 .one{max-width:1080px;margin:0 auto;padding:22px 24px 40px;font:400 14px/1.45 var(--sans);color:var(--fg);letter-spacing:-.005em}
 .one a{color:inherit}
 .one-dim{color:var(--dim)}
-.one-top{display:grid;grid-template-columns:1fr 1fr auto;gap:16px;align-items:baseline;padding-bottom:18px}
-.one-top nav{display:flex;gap:18px}
-.one-top button{font:inherit;color:var(--dim);background:none;border:0;padding:0;cursor:pointer}
-.one-top button:hover{color:var(--fg)}
 .one-intro{display:block;padding:clamp(56px,11vw,140px) 0 clamp(40px,7vw,80px)}
 .one-intro img{width:120px;height:150px;object-fit:cover;border-radius:2px;filter:grayscale(1) contrast(1.05);transition:filter .5s}
 .one-intro img:hover{filter:none}
@@ -318,8 +314,7 @@ html[data-mode=core],html[data-mode=core][data-theme]{--bg:#fff;--fg:#111;--dim:
 .ink-trail{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:60}
 @media(max-width:480px){.one-grid{grid-template-columns:1fr}}
 @media(max-width:720px){
-  .one-top{grid-template-columns:1fr auto}.one-top>.one-dim{display:none}
-  .one-intro{padding-top:48px}
+    .one-intro{padding-top:48px}
   .one-facts{grid-template-columns:1fr 1fr}
   .one-grid{grid-template-columns:1fr 1fr;gap:32px 14px}
   .one-rows li>*{grid-template-columns:1fr auto;gap:2px 16px}.one-rows .one-d{grid-column:1/-1;grid-row:2}
@@ -438,3 +433,29 @@ html[data-mode=complete] .nav-cta:hover{background:#fff;color:#000}
 .case-photos img{display:block;width:100%;height:auto;border-radius:4px}
 .case-photos figcaption{font-size:13px;margin-top:8px}
 @media(max-width:700px){.case-photos{grid-template-columns:1fr}}
+
+/* ============ one header for both modes ============
+   Same bar, same positions, same controls in Core and Complete: only the colours change, and they fade. */
+.nav,html[data-mode=core] .nav,html[data-mode=complete] .nav{mix-blend-mode:normal;color:var(--fg);padding:14px var(--pad);
+  background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid color-mix(in srgb,var(--fg) 8%,transparent);transition:background-color .5s,color .5s,border-color .5s}
+body{transition:background-color .5s,color .5s}
+.nav .logo{font:500 18px var(--sans);letter-spacing:-.02em}
+.nav nav a{opacity:.62}
+.nav .tool{border-color:color-mix(in srgb,var(--fg) 22%,transparent);transition:border-color .5s,opacity .25s}
+.nav-cta,html[data-mode=complete] .nav-cta{color:var(--bg)!important;background:var(--fg);padding:6px 14px;border-radius:99px;margin:-6px 0;opacity:1!important;transition:background-color .5s,color .5s}
+html[data-mode=complete] .nav-cta{background:var(--accent);color:#fff!important}
+.nav-cta:hover{opacity:.8!important}
+/* Core is always white, so its theme button would do nothing: keep its space so nothing shifts between modes */
+html[data-mode=core] .theme-tool{visibility:hidden}
+/* the mode slider */
+.mode-switch,html[data-mode=core] .mode-switch{position:relative;display:inline-grid;grid-template-columns:1fr 1fr;padding:3px;border:1px solid color-mix(in srgb,var(--fg) 22%,transparent);border-radius:99px;overflow:visible;margin-right:4px;transition:border-color .5s}
+.mode-switch::before{content:'';position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);border-radius:99px;background:var(--fg);transition:transform .45s cubic-bezier(.65,0,.35,1),background-color .5s}
+.mode-switch[data-on=complete]::before{transform:translateX(100%)}
+.mode-switch button,html[data-mode=core] .mode-switch button[aria-pressed=true]{position:relative;z-index:1;min-width:78px;padding:5px 12px;text-align:center;background:none;color:var(--fg);opacity:.6;transition:color .45s,opacity .45s}
+html[data-mode] .mode-switch button[aria-pressed=true]{opacity:1;color:var(--bg);background:none}
+@media(max-width:560px){.mode-switch button,html[data-mode=core] .mode-switch button[aria-pressed=true]{min-width:62px;padding:5px 8px}}
+/* Core sits under the fixed bar now */
+.one{padding-top:84px}
+/* phones: keep logo, links, Contact, the slider and ES; search and theme step aside */
+@media(max-width:560px){.nav{gap:10px;padding:12px 14px}.nav nav{gap:12px}.search-tool,.theme-tool{display:none!important}}

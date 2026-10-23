@@ -50,6 +50,7 @@ export const projects: Project[] = [
       es: 'Un 14% menos de error de previsión que la previsión ECMWF sin corregir en 358 noches no vistas (de 1,50 a 1,29 °C). Hecho en dos días; 1.º en Madrid y después 2.º en la final EMEA frente a los ganadores de los demás hubs de BCG Platinion. Un prototipo, con un piloto propuesto.',
     },
     stack: ['Python', 'FastAPI', 'SQLite', 'scikit-learn', 'pandas', 'React', 'TypeScript', 'Vite', 'Three.js', 'Raspberry Pi 5', 'I2C', 'Open-Meteo / ERA5-Land', 'Twilio', 'Pytest', 'Playwright'],
+    // team repo (github.com/arribasgomezmarcos-svg/SnapFrost) is private for now; link it once it is public
     links: [],
     photos: [
       { name: 'snapfrost-station', alt: { en: 'Wiring the field station: a Raspberry Pi and sensors inside a BCG-branded box', es: 'Montando la estación de campo: una Raspberry Pi y sensores dentro de una caja de BCG' } },
@@ -158,9 +159,9 @@ export const projects: Project[] = [
       en: 'AI validation that catches non-compliant regulatory documents before they reach human review.',
       es: 'Validación con IA que detecta documentos regulatorios no conformes antes de que lleguen a revisión humana.',
     },
-    badge: { en: 'Co-founder & CTO · MVP on hold', es: 'Cofundador y CTO · MVP en pausa' },
+    badge: { en: 'Co-founder & CTO', es: 'Cofundador y CTO' },
     kind: { en: 'Startup · AI compliance', es: 'Startup · Cumplimiento con IA' },
-    when: { en: '2026 · on hold', es: '2026 · en pausa' },
+    when: { en: '2026', es: '2026' },
     role: { en: 'Co-founder & CTO', es: 'Cofundador y CTO' },
     team: { en: 'Founding team', es: 'Equipo fundador' },
     cover: 'pharma',
@@ -188,7 +189,7 @@ export const projects: Project[] = [
       es: 'Un MVP en curso, ahora en pausa. Sin ingresos, orientado a biotecnológicas en Series A–C.',
     },
     stack: ['Next.js', 'Fastify', 'tRPC', 'FastAPI', 'Turborepo', 'Hash-chained audit log'],
-    links: [],
+    links: [{ label: { en: 'pharmable.dev', es: 'pharmable.dev' }, href: 'https://pharmable.dev' }],
   },
   {
     slug: 'frutas-prohibidas',
