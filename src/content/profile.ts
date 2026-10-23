@@ -7,6 +7,8 @@ export const profile = {
   github: 'https://github.com/javocruz',
   linkedin: 'https://linkedin.com/in/javiercruzv',
   siteUrl: 'https://javicruz.dev',
+  /** the downloadable CV (contact line uses contact@javicruz.dev, never a personal address) */
+  cv: '/Javier_Cruz_Villarreal_CV.pdf',
 }
 
 export const summary: L = {

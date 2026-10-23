@@ -165,7 +165,7 @@ export default function CoreHome() {
             </div></li>
           ))}
         </ul>
-        <p className="one-after"><Link to="/cv">{l({ en: 'Full CV', es: 'CV completo' })}</Link></p>
+        <p className="one-after"><a href={profile.cv} download>{l({ en: 'Download CV (PDF)', es: 'Descargar CV (PDF)' })}</a></p>
       </section>
 
       <section className="one-sec">
@@ -183,6 +183,7 @@ export default function CoreHome() {
         <div className="one-social">
           <a href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn <span aria-hidden>↗</span></a>
           <a href={profile.github} target="_blank" rel="noreferrer">GitHub <span aria-hidden>↗</span></a>
+          <a href={profile.cv} download>{l({ en: 'CV', es: 'CV' })} <span aria-hidden>↓</span></a>
         </div>
         <div className="one-form">
           <p className="one-dim">{l({ en: 'Or write here', es: 'O escribe aquí' })}</p>

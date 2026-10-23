@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { I18nProvider } from './lib/i18n'
 import { ThemeProvider } from './lib/theme'
 import { FxProvider } from './lib/fx'
@@ -14,7 +14,6 @@ import NotFound from './pages/NotFound'
 const CompleteHome = lazy(() => import('./pages/CompleteHome'))
 const Gallery = lazy(() => import('./pages/Gallery'))
 const CaseStudy = lazy(() => import('./pages/CaseStudy'))
-const Cv = lazy(() => import('./pages/Cv'))
 const BlogIndex = lazy(() => import('./pages/Blog').then((m) => ({ default: m.BlogIndex })))
 const BlogPost = lazy(() => import('./pages/Blog').then((m) => ({ default: m.BlogPost })))
 const CoreWork = lazy(() => import('./pages/CoreWork'))
@@ -84,7 +83,8 @@ function Shell() {
             <Route path="/work/:slug" element={lz(<CaseStudy />)} />
             <Route path="/blog" element={lz(<BlogIndex />)} />
             <Route path="/blog/:slug" element={lz(<BlogPost />)} />
-            <Route path="/cv" element={lz(<Cv />)} />
+            {/* the CV is a download in the contact section now; old links land there */}
+            <Route path="/cv" element={<Navigate to="/#contact" replace />} />
             <Route path="/lab" element={lz(<LabIndex />)} />
             <Route path="/lab/heroes" element={lz(<Heroes />)} />
             <Route path="/lab/plates" element={lz(<Plates />)} />

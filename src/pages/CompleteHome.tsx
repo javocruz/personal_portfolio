@@ -106,7 +106,7 @@ export default function CompleteHome() {
             <a className="btn solid" href={`mailto:${profile.email}`}>{l({ en: 'Email me', es: 'Escríbeme' })}</a>
             <a className="btn" href={profile.linkedin} target="_blank" rel="noreferrer">LinkedIn ↗</a>
             <a className="btn" href={profile.github} target="_blank" rel="noreferrer">GitHub ↗</a>
-            <Link className="btn" to="/cv">{t('nav.cv')}</Link>
+            <a className="btn" href={profile.cv} download>{l({ en: 'Download CV', es: 'Descargar CV' })} ↓</a>
           </div>
           <div className="reach-form">
             <p className="kicker">{l({ en: 'Or send a message from here', es: 'O envía un mensaje desde aquí' })}</p>
