@@ -6,12 +6,18 @@ import { useMode } from './mode'
  * Remembered once chosen; ?style=mondrian|rothko overrides it (handy for links). First visits get Rothko.
  */
 export type CoreStyle = 'mondrian' | 'rothko'
+/**
+ * Rothko is the only style live for now. While this is false the header hides the switch and the style is always
+ * Rothko: ?style=mondrian and any saved choice are ignored. The Mondrian code and its baked plates stay in place.
+ */
+export const SHOW_CORE_STYLE_SWITCH = false
 export const CORE_STYLES: CoreStyle[] = ['mondrian', 'rothko']
 /** The ground colour of each style, for <meta name="theme-color">. */
 export const coreGround: Record<CoreStyle, string> = { mondrian: '#f7f5ef', rothko: '#f8f3ea' }
 const Ctx = createContext<{ style: CoreStyle; setStyle: (s: CoreStyle) => void }>(null as never)
 
 const read = (): CoreStyle => {
+  if (!SHOW_CORE_STYLE_SWITCH) return 'rothko'
   try {
     const q = new URLSearchParams(location.search).get('style')
     if (q === 'mondrian' || q === 'rothko') { localStorage.setItem('coreStyle', q); return q }
@@ -29,7 +35,10 @@ export function CoreStyleProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', mode === 'core' ? coreGround[style] : '#0a0908')
   }, [mode, style])
-  const setStyle = useCallback((s: CoreStyle) => { set(s); try { localStorage.setItem('coreStyle', s) } catch { /* ignore */ } }, [])
+  const setStyle = useCallback((s: CoreStyle) => {
+    if (!SHOW_CORE_STYLE_SWITCH) return
+    set(s); try { localStorage.setItem('coreStyle', s) } catch { /* ignore */ }
+  }, [])
   const value = useMemo(() => ({ style, setStyle }), [style, setStyle])
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>
 }

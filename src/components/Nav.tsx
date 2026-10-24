@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useI18n } from '../lib/i18n'
 import { useMode } from '../lib/mode'
-import { useCoreStyle } from '../lib/coreStyle'
+import { useCoreStyle, SHOW_CORE_STYLE_SWITCH } from '../lib/coreStyle'
 
 export function Nav({ openPalette }: { openPalette: () => void }) {
   const { t, l, lang, setLang } = useI18n()
@@ -27,7 +27,7 @@ export function Nav({ openPalette }: { openPalette: () => void }) {
             <button aria-pressed={mode === 'complete'} onClick={() => setMode('complete')}>Complete</button>
           </div>
         )}
-        {mode === 'core' && (
+        {mode === 'core' && SHOW_CORE_STYLE_SWITCH && (
           // Core's two painters, in the same slider as the mode switch
           <div className="mode-switch style-switch" role="group" aria-label={l({ en: 'Painting style', es: 'Estilo de pintura' })} data-on={style}>
             <button aria-pressed={style === 'mondrian'} onClick={() => setStyle('mondrian')} aria-label={l({ en: 'Mondrian style', es: 'Estilo Mondrian' })} title={l({ en: 'Mondrian style', es: 'Estilo Mondrian' })}>
