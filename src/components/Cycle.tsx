@@ -327,8 +327,6 @@ function CycleDebug({ live, engine, stage }: { live: React.MutableRefObject<{ p:
       <pre ref={out} />
       {slider('dot', 1, 8, 0.5)}
       {slider('glow', 0, 3, 0.05)}
-      {slider('lens', 0, 400, 5)}
-      {slider('lensPh', 0, 1, 0.01)}
       {slider('hold', -1, LAST, 0.01)}
     </div>
   )
