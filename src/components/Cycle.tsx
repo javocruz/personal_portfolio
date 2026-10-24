@@ -140,16 +140,9 @@ export function Cycle() {
       // keep GPU memory to the neighbourhood of where you are
       const trim = (a: number) => texs.forEach((t, i) => { if (i < a - 1 || i > a + 2) { gl.deleteTexture(t); texs.delete(i) } })
 
-      // ---- input
-      let mx = -1e5, my = -1e5, pointer = false, mouse = false, touchUntil = 0, lastScroll = -1e9
-      const onMove = (e: PointerEvent) => {
-        mx = e.clientX * dpr; my = e.clientY * dpr
-        pointer = true
-        mouse = e.pointerType === 'mouse'
-        if (!mouse) touchUntil = performance.now() + 600
-        wake()
-      }
-      const onOut = (e: PointerEvent) => { if (!e.relatedTarget && e.pointerType === 'mouse') { pointer = false; wake() } }
+      // ---- input: scroll only. The cursor lens is off (it read as noise); the shader keeps the uniform at 0.
+      const mx = -1e5, my = -1e5
+      let lastScroll = -1e9
 
       // ---- the loop: runs only while something is changing
       let raf = 0, last = 0, slow = 0, frameNo = 0, shift = 0, act = 0, lensW = 0, first = true
@@ -187,11 +180,7 @@ export function Cycle() {
         const bump = smooth(0.06, 0.28, t) * (1 - smooth(0.72, 0.94, t))
         setVar('--cyc-ui', (1 - 0.75 * bump * act).toFixed(3))
 
-        // cursor lens: on while a mouse is over the page, or for 600ms after a touch
-        const touch = now < touchUntil
-        const lensGoal = pointer && (mouse || touch) ? 1 : 0
-        lensW += (lensGoal - lensW) * (1 - Math.pow(0.8, dt))
-        if (Math.abs(lensGoal - lensW) < 0.003) lensW = lensGoal
+        const lensGoal = 0, touch = false
 
         // shimmer: the Bayer pattern steps one dot every 4 frames while a dissolve plays
         const running = t > 0 && t < 1 && act > 0.05
@@ -236,9 +225,6 @@ export function Cycle() {
 
       addEventListener('scroll', onScroll, { passive: true })
       addEventListener('resize', onResize)
-      addEventListener('pointermove', onMove, { passive: true })
-      addEventListener('pointerdown', onMove, { passive: true })
-      document.addEventListener('pointerout', onOut)
       document.addEventListener('visibilitychange', onVis)
       addEventListener('cycle:tune', wake)
       const drawNow = () => { cancelAnimationFrame(raf); frame(performance.now()) }
@@ -248,8 +234,7 @@ export function Cycle() {
       stopGL = () => {
         cancelAnimationFrame(raf); raf = 0
         removeEventListener('scroll', onScroll); removeEventListener('resize', onResize)
-        removeEventListener('pointermove', onMove); removeEventListener('pointerdown', onMove)
-        document.removeEventListener('pointerout', onOut); document.removeEventListener('visibilitychange', onVis)
+        document.removeEventListener('visibilitychange', onVis)
         removeEventListener('cycle:tune', wake); removeEventListener('cycle:draw', drawNow); canvas.removeEventListener('webglcontextlost', onLost)
         texs.forEach((t) => gl.deleteTexture(t)); texs.clear()
         delete canvas.dataset.ready

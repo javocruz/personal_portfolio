@@ -5,8 +5,7 @@ import { useI18n } from '../lib/i18n'
 import { useHead } from '../lib/head'
 import { reveal } from '../lib/motion'
 import { projects, builds } from '../content/projects'
-import { plateBySlug, plateSet, plateSrc, plateDither, paintingSrc, paintingSet, ROMAN } from '../content/art'
-import { DitherReveal } from '../components/DitherReveal'
+import { plateBySlug, plateSet, plateSrc, paintingSrc, paintingSet, ROMAN } from '../content/art'
 import plateCode from '../lab/art/plates.ts?raw'
 
 const source = (id: string) => (plateCode.match(new RegExp(`// <plate:${id}>([\\s\\S]*?)// </plate:${id}>`)) ?? [])[1]?.trim() ?? ''
@@ -28,7 +27,7 @@ export default function Gallery() {
           const plate = plateBySlug[p.slug]
           return (
             <motion.figure key={p.slug} className={`plate p${i + 1}`} {...reveal}>
-              <Link to={`/work/${p.slug}`} className="frame-art"><DitherReveal dither={plateDither(p.slug)}><img src={plateSrc(p.slug)} srcSet={plateSet(p.slug)} sizes="(max-width: 900px) 92vw, 40vw" alt={p.title} loading={i < 2 ? 'eager' : 'lazy'} width={600} height={750} /></DitherReveal></Link>
+              <Link to={`/work/${p.slug}`} className="frame-art"><img src={plateSrc(p.slug)} srcSet={plateSet(p.slug)} sizes="(max-width: 900px) 92vw, 40vw" alt={p.title} loading={i < 2 ? 'eager' : 'lazy'} width={600} height={750} /></Link>
               <figcaption className="wall">
                 <b>{l({ en: 'Plate', es: 'Lámina' })} {ROMAN[i]}</b> · {p.title}<br />
                 <span className="dim">{l({ en: 'Code, ink and watercolour', es: 'Código, tinta y acuarela' })} · {plate?.caption}</span><br />
