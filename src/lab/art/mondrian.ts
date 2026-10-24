@@ -7,6 +7,7 @@
  * craquelure and canvas weave.
  */
 import type { L } from '../../content/types'
+import { NOTES } from './notes'
 import { DETAIL, mulberry, shade, craquelure, weave, finish, type Rand, type ProjectId } from './rothko'
 
 export type Level = 1 | 2 | 3
@@ -20,24 +21,24 @@ type Plan = [Size, string, ((c: Rect) => boolean)?][]
 
 export const MONDRIAN: Record<ProjectId, { note: L; plan: Plan; leaves?: number; order?: boolean }> = {
   frost: {
-    note: { en: 'Blue night dominates; one long yellow strip is the 0.21 °C the model gained; a small red counterweight.', es: 'Domina la noche azul; una tira amarilla larga son los 0.21 °C que ganó el modelo; un rojo pequeño hace contrapeso.' },
+    note: NOTES.mondrian.frost,
     plan: [['dom', BLUE], ['strip', YEL], ['small', RED]],
   },
   maps: {
-    note: { en: 'Red fire dominates; a small red echo, never touching it, is the control room’s picture 12 steps behind.', es: 'Domina el fuego rojo; un eco rojo pequeño, que nunca lo toca, es la imagen de la sala de control 12 pasos atrás.' },
+    note: NOTES.mondrian.maps,
     plan: [['dom', RED], ['small', RED], ['med', YEL], ['small', BLUE]],
   },
   iris: {
-    note: { en: 'Order on the left (blue), doubt on the right (red). The score falls left to right.', es: 'Orden a la izquierda (azul), duda a la derecha (rojo). La puntuación baja de izquierda a derecha.' },
+    note: NOTES.mondrian.iris,
     plan: [['dom', BLUE, (c) => c.x + c.w / 2 < 0.5], ['small', RED, (c) => c.x + c.w / 2 > 0.6], ['small', YEL]],
   },
   chain: {
-    note: { en: 'Seven main planes, one red. Everything else in the chain is clean.', es: 'Siete planos principales, uno rojo. Todo lo demás en la cadena está limpio.' },
+    note: NOTES.mondrian.chain,
     plan: [['small', RED], ['med', BLUE], ['small', YEL]], leaves: 7,
   },
   // TODO(javi): real CO₂ / land / water shares, same as the Rothko.
   hills: {
-    note: { en: 'Three planes for one meal: red CO₂, yellow land, blue water, sized by their shares.', es: 'Tres planos para una comida: CO₂ rojo, suelo amarillo, agua azul, del tamaño de su parte.' },
+    note: NOTES.mondrian.hills,
     plan: [['med', RED], ['med', YEL], ['med', BLUE]], order: true,
   },
 }

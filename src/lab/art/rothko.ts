@@ -6,6 +6,7 @@
  * (`note`) tells the story. Baked once, offline (see /lab/bake?core), so render cost doesn't matter.
  */
 import type { L } from '../../content/types'
+import { NOTES } from './notes'
 
 /** Scales the detail passes beyond the prototype: glazes, edge blobs, scumble strokes. */
 export const DETAIL = 2
@@ -99,24 +100,24 @@ export type ProjectId = (typeof PROJECT_IDS)[number]
 type Palette = { ground: string; fields: string[] }
 export const ROTHKO: Record<ProjectId, { note: L; palettes: Palette[]; h: number[] }> = {
   frost: {
-    note: { en: 'Night over frost. Field heights are 1.50 : 1.29, the two forecast errors; the glowing gap between them is the 0.21 °C gained.', es: 'La noche sobre la helada. Los campos miden 1.50 : 1.29, los dos errores de pronóstico; el hueco que brilla entre ellos son los 0.21 °C ganados.' },
+    note: NOTES.rothko.frost,
     palettes: [{ ground: '#1b2136', fields: ['#2c4790', '#a7bacb'] }, { ground: '#121a2c', fields: ['#1f356f', '#6f8fb0'] }, { ground: '#2a2f45', fields: ['#3a4f8c', '#c9d3d9'] }], h: [1.5, 1.29],
   },
   maps: {
-    note: { en: 'The fire and what the control room knows. Same hue twice; the lower field is dimmer and shorter, 12 steps out of date.', es: 'El incendio y lo que sabe la sala de control. El mismo tono dos veces; el campo de abajo es más tenue y más bajo, 12 pasos atrasado.' },
+    note: NOTES.rothko.maps,
     palettes: [{ ground: '#4a150f', fields: ['#d2481f', '#9a2d17'] }, { ground: '#2f0d0a', fields: ['#e0552b', '#7e2414'] }, { ground: '#5c2412', fields: ['#e57a2c', '#b5401c'] }], h: [1.0, 0.55],
   },
   iris: {
-    note: { en: 'Authentic blue above, synthetic red below, and a thin violet band where the score falls through.', es: 'Azul auténtico arriba, rojo sintético abajo y una franja violeta delgada donde cae la puntuación.' },
+    note: NOTES.rothko.iris,
     palettes: [{ ground: '#24182a', fields: ['#3b5d9b', '#5f3a6b', '#b3392b'] }, { ground: '#1a1a2a', fields: ['#2f4f8f', '#7a3f6e', '#c4472f'] }], h: [1.0, 0.18, 0.85],
   },
   chain: {
-    note: { en: 'A ledger in ochre. The one thin crimson band is the critical finding.', es: 'Un libro de registro en ocre. La única franja carmesí delgada es el hallazgo crítico.' },
+    note: NOTES.rothko.chain,
     palettes: [{ ground: '#6b3c15', fields: ['#d9a03c', '#8f1c19', '#c8862b'] }, { ground: '#4e2a12', fields: ['#e2b04d', '#a01f1a', '#b8772a'] }, { ground: '#7a4a1c', fields: ['#e6c066', '#7c1616', '#d49a3a'] }], h: [1.0, 0.16, 0.8],
   },
   // TODO(javi): real CO₂ / land / water shares. projects.ts has no figures, so these are placeholders.
   hills: {
-    note: { en: 'CO₂ over land over water, each field as tall as its share of the meal’s impact.', es: 'CO₂ sobre suelo sobre agua, cada campo tan alto como su parte del impacto de la comida.' },
+    note: NOTES.rothko.hills,
     palettes: [{ ground: '#3a2616', fields: ['#e0662a', '#8a893a', '#3f6a8f'] }, { ground: '#2b1c12', fields: ['#d4552a', '#6f7a34', '#2f5878'] }], h: [0.45, 0.3, 0.25],
   },
 }

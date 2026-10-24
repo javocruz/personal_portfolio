@@ -608,3 +608,10 @@ html[data-mode=complete] .cyc-home .isle-hero::after{background:linear-gradient(
 html[data-mode=complete] .frame-art{border:12px solid #1d1712;background:#1d1712;outline:none;
   box-shadow:0 0 0 1px rgba(233,225,211,.42),0 0 0 5px rgba(11,9,7,.9),0 0 0 6px rgba(233,225,211,.12),0 40px 80px -30px #000}
 html[data-mode=complete] .frame-art>*{box-shadow:0 0 0 1px rgba(201,168,106,.75)}
+
+/* Core: each painting's caption. On the card it rises over the painting on hover; in Technique it sits above the code. */
+.one-art-note{position:absolute;z-index:3;left:0;right:0;bottom:0;padding:28px 12px 10px;font-size:12px;line-height:1.45;color:#fff;
+  background:linear-gradient(transparent,rgba(17,12,8,.78));opacity:0;transform:translateY(6px);transition:opacity .35s,transform .35s;pointer-events:none}
+.one-card:hover .one-art-note,.one-card:focus-visible .one-art-note{opacity:1;transform:none}
+@media(hover:none){.one-art-note{display:none}}
+.one-recipe-note{margin:0 0 12px;max-width:78ch;color:var(--fg)}

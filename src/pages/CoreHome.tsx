@@ -12,6 +12,10 @@ import { profile, experience } from '../content/profile'
 import { projects, builds } from '../content/projects'
 import { paintingSrc, plateSrc, plateSet, plateBySlug, plateName } from '../content/art'
 import { posts } from '../posts'
+import { NOTES, type NoteId } from '../lab/art/notes'
+
+/** The painting's caption for a project in the active style. */
+const noteFor = (slug: string, style: CoreStyle) => { const id = plateBySlug[slug]?.id as NoteId | undefined; return id ? NOTES[style][id] : undefined }
 
 /** Splits a plate's source at its layer('…') calls: a header, then one block of code per step. */
 function steps(src: string) {
@@ -71,15 +75,16 @@ function Technique() {
 
   const choose = (slug: string) => { setPick(slug); setStep(0); setPlaying(true) }
   const artist = style === 'mondrian'
-    ? l({ en: 'Draw it like Mondrian: split the canvas by the data, fill a few planes with flat red, blue or yellow, and hold it together with thick black lines. All with p5.brush on one WebGL canvas, one layer at a time.', es: 'Dibújalo como Mondrian: divide el lienzo según los datos, rellena algunos planos de rojo, azul o amarillo planos y sostenlo todo con líneas negras gruesas. Todo con p5.brush sobre un solo lienzo WebGL, capa por capa.' })
-    : l({ en: 'Draw it like Rothko: stack thin washes until the edges glow, two to four soft fields on a warm ground, each as big as its number. All with p5.brush on one WebGL canvas, one layer at a time.', es: 'Dibújalo como Rothko: superpón veladuras delgadas hasta que los bordes brillen, de dos a cuatro campos suaves sobre un fondo cálido, cada uno del tamaño de su número. Todo con p5.brush sobre un solo lienzo WebGL, capa por capa.' })
+    ? l({ en: 'Paint it like Mondrian: split the canvas into planes, give a few of them flat red, blue or yellow, and hold it all together with thick black lines. The numbers only set which plane is red and how big it is. Plain Canvas 2D, one layer at a time.', es: 'Píntalo como Mondrian: divide el lienzo en planos, dale a algunos rojo, azul o amarillo planos y sostenlo todo con líneas negras gruesas. Los números solo deciden qué plano es rojo y qué tan grande es. Canvas 2D simple, capa por capa.' })
+    : l({ en: 'Paint it like Rothko: over a stained ground, stack dozens of thin glazes for each field until its edges glow and dissolve. The numbers only set how tall each field is and which colours sit together. Plain Canvas 2D, one layer at a time.', es: 'Píntalo como Rothko: sobre un fondo manchado, apila decenas de veladuras delgadas en cada campo hasta que sus bordes brillen y se disuelvan. Los números solo deciden qué tan alto es cada campo y qué colores van juntos. Canvas 2D simple, capa por capa.' })
+  const note = noteFor(pick, style)
   return (
     <details className="one-recipe" onToggle={(e) => setOpen((e.currentTarget as HTMLDetailsElement).open)}>
       <summary>{l({ en: 'Every painting above was generated with JavaScript. ', es: 'Cada pintura de arriba se generó con JavaScript. ' })}<u>{l({ en: 'Technique', es: 'Técnica' })}</u></summary>
       <ol>
-        <li>{l({ en: 'Pick one real number or idea from the project: a forecast error falling from 1.50 to 1.29 °C, the same fire on two maps 12 steps apart, a score from deepfake to authentic.', es: 'Elige un número o una idea real del proyecto: un error de pronóstico que baja de 1.50 a 1.29 °C, el mismo incendio en dos mapas con 12 pasos de diferencia, una puntuación de deepfake a auténtico.' })}</li>
+        <li>{l({ en: 'Start from the project’s real numbers: two forecast errors, 1.50 and 1.29 °C; a fire seen 12 steps late; one critical finding in a ledger. They nudge the painting, they don’t draw it.', es: 'Parte de los números reales del proyecto: dos errores de pronóstico, 1.50 y 1.29 °C; un incendio visto 12 pasos tarde; un hallazgo crítico en un registro. Empujan la pintura, no la dibujan.' })}</li>
         <li>{artist}</li>
-        <li>{l({ en: 'Seed the randomness so the same code paints the same picture every time.', es: 'Fija la semilla del azar para que el mismo código pinte siempre el mismo cuadro.' })}</li>
+        <li>{l({ en: 'Seed the randomness so the same code paints the same picture every time, then keep the strongest of 24 seeds.', es: 'Fija la semilla del azar para que el mismo código pinte siempre el mismo cuadro, y quédate con la mejor de 24 semillas.' })}</li>
         <li>{l({ en: 'Paint once, save it as a JPG, and serve the image. Nothing is painted in your browser.', es: 'Píntalo una vez, guárdalo como JPG y sirve la imagen. Nada se pinta en tu navegador.' })}</li>
       </ol>
       <div className="one-recipe-tabs" role="tablist">
@@ -87,6 +92,7 @@ function Technique() {
           <button key={p.slug} role="tab" aria-selected={pick === p.slug} onClick={() => choose(p.slug)}>{p.title}</button>
         ))}
       </div>
+      {note && <p className="one-recipe-note">{l(note)}</p>}
       {code[style] && (
         <div className="one-split">
           <div className="one-split-code" ref={codeBox}>
@@ -185,7 +191,10 @@ export default function CoreHome() {
         <div className="one-grid">
           {projects.map((p, i) => (
             <Link to={`/work/${p.slug}`} className="one-card" key={p.slug} data-c={i % 3} data-k={i % 4}>
-              <div className="one-art"><Plate slug={p.slug} style={style} /></div>
+              <div className="one-art">
+                <Plate slug={p.slug} style={style} />
+                {noteFor(p.slug, style) && <span className="one-art-note">{l(noteFor(p.slug, style)!)}</span>}
+              </div>
               <span className="one-t">{p.title}</span>
               <span className="one-d">{l(p.tagline)}</span>
               <span className="one-m">{l(p.badge)} · {l(p.when)}</span>
