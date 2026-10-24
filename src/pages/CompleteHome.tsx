@@ -8,8 +8,7 @@ import { useHead } from '../lib/head'
 import { reveal } from '../lib/motion'
 import { profile, summary, heroLine, experience, leadership, skills, education, certs, now } from '../content/profile'
 import { projects } from '../content/projects'
-import { plateSet, plateSrc, plateDither, ROMAN } from '../content/art'
-import { DitherReveal } from '../components/DitherReveal'
+import { plateSet, plateSrc, ROMAN } from '../content/art'
 import { Cycle } from '../components/Cycle'
 import { stages } from '../content/cycle'
 
@@ -76,7 +75,7 @@ export default function CompleteHome() {
           <div className="teaser">
             {featured.map((p, i) => (
               <motion.figure key={p.slug} className="plate" {...reveal}>
-                <Link to={`/work/${p.slug}`} className="frame-art"><DitherReveal dither={plateDither(p.slug)}><img src={plateSrc(p.slug)} srcSet={plateSet(p.slug)} sizes="(max-width: 900px) 92vw, 20vw" alt={p.title} loading="lazy" width={600} height={750} /></DitherReveal></Link>
+                <Link to={`/work/${p.slug}`} className="frame-art"><img src={plateSrc(p.slug)} srcSet={plateSet(p.slug)} sizes="(max-width: 900px) 92vw, 20vw" alt={p.title} loading="lazy" width={600} height={750} /></Link>
                 <figcaption className="wall"><b>{l({ en: 'Plate', es: 'Lámina' })} {ROMAN[i]}</b> · {p.title}<br /><span className="dim">{l(p.badge)}</span></figcaption>
               </motion.figure>
             ))}

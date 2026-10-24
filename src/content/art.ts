@@ -13,13 +13,10 @@ export const paintingSet = (name: string) => `${paintingSrc(name, 600)} 600w, ${
 export type PlateStyle = 'mondrian' | 'rothko'
 export const plateName = (slug: string, style?: PlateStyle) => (plateBySlug[slug] ? `plate-${plateBySlug[slug].id}${style ? '-' + style : ''}` : '')
 export const plateSrc = (slug: string, w: 600 | 1200 = 600, style?: PlateStyle) => (plateBySlug[slug] ? paintingSrc(plateName(slug, style), w) : '')
-/** 1-bit blue dither version, shown before hover in Complete's gallery. */
-export const plateDither = (slug: string) => (plateBySlug[slug] ? `/art/paintings/plate-${plateBySlug[slug].id}-dither.png` : '')
 export const plateSet = (slug: string, style?: PlateStyle) => (plateBySlug[slug] ? paintingSet(plateName(slug, style)) : '')
 
 export const isle = {
   dusk: { src: '/art/isle-dusk-1920.jpg', set: '/art/isle-dusk-960.jpg 960w, /art/isle-dusk-1920.jpg 1920w' },
-  dither: { src: '/art/isle-dither-1920.png', set: '/art/isle-dither-960.png 960w, /art/isle-dither-1920.png 1920w' },
   /** Where the gap in the cypresses sits in the painting (fractions of width/height): the eye rises there. */
   gap: { x: 0.5, y: 0.3 },
   aspect: 1920 / 1023,

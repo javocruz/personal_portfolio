@@ -32,7 +32,7 @@ export const stages: Stage[] = [
   {
     id: 'isle', title: { en: 'Isle of the Dead', es: 'La isla de los muertos' }, artist: 'Arnold Böcklin', year: 1883,
     img: '/art/isle-dusk', jpgOnly: true, src: { w: 1920, h: 1023 }, focus: { x: 0.5, y: 0.5 }, textSide: 'left',
-    palette: { accent: '#e9e1d3', dotHi: '#9fb0c4', dotLo: '#0b0907', glow: '#ff5a46', smoke: '#05060f' }, enter: 'rise',
+    palette: { accent: '#e9e1d3', dotHi: '#d8cfbf', dotLo: '#0b0907', glow: '#f2d6a6', smoke: '#07080a' }, enter: 'rise',
   },
   {
     id: 'savage', title: { en: 'The Savage State', es: 'El estado salvaje' }, artist: 'Thomas Cole', year: 1836,

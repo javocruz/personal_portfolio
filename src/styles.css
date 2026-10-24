@@ -228,14 +228,11 @@ html[data-mode=core] .form-note.err{color:#b42318}
 .isle-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 @property --lr{syntax:'<length>';inherits:true;initial-value:0px}
 .isle-hero{transition:--lr .45s cubic-bezier(.16,1,.3,1)}
-.isle-lens{image-rendering:pixelated;-webkit-mask-image:radial-gradient(circle var(--lr) at var(--lx) var(--ly),#000 96%,transparent 100%);mask-image:radial-gradient(circle var(--lr) at var(--lx) var(--ly),#000 96%,transparent 100%)}
 .isle-eye{position:absolute;inset:0;pointer-events:none}
 .isle-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,6,15,0) 45%,rgba(5,6,15,.85));pointer-events:none}
 .isle-text{position:absolute;z-index:4;left:0;right:0;bottom:0;padding:0 var(--pad) 44px}
 .isle-text h1{font-size:clamp(56px,11vw,170px);letter-spacing:-.03em;margin:14px 0 18px}
 .isle-sub{max-width:520px;font-size:19px;margin-bottom:22px}
-.isle-hint{position:absolute;z-index:4;right:var(--pad);top:96px;opacity:.6}
-@media(hover:none){.isle-hint{display:none}}
 .frame-art{display:block;border:10px solid #14111a;outline:1px solid #3a3342;box-shadow:0 40px 80px -40px #000;background:#14111a}
 .frame-art img{display:block;width:100%;height:auto}
 .plate{margin:0}
@@ -256,10 +253,6 @@ html[data-mode=core] .form-note.err{color:#b42318}
 .case-room .back{margin-bottom:30px}
 .contact-eye{position:absolute;inset:0;opacity:.85}
 @media(max-width:900px){.teaser,.case-room{grid-template-columns:1fr}.teaser .plate:nth-child(2){margin-top:0}.hall>figure{grid-column:1/-1!important;margin-top:0!important}}
-/* Complete palette: red accent to sit with the red/blue/black isle */
-html[data-mode=complete]{--accent:#ff3b2f}
-html[data-mode=complete] .stage{--accent:#ff3b2f}
-html[data-mode=complete] .btn.solid{color:#fff}
 .isle-hero::before{content:'';position:absolute;z-index:3;left:0;right:0;top:0;height:150px;background:linear-gradient(180deg,rgba(0,0,0,.72),rgba(0,0,0,0));pointer-events:none}
 /* Core: one page, studio-index style. White, small type, hairlines, no ornament. */
 html[data-mode=core]{--bg:#fff;--fg:#111;--dim:#8a8a8a;--line:#e6e6e6;--card:#f4f4f4;--accent:#111;--soft:#444;--sans:'Jost','Inter Tight',system-ui,sans-serif;--rule:var(--line);color-scheme:light}
@@ -402,17 +395,6 @@ h1 em,h2 em,h3 em{font-style:normal;color:inherit}
 .stats b,.mail{letter-spacing:-.04em}
 
 /* ============ texture: dither, smoke, ascii, grain ============ */
-@property --dr{syntax:'<length>';inherits:false;initial-value:0px}
-.dither-reveal{position:relative;display:block;overflow:hidden}
-.dither-reveal>img{display:block;width:100%;height:auto}
-.dither-layer{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;image-rendering:pixelated;
-  -webkit-mask:radial-gradient(circle var(--dr) at var(--dx,50%) var(--dy,50%),transparent 98%,#000 100%);
-  mask:radial-gradient(circle var(--dr) at var(--dx,50%) var(--dy,50%),transparent 98%,#000 100%);
-  transition:--dr .9s cubic-bezier(.3,.7,.2,1)}
-.dither-reveal:hover .dither-layer,a:focus-visible .dither-layer{--dr:1400px}
-@media(hover:none){.dither-layer{display:none}}
-.gate-smoke{position:absolute;inset:0;width:100%;height:100%;z-index:0;mix-blend-mode:screen;opacity:.55;transition:opacity 1s}
-.gate-complete:hover .gate-smoke{opacity:.85}
 .ascii-art{display:block;width:100%;height:auto;background:#000}
 .lost{position:relative;min-height:100vh;overflow:hidden}
 .lost{background:#000}
@@ -527,7 +509,7 @@ html[data-mode] .mode-switch button[aria-pressed=true]{opacity:1;color:var(--bg)
    The accent defaults to the Consummation's gold; on the home it follows the painting behind (Cycle writes it). */
 html[data-mode=complete],html[data-mode=complete][data-theme]{--bg:#0a0908;--fg:#f1ece4;--dim:#8d857a;--line:#2a2623;--card:#120f0c;--soft:#cfc8bd;--accent:#f0d79a;--serif:'Cormorant Garamond',Georgia,serif;color-scheme:dark}
 /* the header stays exactly as it was */
-html[data-mode=complete] .nav-cta{background:#ff3b2f}
+html[data-mode=complete] .nav-cta{background:var(--accent);color:#0b0907!important;transition:background-color .6s}
 html[data-mode=complete] main{--dim:#a39a8d;font:500 20px/1.5 var(--serif);letter-spacing:0}
 html[data-mode=complete] main :is(h1,h2,h3){font-family:var(--serif);font-weight:300;letter-spacing:-.02em;line-height:.9}
 html[data-mode=complete] main h3{font-weight:400;letter-spacing:-.01em;line-height:1.02}
@@ -596,11 +578,33 @@ html[data-mode=complete] .reach-title{font-weight:300;letter-spacing:-.03em}
 }
 
 /* ---- project plates: blue dither until hovered, then a dot dissolve to colour (PlateDissolve draws it) */
-.dither-layer{-webkit-mask:none;mask:none;transition:opacity .2s}
-.dither-reveal[data-live] .dither-layer,a:focus-visible .dither-layer,.dither-reveal[data-fx=fade]:hover .dither-layer{opacity:0}
 .plate-fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;image-rendering:pixelated}
 /* Complete's 404: Desolation as text, full-bleed, the note to one side */
 html[data-mode=complete] .lost{max-width:none;margin:0;display:flex;align-items:center}
 html[data-mode=complete] .lost .blog-head{max-width:520px;margin:0;background:rgba(0,0,0,.72)}
 /* the canvas draws the dither itself while it's on a plate: the static layer goes at once, or it shows through the holes */
-.dither-reveal[data-live] .dither-layer{transition:none}
+
+/* ============ Complete hero: a museum title, not a poster ============
+   Böcklin in his own colours; the name small and set in Cormorant, the accent taken from the painting (bone). */
+/* the old .stage rule sets its own orange; in Complete the hero takes the painting's accent like everything else */
+html[data-mode=complete] .stage{--accent:inherit}
+html[data-mode=complete] .isle-text{padding:0 var(--pad) clamp(40px,7vh,72px);max-width:760px}
+html[data-mode=complete] .isle-text .mono{font-size:10.5px;letter-spacing:.22em;color:rgba(233,225,211,.72)}
+html[data-mode=complete] .isle-text h1{font-size:clamp(40px,5.4vw,88px);font-weight:300;line-height:1;letter-spacing:-.012em;margin:18px 0 22px}
+html[data-mode=complete] .isle-text h1 .line{display:inline-block;margin-right:.24em}
+html[data-mode=complete] .isle-text h1 em{font-weight:300;color:var(--accent)}
+html[data-mode=complete] .isle-sub{font-size:clamp(17px,1.35vw,20px);line-height:1.5;max-width:36ch;color:rgba(233,225,211,.82);margin-bottom:30px}
+html[data-mode=complete] .isle-text .cta{gap:10px}
+html[data-mode=complete] .isle-text .btn{font:400 11px/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;padding:14px 22px;border-radius:0;
+  border:1px solid rgba(233,225,211,.45);color:#e9e1d3;background:transparent;backdrop-filter:none}
+html[data-mode=complete] .isle-text .btn:hover{border-color:#e9e1d3;background:rgba(233,225,211,.08)}
+html[data-mode=complete] main .isle-text .btn.solid{background:#e9e1d3;border-color:#e9e1d3;color:#0b0907}
+html[data-mode=complete] main .isle-text .btn.solid:hover{background:transparent;color:#e9e1d3}
+/* the shades over the painting are warm black now, not blue */
+html[data-mode=complete] .isle-hero::after{background:linear-gradient(180deg,rgba(11,9,7,0) 40%,rgba(11,9,7,.82))}
+html[data-mode=complete] .cyc-home .isle-hero::after{background:linear-gradient(90deg,rgba(11,9,7,.78),rgba(11,9,7,.38) 42%,rgba(11,9,7,0) 66%)}
+/* Complete's paintings hang in real frames, so they stand off the dark wall: a pale hairline outside,
+   dark-wood moulding, and a thin gilt line where the frame meets the painting */
+html[data-mode=complete] .frame-art{border:12px solid #1d1712;background:#1d1712;outline:none;
+  box-shadow:0 0 0 1px rgba(233,225,211,.42),0 0 0 5px rgba(11,9,7,.9),0 0 0 6px rgba(233,225,211,.12),0 40px 80px -30px #000}
+html[data-mode=complete] .frame-art>*{box-shadow:0 0 0 1px rgba(201,168,106,.75)}
