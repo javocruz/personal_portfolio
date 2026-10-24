@@ -22,7 +22,7 @@ export default function CompleteHome() {
   const { t, l } = useI18n()
   const [copied, setCopied] = useState(false)
   const copy = () => navigator.clipboard?.writeText(profile.email).then(() => { setCopied(true); setTimeout(() => setCopied(false), 1800) })
-  useHead('Javier Cruz Villarreal — CS & AI', l(summary))
+  useHead('Javier Cruz Villarreal · CS & AI', l(summary))
   const featured = projects.filter((p) => p.featured).slice(0, 3)
   return (
     <main id="top" className="complete cyc-home">

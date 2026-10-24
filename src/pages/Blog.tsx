@@ -12,7 +12,7 @@ export function BlogIndex() {
   const { t, lang } = useI18n()
   const [params, setParams] = useSearchParams()
   const tag = params.get('tag')
-  useHead('Writing — Javier Cruz Villarreal', t('blog.sub'))
+  useHead('Writing · Javier Cruz Villarreal', t('blog.sub'))
   const tags = [...new Set(posts.flatMap((p) => p.tags))].sort()
   const shown = tag ? posts.filter((p) => p.tags.includes(tag)) : posts
   return (
@@ -45,7 +45,7 @@ export function BlogPost() {
   const { slug } = useParams()
   const { t, lang } = useI18n()
   const post = posts.find((p) => p.slug === slug)
-  useHead(post ? `${post.title} — Javier Cruz Villarreal` : 'Not found', post?.summary)
+  useHead(post ? `${post.title} · Javier Cruz Villarreal` : 'Not found', post?.summary)
   if (!post) return <NotFound />
   return (
     <main className="blog post">

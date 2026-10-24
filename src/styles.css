@@ -547,7 +547,7 @@ html[data-mode=complete] .reach-title{font-weight:300;letter-spacing:-.03em}
 .cyc-sec[data-side=right]{justify-content:flex-end}
 .cyc-sec::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:var(--cyc-ui,1);
   /* feathered top and bottom, so the painting shows between sections and no scrim ends in a hard line */
-  -webkit-mask:linear-gradient(180deg,transparent,#000 22vh,#000 calc(100% - 22vh),transparent);mask:linear-gradient(180deg,transparent,#000 22vh,#000 calc(100% - 22vh),transparent);
+  -webkit-mask:linear-gradient(180deg,transparent,#000 11vh,#000 calc(100% - 11vh),transparent);mask:linear-gradient(180deg,transparent,#000 11vh,#000 calc(100% - 11vh),transparent);
   background:linear-gradient(90deg,rgb(var(--cyc-smoke,10 9 8) / .92) 0%,rgb(var(--cyc-smoke,10 9 8) / .86) 44%,rgb(var(--cyc-smoke,10 9 8) / .45) 64%,rgb(var(--cyc-smoke,10 9 8) / 0) 84%)}
 .cyc-sec[data-side=right]::before{transform:scaleX(-1)}
 .cyc-panel{width:min(640px,100%);opacity:var(--cyc-ui,1)}

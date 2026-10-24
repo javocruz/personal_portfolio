@@ -7,7 +7,7 @@ import { plateSrc } from '../content/art'
 /** Core's work page: the same numbered index as the home page, plus the smaller builds. */
 export default function CoreWork() {
   const { l, t } = useI18n()
-  useHead('Work — Javier Cruz Villarreal', t('work.index.sub'))
+  useHead('Work · Javier Cruz Villarreal', t('work.index.sub'))
   return (
     <main className="core">
       <div className="core-col">

@@ -161,13 +161,13 @@ export default function CoreHome() {
   const { l, lang } = useI18n()
   const { style } = useCoreStyle()
   const time = useMadridTime()
-  useHead('Javier Cruz Villarreal — CS & AI', l({ en: 'Computer Science & AI student in Madrid who builds AI products from idea to demo.', es: 'Estudiante de Ciencias de la Computación e IA en Madrid que construye productos de IA de la idea a la demo.' }))
+  useHead('Javier Cruz Villarreal · CS & AI', l({ en: 'Computer Science & AI student in Madrid who builds AI products from idea to demo.', es: 'Estudiante de Ciencias de la Computación e IA en Madrid que construye productos de IA de la idea a la demo.' }))
   const date = (d: string) => new Date(d).toLocaleDateString(lang === 'es' ? 'es-MX' : 'en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
 
   const facts: [string, string][] = [
     [l({ en: 'Based', es: 'Vivo en' }), 'Madrid'],
     [l({ en: 'Studying', es: 'Estudio' }), l({ en: 'CS & AI, IE University, ’28', es: 'CC e IA, IE University, ’28' })],
-    [l({ en: 'Latest', es: 'Lo más reciente' }), l({ en: 'SnapFrost, 1st Madrid', es: 'SnapFrost, 1.er lugar Madrid' })],
+    [l({ en: 'Latest', es: 'Lo más reciente' }), l({ en: 'SnapFrost, 1st Madrid', es: 'SnapFrost, 1er lugar Madrid' })],
     [l({ en: 'CTO', es: 'CTO' }), 'Hospitia'],
     [l({ en: 'Speaks', es: 'Hablo' }), l({ en: 'Spanish, English', es: 'Español, inglés' })],
   ]

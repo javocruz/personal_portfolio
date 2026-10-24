@@ -14,7 +14,7 @@ Thomas Cole, *The Course of Empire*, 1836, oil on canvas, New-York Historical So
 
 ## Hero
 
-Arnold Böcklin, *Isle of the Dead*, 1883 (third version), public domain, recoloured (`public/art/isle-*`).
+Arnold Böcklin, *Isle of the Dead*, 1883 (third version), public domain, in its own colours, graded slightly darker and warmer (`public/art/isle-*`).
 
 ## Contact
 
