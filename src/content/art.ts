@@ -22,4 +22,17 @@ export const isle = {
   aspect: 1920 / 1023,
 }
 
+/**
+ * Core's chosen seeds, one per project and style (and per level for Mondrian). Picked on /lab/plates, which renders
+ * 24 candidates each and has a "copy seeds" button: paste its output here to change a pick, then re-bake.
+ */
+export const CORE_SEEDS = {
+  rothko: { frost: 10, maps: 19, iris: 24, chain: 23, hills: 11 },
+  mondrian: {
+    level1: { frost: 94, maps: 96, iris: 34, chain: 63, hills: 107 },
+    level2: { frost: 107, maps: 62, iris: 107, chain: 143, hills: 60 },
+    level3: { frost: 75, maps: 140, iris: 37, chain: 107, hills: 20 },
+  },
+}
+
 export const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII']
