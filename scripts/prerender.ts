@@ -25,11 +25,11 @@ const posts = existsSync(join(root, 'content/posts'))
   : []
 
 const routes: Route[] = [
-  { path: '/', title: `${NAME} — CS & AI`, description: summary.en, og: 'home', ogTitle: NAME, ogLabel: 'CS & AI · Madrid' },
-  { path: '/work', title: `Work — ${NAME}`, description: 'Case studies from startups, client work, hackathons and competitions.', og: 'work', ogTitle: 'Selected work', ogLabel: NAME },
-  { path: '/blog', title: `Writing — ${NAME}`, description: 'Things I’m building, learning and figuring out.', og: 'blog', ogTitle: 'Notes & essays', ogLabel: NAME },
-  ...projects.map((p) => ({ path: `/work/${p.slug}`, title: `${p.title} — ${NAME}`, description: p.tagline.en, og: `work-${p.slug}`, ogTitle: p.title, ogLabel: p.badge.en })),
-  ...posts.map((p) => ({ path: `/blog/${p.slug}`, title: `${p.title} — ${NAME}`, description: p.summary || summary.en, og: `blog-${p.slug}`, ogTitle: p.title, ogLabel: `${p.date} · ${p.minutes} min read`, type: 'article' as const, date: p.date })),
+  { path: '/', title: `${NAME} · CS & AI`, description: summary.en, og: 'home', ogTitle: NAME, ogLabel: 'CS & AI · Madrid' },
+  { path: '/work', title: `Work · ${NAME}`, description: 'Case studies from startups, client work, hackathons and competitions.', og: 'work', ogTitle: 'Selected work', ogLabel: NAME },
+  { path: '/blog', title: `Writing · ${NAME}`, description: 'Things I’m building, learning and figuring out.', og: 'blog', ogTitle: 'Notes & essays', ogLabel: NAME },
+  ...projects.map((p) => ({ path: `/work/${p.slug}`, title: `${p.title} · ${NAME}`, description: p.tagline.en, og: `work-${p.slug}`, ogTitle: p.title, ogLabel: p.badge.en })),
+  ...posts.map((p) => ({ path: `/blog/${p.slug}`, title: `${p.title} · ${NAME}`, description: p.summary || summary.en, og: `blog-${p.slug}`, ogTitle: p.title, ogLabel: `${p.date} · ${p.minutes} min read`, type: 'article' as const, date: p.date })),
 ]
 
 // ---------- preview images ----------
@@ -118,7 +118,7 @@ writeFileSync(
 
 writeFileSync(
   join(dist, 'rss.xml'),
-  `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">\n<channel>\n  <title>${esc(NAME)} — Writing</title>\n  <link>${SITE}/blog/</link>\n  <description>Things I’m building, learning and figuring out.</description>\n  <language>en</language>\n  <atom:link href="${SITE}/rss.xml" rel="self" type="application/rss+xml" />\n${posts
+  `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">\n<channel>\n  <title>${esc(NAME)} · Writing</title>\n  <link>${SITE}/blog/</link>\n  <description>Things I’m building, learning and figuring out.</description>\n  <language>en</language>\n  <atom:link href="${SITE}/rss.xml" rel="self" type="application/rss+xml" />\n${posts
     .map((p) => `  <item>\n    <title>${esc(p.title)}</title>\n    <link>${SITE}/blog/${p.slug}/</link>\n    <guid>${SITE}/blog/${p.slug}/</guid>\n    <pubDate>${new Date(p.date).toUTCString()}</pubDate>\n    <description>${esc(p.summary)}</description>\n    <content:encoded><![CDATA[${renderMarkdown(p.body).replace(/]]>/g, ']]]]><![CDATA[>')}]]></content:encoded>\n  </item>`)
     .join('\n')}\n</channel>\n</rss>\n`,
 )

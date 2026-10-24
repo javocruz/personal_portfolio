@@ -9,7 +9,7 @@ export const projects: Project[] = [
       en: 'Frost early-warning system that texts Andean potato farmers before a damaging night.',
       es: 'Sistema de alerta temprana de heladas que avisa por SMS a agricultores de papa andinos antes de una noche dañina.',
     },
-    badge: { en: '1st place Madrid · 2nd place EMEA final', es: '1.er puesto Madrid · 2.º puesto final EMEA' },
+    badge: { en: '1st place Madrid · 2nd place EMEA final', es: '1er lugar Madrid · 2º lugar final EMEA' },
     kind: { en: 'Hackathon · BCG Platinion × Welthungerhilfe', es: 'Hackathon · BCG Platinion × Welthungerhilfe' },
     when: { en: '16–17 Oct 2026', es: '16–17 oct 2026' },
     role: { en: 'Team member · hardware, ML and demo', es: 'Miembro del equipo · hardware, ML y demo' },
@@ -21,7 +21,7 @@ export const projects: Project[] = [
     featured: true,
     problem: {
       en: 'A single frost night can wipe out a potato harvest in the Bolivian Andes, along with the farmer’s income and next year’s seed. Regional forecasts measure air at 2 m, but on clear, calm nights the air at the leaves is colder. Farmers have basic phones, so the warning has to be an SMS.',
-      es: 'Una sola noche de helada puede acabar con una cosecha de papa en los Andes bolivianos, y con ella los ingresos del agricultor y la semilla del año siguiente. Las previsiones regionales miden el aire a 2 m, pero en noches despejadas y en calma el aire junto a las hojas está más frío. Los agricultores tienen teléfonos básicos, así que el aviso tiene que ser un SMS.',
+      es: 'Una sola noche de helada puede acabar con una cosecha de papa en los Andes bolivianos, y con ella los ingresos del agricultor y la semilla del año siguiente. Los pronósticos regionales miden el aire a 2 m, pero en noches despejadas y en calma el aire junto a las hojas está más frío. Los agricultores tienen teléfonos básicos, así que el aviso tiene que ser un SMS.',
     },
     built: [
       {
@@ -47,7 +47,7 @@ export const projects: Project[] = [
     ],
     outcome: {
       en: '14% lower forecast error than the raw ECMWF forecast on 358 unseen nights (1.50 to 1.29 °C). Built in two days; 1st in Madrid, then 2nd in the EMEA final against the winners of the other BCG Platinion hubs. A prototype, with a pilot proposed.',
-      es: 'Un 14% menos de error de previsión que la previsión ECMWF sin corregir en 358 noches no vistas (de 1,50 a 1,29 °C). Hecho en dos días; 1.º en Madrid y después 2.º en la final EMEA frente a los ganadores de los demás hubs de BCG Platinion. Un prototipo, con un piloto propuesto.',
+      es: 'Un 14% menos de error de pronóstico que el pronóstico ECMWF sin corregir en 358 noches no vistas (de 1.50 a 1.29 °C). Hecho en dos días; 1º en Madrid y después 2º en la final EMEA frente a los ganadores de los demás hubs de BCG Platinion. Un prototipo, con un piloto propuesto.',
     },
     stack: ['Python', 'FastAPI', 'SQLite', 'scikit-learn', 'pandas', 'React', 'TypeScript', 'Vite', 'Three.js', 'Raspberry Pi 5', 'I2C', 'Open-Meteo / ERA5-Land', 'Twilio', 'Pytest', 'Playwright'],
     // team repo (github.com/arribasgomezmarcos-svg/SnapFrost) is private for now; link it once it is public
@@ -65,7 +65,7 @@ export const projects: Project[] = [
       en: 'AI agents run a wildfire crisis room, dispatching drones and trucks with incomplete information.',
       es: 'Agentes de IA dirigen una sala de crisis de incendios y despachan drones y camiones con información incompleta.',
     },
-    badge: { en: '1st place · HappyRobot track', es: '1.er puesto · track HappyRobot' },
+    badge: { en: '1st place · HappyRobot track', es: '1er lugar · track HappyRobot' },
     kind: { en: 'Hackathon · HackSpain 2026', es: 'Hackathon · HackSpain 2026' },
     when: { en: '18–20 Sep 2026', es: '18–20 sep 2026' },
     role: { en: 'Team member · product and interface', es: 'Miembro del equipo · producto e interfaz' },
@@ -99,7 +99,7 @@ export const projects: Project[] = [
     ],
     outcome: {
       en: '1st place in the HappyRobot track, one of five tracks, at HackSpain 2026: 36 hours, about 250 builders. A prototype.',
-      es: '1.er puesto en el track de HappyRobot, uno de cinco tracks, en HackSpain 2026: 36 horas y unos 250 participantes. Un prototipo.',
+      es: '1er lugar en el track de HappyRobot, uno de cinco tracks, en HackSpain 2026: 36 horas y unos 250 participantes. Un prototipo.',
     },
     stack: ['Python', 'Custom simulation engine', 'JavaScript', 'Canvas', 'HappyRobot', 'MCP'],
     links: [
@@ -239,7 +239,7 @@ export const builds: Build[] = [
     when: '2025/26 · IE Tech Venture Bootcamp',
     text: {
       en: 'A real-time Twitch chat intelligence platform. 2nd of 25 teams at the IE Tech Venture Bootcamp.',
-      es: 'Una plataforma de inteligencia de chat de Twitch en tiempo real. 2.º de 25 equipos en el IE Tech Venture Bootcamp.',
+      es: 'Una plataforma de inteligencia de chat de Twitch en tiempo real. 2º de 25 equipos en el IE Tech Venture Bootcamp.',
     },
     href: 'https://github.com/javocruz/Stream-Scope',
   },
@@ -283,7 +283,7 @@ export const builds: Build[] = [
     when: '2026 · Hackathon challenge',
     text: {
       en: 'Given an address, resolves the jurisdiction stack and which tenancy rules apply: rent caps, just-cause eviction, deposits, screening and algorithmic pricing.',
-      es: 'Dada una dirección, resuelve la jerarquía de jurisdicciones y qué normas de alquiler aplican: límites de renta, desahucio causal, fianzas, selección de inquilinos y precios algorítmicos.',
+      es: 'Dada una dirección, resuelve la jerarquía de jurisdicciones y qué normas de alquiler aplican: límites de renta, desalojo con causa justificada, depósitos, selección de inquilinos y precios algorítmicos.',
     },
   },
   {
@@ -291,7 +291,7 @@ export const builds: Build[] = [
     when: 'Oct 2026 · Causa Prima hackathon',
     text: {
       en: 'A negotiation agent that haggles with card dealers, trades with other teams and runs a market, built for a live multi-team game in Madrid.',
-      es: 'Un agente de negociación que regatea con vendedores de cromos, comercia con otros equipos y gestiona un mercado, creado para un juego en vivo entre equipos en Madrid.',
+      es: 'Un agente de negociación que regatea con vendedores de tarjetas coleccionables, comercia con otros equipos y gestiona un mercado, creado para un juego en vivo entre equipos en Madrid.',
     },
   },
   {

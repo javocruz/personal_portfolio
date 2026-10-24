@@ -9,7 +9,7 @@ import { isle } from '../content/art'
 export default function NotFound() {
   const { t, l } = useI18n()
   const { mode } = useMode()
-  useHead(`${t('404.title')} — Javier Cruz Villarreal`)
+  useHead(`${t('404.title')} · Javier Cruz Villarreal`)
   // Complete: the last of Cole's paintings, Desolation, as text
   const complete = mode === 'complete'
   return (

@@ -32,7 +32,7 @@ const es: Record<UIKey, string> = {
   'hero.kicker': 'CS e IA · Madrid · Abierto a oportunidades',
   'hero.cta1': 'Proyectos', 'hero.cta2': 'Contactar', 'hero.scroll': 'Desliza',
   'strip.label': 'He trabajado con',
-  'work.title1': 'Proyectos', 'work.title2': 'destacados', 'work.all': 'Todos los proyectos', 'work.index.sub': 'Casos de estudio de startups, proyectos para clientes, hackathons y competiciones.',
+  'work.title1': 'Proyectos', 'work.title2': 'destacados', 'work.all': 'Todos los proyectos', 'work.index.sub': 'Casos de estudio de startups, proyectos para clientes, hackathons y competencias.',
   'case.back': 'Todos los proyectos', 'case.problem': 'El problema', 'case.built': 'Lo construido', 'case.outcome': 'Resultado', 'case.stack': 'Tecnologías', 'case.links': 'Enlaces', 'case.role': 'Rol', 'case.team': 'Equipo', 'case.when': 'Cuándo', 'case.next': 'Siguiente proyecto', 'case.notfound': 'Proyecto no encontrado',
   'builds.title': 'También construido', 'builds.sub': 'Proyectos más pequeños, hackathons y trabajos universitarios.',
   'xp.title': 'Experiencia', 'lead.title': 'Liderazgo',

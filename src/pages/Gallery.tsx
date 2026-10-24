@@ -14,13 +14,13 @@ const source = (id: string) => (plateCode.match(new RegExp(`// <plate:${id}>([\\
 export default function Gallery() {
   const { t, l } = useI18n()
   const [open, setOpen] = useState<string | null>(null)
-  useHead('Gallery — Javier Cruz Villarreal', l({ en: 'Every project as a painting, each made in code from the project’s own numbers.', es: 'Cada proyecto como una pintura, hecha con código a partir de sus propios datos.' }))
+  useHead('Gallery · Javier Cruz Villarreal', l({ en: 'Every project as a painting, each made in code from the project’s own numbers.', es: 'Cada proyecto como una pintura, hecha con código a partir de sus propios datos.' }))
   return (
     <main className="complete gallery">
       <header className="blog-head gallery-head">
         <p className="mono dim">{t('nav.work')}</p>
         <h1>{l({ en: 'The', es: 'La' })} <em>{l({ en: 'gallery', es: 'galería' })}</em></h1>
-        <p>{l({ en: 'Every project hangs here as a painting. Each one is a few lines of code, painted from a real number in the project. Read the label, or view the source.', es: 'Cada proyecto cuelga aquí como una pintura. Cada una son unas líneas de código, pintadas a partir de un dato real del proyecto. Lee la cartela o mira el código.' })}</p>
+        <p>{l({ en: 'Every project hangs here as a painting. Each one is a few lines of code, painted from a real number in the project. Read the label, or view the source.', es: 'Cada proyecto cuelga aquí como una pintura. Cada una son unas líneas de código, pintadas a partir de un dato real del proyecto. Lee la ficha o mira el código.' })}</p>
       </header>
       <div className="hall">
         {projects.map((p, i) => {

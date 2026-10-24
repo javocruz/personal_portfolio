@@ -12,7 +12,7 @@ export default function CaseStudy() {
   const { t, l } = useI18n()
   const i = projects.findIndex((p) => p.slug === slug)
   const p = projects[i]
-  useHead(p ? `${p.title} — Javier Cruz Villarreal` : 'Not found', p ? l(p.tagline) : undefined)
+  useHead(p ? `${p.title} · Javier Cruz Villarreal` : 'Not found', p ? l(p.tagline) : undefined)
   if (!p) return <NotFound />
   const next = projects[(i + 1) % projects.length]
   const meta: [string, string][] = [
