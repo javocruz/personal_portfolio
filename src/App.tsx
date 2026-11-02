@@ -1,13 +1,16 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
-import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom'
 import { I18nProvider } from './lib/i18n'
 import { FxProvider } from './lib/fx'
 import { ModeProvider, useMode } from './lib/mode'
 import { CoreStyleProvider } from './lib/coreStyle'
 import { Nav } from './components/Nav'
 import { CommandPalette } from './components/CommandPalette'
-import Gate from './pages/Gate'
 import CoreHome from './pages/CoreHome'
+import SiteHome from './site/SiteHome'
+import { SiteNav } from './site/SiteNav'
+import { useArrive } from './site/steps'
+import './site/site.css'
 import NotFound from './pages/NotFound'
 
 // Everything heavier than Core loads on demand.
@@ -17,6 +20,11 @@ const CaseStudy = lazy(() => import('./pages/CaseStudy'))
 const BlogIndex = lazy(() => import('./pages/Blog').then((m) => ({ default: m.BlogIndex })))
 const BlogPost = lazy(() => import('./pages/Blog').then((m) => ({ default: m.BlogPost })))
 const CoreWork = lazy(() => import('./pages/CoreWork'))
+// the site's pages (the home is eager: it's the front door)
+const SiteProjects = lazy(() => import('./site/SiteProjects'))
+const SiteProject = lazy(() => import('./site/SiteProject'))
+const SiteGallery = lazy(() => import('./site/SiteGallery'))
+const SiteBlog = lazy(() => import('./site/SiteBlog'))
 // Design lab (prototypes)
 const LabIndex = lazy(() => import('./lab/LabIndex'))
 const Heroes = lazy(() => import('./lab/Heroes'))
@@ -27,14 +35,25 @@ const LayoutA = lazy(() => import('./lab/layouts/A'))
 const LayoutB = lazy(() => import('./lab/layouts/B'))
 const LayoutC = lazy(() => import('./lab/layouts/C'))
 
+// No mode: the site. Inside an exhibit (Core or Complete), its own pages.
 function Home() {
   const { mode } = useMode()
-  if (!mode) return <Gate />
+  if (!mode) return <SiteHome />
   return mode === 'core' ? <CoreHome /> : <CompleteHome />
 }
 function Work() {
   const { mode } = useMode()
+  if (!mode) return <Navigate to="/projects" replace />
   return mode === 'complete' ? <Gallery /> : <CoreWork />
+}
+function WorkCase() {
+  const { mode } = useMode()
+  const { slug } = useParams()
+  return mode ? <CaseStudy /> : <Navigate to={`/projects/${slug}`} replace />
+}
+function Blog() {
+  const { mode } = useMode()
+  return mode ? <BlogIndex /> : <SiteBlog />
 }
 
 function Shell() {
@@ -42,7 +61,7 @@ function Shell() {
   const { mode } = useMode()
   const [palette, setPalette] = useState(false)
   const inLab = location.pathname.startsWith('/lab')
-  const gate = !mode && location.pathname === '/'
+  useArrive()
 
   useEffect(() => {
     if (location.hash) setTimeout(() => document.querySelector(location.hash)?.scrollIntoView(), 80)
@@ -51,10 +70,12 @@ function Shell() {
 
   // Once the page is idle, fetch the pages a visitor is likely to open next so clicking through feels instant.
   useEffect(() => {
-    if (!mode || inLab) return
-    const go = mode === 'complete'
-      ? () => { import('./pages/Gallery'); import('./pages/CaseStudy'); import('./pages/CompleteHome') }
-      : () => { import('./pages/CaseStudy'); import('./pages/Blog') }
+    if (inLab) return
+    const go = !mode
+      ? () => { import('./site/SiteProjects'); import('./site/SiteProject'); import('./site/SiteGallery') }
+      : mode === 'complete'
+        ? () => { import('./pages/Gallery'); import('./pages/CaseStudy'); import('./pages/CompleteHome') }
+        : () => { import('./pages/CaseStudy'); import('./pages/Blog') }
     const id = 'requestIdleCallback' in window ? requestIdleCallback(go, { timeout: 3000 }) : setTimeout(go, 2000)
     return () => { 'cancelIdleCallback' in window ? cancelIdleCallback(id as number) : clearTimeout(id as number) }
   }, [mode, inLab])
@@ -73,15 +94,18 @@ function Shell() {
 
   return (
     <>
-      {!inLab && !gate && <Nav openPalette={() => setPalette(true)} />}
+      {!inLab && (mode ? <Nav openPalette={() => setPalette(true)} /> : <SiteNav />)}
       <CommandPalette open={palette} onClose={() => setPalette(false)} />
       {/* new pages fade in; nothing waits for the old page to fade out */}
       <div className="page" key={location.pathname + (mode ?? '')}>
           <Routes location={location}>
             <Route path="/" element={lz(<Home />)} />
             <Route path="/work" element={lz(<Work />)} />
-            <Route path="/work/:slug" element={lz(<CaseStudy />)} />
-            <Route path="/blog" element={lz(<BlogIndex />)} />
+            <Route path="/work/:slug" element={lz(<WorkCase />)} />
+            <Route path="/projects" element={lz(<SiteProjects />)} />
+            <Route path="/projects/:slug" element={lz(<SiteProject />)} />
+            <Route path="/gallery" element={lz(<SiteGallery />)} />
+            <Route path="/blog" element={lz(<Blog />)} />
             <Route path="/blog/:slug" element={lz(<BlogPost />)} />
             {/* the CV is a download in the contact section now; old links land there */}
             <Route path="/cv" element={<Navigate to="/#contact" replace />} />

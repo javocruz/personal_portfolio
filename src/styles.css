@@ -615,3 +615,9 @@ html[data-mode=complete] .frame-art>*{box-shadow:0 0 0 1px rgba(201,168,106,.75)
 .one-card:hover .one-art-note,.one-card:focus-visible .one-art-note{opacity:1;transform:none}
 @media(hover:none){.one-art-note{display:none}}
 .one-recipe-note{margin:0 0 12px;max-width:78ch;color:var(--fg)}
+
+/* the way back out of an exhibit (Core, Complete) to the site's gallery */
+.nav-left{display:inline-flex;align-items:center;gap:16px}
+.nav-exit{background:none;border:0;padding:0;font:400 13px var(--sans);color:var(--fg);opacity:.6;cursor:pointer}
+.nav-exit:hover{opacity:1}
+@media(max-width:560px){.nav-exit{font-size:12px}.nav-left{gap:10px}}

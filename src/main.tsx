@@ -19,7 +19,7 @@ addEventListener('vite:preloadError', (e) => {
 
 // Start fetching the Complete home right away instead of after React has rendered once.
 try {
-  const m = new URLSearchParams(location.search).get('mode') ?? localStorage.getItem('mode')
+  const m = new URLSearchParams(location.search).get('mode') ?? sessionStorage.getItem('mode')
   if (m === 'complete' && location.pathname === '/') void import('./pages/CompleteHome')
 } catch { /* storage blocked */ }
 createRoot(document.getElementById('root')!).render(<App />)

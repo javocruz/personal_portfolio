@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useI18n } from '../lib/i18n'
 import { useMode } from '../lib/mode'
 import { useCoreStyle, SHOW_CORE_STYLE_SWITCH } from '../lib/coreStyle'
@@ -7,11 +7,17 @@ export function Nav({ openPalette }: { openPalette: () => void }) {
   const { t, l, lang, setLang } = useI18n()
   const { style, setStyle } = useCoreStyle()
   const { pathname } = useLocation()
-  const { mode, setMode } = useMode()
+  const { mode, setMode, reset } = useMode()
+  const navigate = useNavigate()
+  // Core and Complete are exhibits in the site's gallery: this steps back out to it
+  const exit = () => { reset(); navigate('/gallery'); scrollTo(0, 0) }
   const cur = (p: string) => (pathname === p || (p !== '/' && pathname.startsWith(p + '/')) ? 'page' : undefined)
   return (
     <header className="nav">
-      <Link to="/" className="logo" aria-label="Javier Cruz Villarreal, home">JCV</Link>
+      <span className="nav-left">
+        <button className="nav-exit" onClick={exit}>← {l({ en: 'gallery', es: 'galería' })}</button>
+        <Link to="/" className="logo" aria-label="Javier Cruz Villarreal, home">JCV</Link>
+      </span>
       <nav aria-label="Main">
         {/* same four links in both modes, so the header doesn't change when you switch */}
         <Link to={mode === 'complete' ? '/work' : '/#work'} aria-current={cur('/work')}>{t('nav.work')}</Link>

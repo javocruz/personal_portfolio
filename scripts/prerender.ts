@@ -26,9 +26,10 @@ const posts = existsSync(join(root, 'content/posts'))
 
 const routes: Route[] = [
   { path: '/', title: `${NAME} · CS & AI`, description: summary.en, og: 'home', ogTitle: NAME, ogLabel: 'CS & AI · Madrid' },
-  { path: '/work', title: `Work · ${NAME}`, description: 'Case studies from startups, client work, hackathons and competitions.', og: 'work', ogTitle: 'Selected work', ogLabel: NAME },
-  { path: '/blog', title: `Writing · ${NAME}`, description: 'Things I’m building, learning and figuring out.', og: 'blog', ogTitle: 'Notes & essays', ogLabel: NAME },
-  ...projects.map((p) => ({ path: `/work/${p.slug}`, title: `${p.title} · ${NAME}`, description: p.tagline.en, og: `work-${p.slug}`, ogTitle: p.title, ogLabel: p.badge.en })),
+  { path: '/projects', title: `Projects · ${NAME}`, description: 'Hackathons, startups and client work, each with a painting made in code.', og: 'work', ogTitle: 'Projects', ogLabel: NAME },
+  { path: '/gallery', title: `Gallery · ${NAME}`, description: 'Two whole websites in one: Core and Complete.', og: 'gallery', ogTitle: 'Gallery', ogLabel: 'Core · Complete' },
+  { path: '/blog', title: `Blog · ${NAME}`, description: 'Notes on what I’m building and learning.', og: 'blog', ogTitle: 'Blog', ogLabel: NAME },
+  ...projects.map((p) => ({ path: `/projects/${p.slug}`, title: `${p.title} · ${NAME}`, description: p.tagline.en, og: `work-${p.slug}`, ogTitle: p.title, ogLabel: p.badge.en })),
   ...posts.map((p) => ({ path: `/blog/${p.slug}`, title: `${p.title} · ${NAME}`, description: p.summary || summary.en, og: `blog-${p.slug}`, ogTitle: p.title, ogLabel: `${p.date} · ${p.minutes} min read`, type: 'article' as const, date: p.date })),
 ]
 
