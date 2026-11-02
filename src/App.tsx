@@ -31,6 +31,7 @@ const Heroes = lazy(() => import('./lab/Heroes'))
 const Plates = lazy(() => import('./lab/Plates'))
 const Cabinet = lazy(() => import('./lab/Cabinet'))
 const Bake = lazy(() => import('./lab/Bake'))
+const Ponds = lazy(() => import('./lab/Ponds'))
 const LayoutA = lazy(() => import('./lab/layouts/A'))
 const LayoutB = lazy(() => import('./lab/layouts/B'))
 const LayoutC = lazy(() => import('./lab/layouts/C'))
@@ -114,6 +115,7 @@ function Shell() {
             <Route path="/lab/plates" element={lz(<Plates />)} />
             <Route path="/lab/cabinet" element={lz(<Cabinet />)} />
             <Route path="/lab/bake" element={lz(<Bake />)} />
+            <Route path="/lab/ponds" element={lz(<Ponds />)} />
             <Route path="/lab/a" element={lz(<LayoutA />)} />
             <Route path="/lab/b" element={lz(<LayoutB />)} />
             <Route path="/lab/c" element={lz(<LayoutC />)} />
