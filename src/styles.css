@@ -172,26 +172,6 @@ footer{position:relative;z-index:2;padding:20px var(--pad);border-top:1px solid 
 
 /* entrance */
 html[data-mode=gate] body{overflow:hidden}
-.gate{position:fixed;inset:0;display:flex;background:#050407}
-.gate-half{position:relative;flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start;gap:10px;padding:clamp(24px,5vw,72px);text-align:left;overflow:hidden;transition:flex-grow .7s cubic-bezier(.16,1,.3,1)}
-.gate-half:hover,.gate-half:focus-visible{flex-grow:1.45}
-.gate-core{background:#f4f3ef;color:#202020}
-.gate-complete{color:#f1ece4}
-.gate-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;transform:scale(1.04);transition:transform 1.4s cubic-bezier(.16,1,.3,1)}
-.gate-complete:hover .gate-bg{transform:scale(1.1)}
-.gate-complete::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,4,7,.15),rgba(5,4,7,.75));z-index:1}
-.gate-half>span{position:relative;z-index:2}
-.gate-kicker{font:400 12px var(--mono);letter-spacing:.14em;opacity:.6}
-.gate-word{font:500 clamp(64px,10vw,150px)/.9 var(--sans);letter-spacing:-.04em}
-.gate-complete .gate-word{font:400 clamp(64px,10vw,150px)/.9 var(--serif)}
-.gate-complete .gate-word em{color:#fff}
-.gate-line{max-width:420px;font-size:clamp(16px,1.4vw,20px);opacity:.85}
-.gate-meta{font:400 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;opacity:.55}
-.gate-name{position:fixed;z-index:5;top:22px;left:50%;transform:translateX(-50%);font:400 12px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:#fff;mix-blend-mode:difference;white-space:nowrap}
-.gate-eye{position:fixed;z-index:4;left:50%;top:50%;width:min(28vw,280px);aspect-ratio:1;transform:translate(-50%,-50%);pointer-events:none}
-.gate-foot{position:fixed;z-index:5;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:16px;font:400 11px var(--mono);letter-spacing:.06em;color:#fff;mix-blend-mode:difference;white-space:nowrap}
-.gate-foot button{text-decoration:underline}
-@media(max-width:760px){.gate{flex-direction:column}.gate-half{justify-content:flex-end;padding-bottom:64px}.gate-core{padding-bottom:28px}.gate-eye{width:150px}.gate-foot{white-space:normal;text-align:center;width:90%}}
 
 /* ---------- Core: quick and simple ---------- */
 html[data-mode=core]{--bg:#f9f9f9;--fg:#202020;--dim:#737373;--line:#e2e2e2;--card:#ececec;--accent:#202020;--soft:#3a3a3a;--serif:var(--sans);color-scheme:light}
@@ -615,3 +595,9 @@ html[data-mode=complete] .frame-art>*{box-shadow:0 0 0 1px rgba(201,168,106,.75)
 .one-card:hover .one-art-note,.one-card:focus-visible .one-art-note{opacity:1;transform:none}
 @media(hover:none){.one-art-note{display:none}}
 .one-recipe-note{margin:0 0 12px;max-width:78ch;color:var(--fg)}
+
+/* the way back out of an exhibit (Core, Complete) to the site's gallery */
+.nav-left{display:inline-flex;align-items:center;gap:16px}
+.nav-exit{background:none;border:0;padding:0;font:400 13px var(--sans);color:var(--fg);opacity:.6;cursor:pointer}
+.nav-exit:hover{opacity:1}
+@media(max-width:560px){.nav-exit{font-size:12px}.nav-left{gap:10px}}

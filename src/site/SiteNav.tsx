@@ -1,0 +1,62 @@
+import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
+import { useI18n } from '../lib/i18n'
+import { StepLink } from './steps'
+
+/** The site's light/dark theme, remembered. Dark is the default. */
+export function useSiteTheme() {
+  const [light, setLight] = useState(() => document.documentElement.dataset.siteTheme === 'light')
+  useEffect(() => {
+    if (light) document.documentElement.dataset.siteTheme = 'light'; else delete document.documentElement.dataset.siteTheme
+    try { localStorage.setItem('siteTheme', light ? 'light' : 'dark') } catch { /* ignore */ }
+  }, [light])
+  return { light, toggle: () => setLight((v) => !v) }
+}
+
+const Sun = () => <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden><circle cx="8" cy="8" r="3" /><path d="M8 1.5v1.6M8 12.9v1.6M1.5 8h1.6M12.9 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1" /></svg>
+const Moon = () => <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden><path d="M13.4 9.6A5.6 5.6 0 0 1 6.4 2.6a5.6 5.6 0 1 0 7 7Z" /></svg>
+
+/**
+ * The site's header (after daoho.dev): lowercase, centred, the current page at full strength and the rest at half.
+ * On phones it becomes a single bar with the name and a menu.
+ */
+export function SiteNav() {
+  const { l, lang, setLang } = useI18n()
+  const { pathname } = useLocation()
+  const { light, toggle } = useSiteTheme()
+  const [open, setOpen] = useState(false)
+  useEffect(() => setOpen(false), [pathname])
+  const links: [string, string][] = [
+    ['/', l({ en: 'pond', es: 'estanque' })],
+    ['/projects', l({ en: 'projects', es: 'proyectos' })],
+    ['/gallery', l({ en: 'gallery', es: 'galería' })],
+    ['/blog', 'blog'],
+  ]
+  const current = (to: string) => (to === '/' ? pathname === '/' : pathname === to || pathname.startsWith(to + '/'))
+  const tools = (
+    <>
+      <button className="snav-tool" onClick={() => setLang(lang === 'en' ? 'es' : 'en')} aria-label={lang === 'en' ? 'Cambiar a español' : 'Switch to English'}>{lang === 'en' ? 'es' : 'en'}</button>
+      <button className="snav-tool" onClick={toggle} aria-label={light ? l({ en: 'Dark theme', es: 'Tema oscuro' }) : l({ en: 'Light theme', es: 'Tema claro' })}>{light ? <Moon /> : <Sun />}</button>
+    </>
+  )
+  return (
+    <>
+      <nav className="snav" aria-label="Main" data-pond-avoid>
+        {links.map(([to, label]) => <StepLink key={to} to={to} aria-current={current(to) ? 'page' : undefined}>{label}</StepLink>)}
+        {tools}
+      </nav>
+      <div className="snav-m" data-pond-avoid>
+        <StepLink to="/" className="snav-m-name">Javier Cruz</StepLink>
+        <button className="snav-m-menu" aria-expanded={open} aria-label={l({ en: 'Menu', es: 'Menú' })} onClick={() => setOpen((v) => !v)}>
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden fill="currentColor"><circle cx="4" cy="4" r="1.2" /><circle cx="12" cy="4" r="1.2" /><circle cx="4" cy="12" r="1.2" /><circle cx="12" cy="12" r="1.2" /><circle cx="8" cy="8" r="1.2" /></svg>
+        </button>
+        {open && (
+          <div className="snav-m-list">
+            {links.map(([to, label]) => <StepLink key={to} to={to} aria-current={current(to) ? 'page' : undefined}>{label}</StepLink>)}
+            <div className="snav-m-tools">{tools}</div>
+          </div>
+        )}
+      </div>
+    </>
+  )
+}

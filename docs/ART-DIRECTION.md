@@ -2,12 +2,19 @@
 
 This file is the source of truth for how javicruz.dev looks. Read it before changing anything visual.
 
-## Two modes, one header
+## The site, and two sites in its gallery
 
-- **Core** is always **light**: quick, one page, laid out like a studio index.
-- **Complete** is always **dark**: the full exhibition.
-- There's no light/dark toggle.
-- Both modes share the same header (`Nav.tsx`). Only its colours change. The single exception is Core's style switch.
+- **The site** (`src/site/`) is the front door, modelled closely on daoho.dev: pond, projects, gallery, blog.
+  - **Type and colour:** Geist Mono only. Warm near-black `#1a1917` with warm off-white `#fff7f0`, and a light theme (`#f5f4f1` / `#262523`) behind a toggle.
+  - **Nav:** lowercase, centred, the current page at full strength and the rest at half.
+  - **Pond:** a placeholder ASCII pond that keeps clear of text (`[data-pond-avoid]`). It will be replaced.
+  - **Projects:** one row of large cards that scrolls sideways, each painting hung on a blurred wash of its own colours. Project pages follow daoho's: hero band, story, the build, photos, previous and next.
+  - **Gallery:** Core and Complete hang as works. The viewer has an "enter" button that steps into that whole site.
+  - **Page changes:** stepped, after marcvendrell.cat. Everything runs on 12 poses a second: the page sinks 4px and goes in 2 poses, then each `[data-block]` steps in, in its `--order` (`src/site/steps.tsx`).
+- **Core** and **Complete** are exhibits. Entering one lasts for the tab. Their header (`Nav.tsx`) has a "← gallery" link back out.
+  - **Core** is always **light**: quick, one page, laid out like a studio index.
+  - **Complete** is always **dark**: the full exhibition.
+  - Both share `Nav.tsx`, where only the colours change, plus Core's style switch.
 
 ## Core: modernist abstraction (20th century)
 
