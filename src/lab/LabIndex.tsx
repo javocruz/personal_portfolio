@@ -6,6 +6,7 @@ const cards: [string, string, string][] = [
   ['/lab/heroes', 'Heroes', 'Six hero concepts: the eye, the isle in different treatments, and the merge.'],
   ['/lab/plates', 'Plates', 'Project art painted in code from each project’s real numbers.'],
   ['/lab/cabinet', 'Cabinet', 'Self-portrait painted in code, ink-face generator, and the loading painting.'],
+  ['/lab/ponds', 'Ponds', 'Twelve live ideas for the water on the site’s home page.'],
   ['/lab/a', 'Layout A', 'Gallery hall: museum structure with wall labels.'],
   ['/lab/b', 'Layout B', 'The voyage: one scroll across the water to the isle.'],
   ['/lab/c', 'Layout C', 'The index: typographic list, art appears on hover.'],

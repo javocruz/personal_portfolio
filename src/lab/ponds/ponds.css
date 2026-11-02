@@ -1,0 +1,14 @@
+.ponds{min-height:100vh;background:#1a1917;color:#fff7f0;font:400 13px/1.6 'Geist Mono',ui-monospace,monospace;padding:64px 24px 96px}
+.ponds a{color:inherit;opacity:.5;text-decoration:underline;text-underline-offset:5px}
+.ponds-head{max-width:72rem;margin:0 auto 48px}
+.ponds-head h1{font:500 14px 'Geist Mono',monospace;margin:28px 0 8px;letter-spacing:0}
+.ponds-head p{max-width:44rem;margin:0;color:rgba(255,247,240,.55)}
+.ponds-grid{max-width:72rem;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,22rem),1fr));gap:48px 20px}
+.tank-canvas{display:block;width:100%;aspect-ratio:16/10;touch-action:none}
+.tank-label p{margin:0}
+.tank-title{margin-top:12px!important}
+.tank-title span{color:rgba(255,247,240,.4)}
+.tank-title b{font-weight:500}
+.tank-tags{color:#e07a3f;font-size:11px}
+.tank-idea{color:rgba(255,247,240,.6);margin-top:4px!important}
+.tank-hint{color:rgba(255,247,240,.35);font-size:11px;margin-top:4px!important}
