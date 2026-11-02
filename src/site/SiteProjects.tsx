@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react'
 import { useI18n } from '../lib/i18n'
 import { useHead } from '../lib/head'
 import { projects } from '../content/projects'
@@ -15,28 +14,17 @@ export function PlateCard({ slug, alt, eager = false, sizes = '(max-width: 900px
   )
 }
 
-/** Projects (after daoho.dev): one row of large cards that scrolls sideways; the mouse wheel moves it too. */
+/** Projects: a two-column grid that scrolls down (like Core's), each painting hung on a wash of its own colours. */
 export default function SiteProjects() {
   const { l } = useI18n()
   useHead('Projects · Javier Cruz Villarreal', l({ en: 'Projects: hackathons, startups and client work, each with a painting made in code.', es: 'Proyectos: hackathons, startups y trabajo para clientes, cada uno con una pintura hecha con código.' }))
-  const row = useRef<HTMLDivElement>(null)
-  // a vertical wheel scrolls the row sideways (trackpads that scroll sideways already do)
-  useEffect(() => {
-    const el = row.current!
-    const wheel = (e: WheelEvent) => {
-      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return
-      e.preventDefault(); el.scrollLeft += e.deltaY
-    }
-    el.addEventListener('wheel', wheel, { passive: false })
-    return () => el.removeEventListener('wheel', wheel)
-  }, [])
   return (
     <main className="site-main site-projects">
-      <div className="proj-row" ref={row}>
+      <div className="proj-grid">
         {projects.map((p, i) => (
           <StepLink key={p.slug} to={`/projects/${p.slug}`} className="proj-card" data-block style={{ ['--order' as string]: i }}>
             <div className="proj-img">
-              <PlateCard slug={p.slug} alt={p.title} eager={i < 2} />
+              <PlateCard slug={p.slug} alt={p.title} eager={i < 4} sizes="(max-width: 1023px) 92vw, 28rem" />
               <span className="proj-view">{l({ en: 'view project', es: 'ver proyecto' })}</span>
             </div>
             <p className="proj-title"><b>{p.title}</b> <span>{l(p.when)}</span></p>

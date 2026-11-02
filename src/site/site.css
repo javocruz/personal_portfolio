@@ -36,7 +36,7 @@ html[data-mode=site] .page{animation:none}
 .snav>*{pointer-events:auto}
 /* a soft fade behind the header, so text scrolling under it stays legible */
 .snav::before{content:'';position:absolute;inset:0 0 -28px;z-index:-1;background:linear-gradient(var(--s-bg) 40%,transparent);pointer-events:none}
-.site-home~.snav::before,html:has(.site-home) .snav::before,html:has(.site-projects) .snav::before{display:none}
+.site-home~.snav::before,html:has(.site-home) .snav::before{display:none}
 .snav a,.snav-tool{color:var(--s-fg);opacity:.5;text-decoration:none;transition:opacity .15s;background:none;border:0;padding:0;font:inherit;cursor:pointer;display:inline-flex;align-items:center}
 .snav a[aria-current],.snav a:hover,.snav-tool:hover{opacity:1}
 .snav-tool{margin-left:-8px}
@@ -72,19 +72,18 @@ html[data-mode=site] .page{animation:none}
 .site-home:has(.home-form){overflow:auto}
 @media(max-width:1023px){.home-col{left:20px;right:20px;bottom:auto;top:44vh}.home-prose,.home-tag{width:auto}}
 
-/* ---- projects: one row that scrolls sideways */
-.site-projects{display:flex;align-items:center;height:100svh;overflow:hidden}
-.proj-row{display:flex;gap:12px;overflow-x:auto;width:100%;padding:0 max(1.5rem,calc((100vw - 56rem) / 2));scrollbar-width:none}
-.proj-row::-webkit-scrollbar{display:none}
-.proj-card{flex:none;width:min(840px,80vw);text-decoration:none!important}
-.proj-img{position:relative;aspect-ratio:3/2;overflow:hidden;background:var(--s-card)}
-.proj-view{position:absolute;left:16px;bottom:16px;padding:7px 12px;border-radius:999px;font:400 11px var(--s-mono);text-transform:uppercase;letter-spacing:.04em;color:#fff7f0;background:rgba(20,19,17,.62);backdrop-filter:blur(8px);opacity:0;transition:opacity .2s}
+/* ---- projects: two columns that scroll down */
+.site-projects{max-width:56rem;margin:0 auto;padding:120px 1.5rem 96px}
+.proj-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:44px 16px}
+.proj-card{display:block;text-decoration:none!important}
+.proj-img{position:relative;aspect-ratio:1/1;overflow:hidden;background:var(--s-card)}
+.proj-view{position:absolute;left:14px;bottom:14px;padding:7px 12px;border-radius:999px;font:400 11px var(--s-mono);text-transform:uppercase;letter-spacing:.04em;color:#fff7f0;background:rgba(20,19,17,.62);backdrop-filter:blur(8px);opacity:0;transition:opacity .2s}
 .proj-card:hover .proj-view,.proj-card:focus-visible .proj-view{opacity:1}
 .proj-title{margin:12px 0 2px;font-size:13px}
 .proj-title b{font-weight:500}
 .proj-title span{color:var(--s-dim);font-size:11px;margin-left:6px}
 .proj-line{margin:0;color:var(--s-dim);font-size:13px}
-@media(max-width:1023px){.site-projects{height:auto;min-height:100svh;padding-top:84px;align-items:flex-start}.proj-row{flex-direction:column;overflow:visible;padding:0 20px 40px;gap:36px}.proj-card{width:100%}}
+@media(max-width:1023px){.site-projects{padding:96px 20px 64px}.proj-grid{grid-template-columns:minmax(0,1fr);gap:36px}}
 
 /* a painting hung on a soft wash of its own colours */
 .plate-card{position:absolute;inset:0;overflow:hidden}
