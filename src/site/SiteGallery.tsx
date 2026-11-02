@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
 import { useI18n } from '../lib/i18n'
 import { useHead } from '../lib/head'
@@ -28,6 +29,25 @@ export default function SiteGallery() {
   const { setMode } = useMode()
   const navigate = useNavigate()
   const [open, setOpen] = useState<number | null>(null)
+  const thumbs = useRef<(HTMLImageElement | null)[]>([])
+  // Moving through the gallery: a work grows out of its place on the wall into the viewer and shrinks back on close;
+  // between works, the next one washes in over the last with a wet, ragged edge from the side you went. Where view
+  // transitions aren't supported (or motion is reduced) it simply switches.
+  const go = (next: number | null) => {
+    const from = open, root = document.documentElement
+    const kind = from === null ? 'open' : next === null ? 'close' : next === (from + 1) % WORKS.length ? 'next' : 'prev'
+    if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) { setOpen(next); return }
+    const name = (i: number | null, v: string) => { const el = i === null ? null : thumbs.current[i]; if (el) el.style.viewTransitionName = v }
+    root.dataset.sgMove = kind
+    if (kind === 'open') name(next, 'sg-work')
+    const vt = document.startViewTransition(() => {
+      if (kind === 'open') name(next, '')
+      if (kind === 'close') name(from, 'sg-work')
+      flushSync(() => setOpen(next))
+    })
+    vt.finished.finally(() => { delete root.dataset.sgMove; if (kind === 'close') name(from, '') })
+  }
+  const step = (d: number) => go(((open ?? 0) + d + WORKS.length) % WORKS.length)
   useHead('Gallery · Javier Cruz Villarreal', l({ en: 'Two whole websites in one: Core and Complete.', es: 'Dos sitios completos en uno: Core y Complete.' }))
   const enter = (m: Mode) => {
     // the same stepped exit as every page change, then into the exhibit
@@ -37,9 +57,9 @@ export default function SiteGallery() {
   useEffect(() => {
     if (open === null) return
     const key = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(null)
-      if (e.key === 'ArrowRight') setOpen((o) => ((o ?? 0) + 1) % WORKS.length)
-      if (e.key === 'ArrowLeft') setOpen((o) => ((o ?? 0) - 1 + WORKS.length) % WORKS.length)
+      if (e.key === 'Escape') go(null)
+      if (e.key === 'ArrowRight') step(1)
+      if (e.key === 'ArrowLeft') step(-1)
     }
     addEventListener('keydown', key)
     return () => removeEventListener('keydown', key)
@@ -54,8 +74,8 @@ export default function SiteGallery() {
       <div className="sg-grid">
         {WORKS.map((it, i) => (
           <figure key={it.mode} className="sg-work" data-block style={{ ['--order' as string]: i + 1 }}>
-            <button className="sg-img" onClick={() => setOpen(i)} aria-label={l({ en: `Look at ${it.title}`, es: `Ver ${it.title}` })}>
-              <img src={`${it.img}-1200.jpg`} srcSet={`${it.img}-800.jpg 800w, ${it.img}-1200.jpg 1200w`} sizes="(max-width: 900px) 92vw, 28rem" alt="" width={1200} height={750} loading={i < 2 ? 'eager' : 'lazy'} />
+            <button className="sg-img" onClick={() => go(i)} aria-label={l({ en: `Look at ${it.title}`, es: `Ver ${it.title}` })}>
+              <img ref={(el) => { thumbs.current[i] = el }} src={`${it.img}-1200.jpg`} srcSet={`${it.img}-800.jpg 800w, ${it.img}-1200.jpg 1200w`} sizes="(max-width: 900px) 92vw, 28rem" alt="" width={1200} height={750} loading={i < 2 ? 'eager' : 'lazy'} />
             </button>
             <figcaption>
               <p><b>{it.title}</b> <span>{it.year}</span></p>
@@ -68,13 +88,13 @@ export default function SiteGallery() {
       {w && (
         <div className="sg-view" role="dialog" aria-modal="true" aria-label={w.title}>
           <div className="sg-view-top">
-            <button onClick={() => setOpen(null)}>{l({ en: 'close', es: 'cerrar' })}</button>
-            <span>{(open ?? 0) + 1} / {WORKS.length}</span>
+            <button onClick={() => go(null)}>{l({ en: 'close', es: 'cerrar' })}</button>
+            <span style={{ viewTransitionName: 'sg-count' }}>{(open ?? 0) + 1} / {WORKS.length}</span>
           </div>
-          <button className="sg-view-arrow sg-l" onClick={() => setOpen(((open ?? 0) - 1 + WORKS.length) % WORKS.length)} aria-label={l({ en: 'Previous', es: 'Anterior' })}>‹</button>
-          <img className="sg-view-img" src={`${w.img}-1200.jpg`} alt={w.title} />
-          <button className="sg-view-arrow sg-r" onClick={() => setOpen(((open ?? 0) + 1) % WORKS.length)} aria-label={l({ en: 'Next', es: 'Siguiente' })}>›</button>
-          <div className="sg-view-foot">
+          <button className="sg-view-arrow sg-l" onClick={() => step(-1)} aria-label={l({ en: 'Previous', es: 'Anterior' })}>‹</button>
+          <img className="sg-view-img" src={`${w.img}-1200.jpg`} alt={w.title} style={{ viewTransitionName: 'sg-work' }} />
+          <button className="sg-view-arrow sg-r" onClick={() => step(1)} aria-label={l({ en: 'Next', es: 'Siguiente' })}>›</button>
+          <div className="sg-view-foot" style={{ viewTransitionName: 'sg-caption' }}>
             <p><b>{w.title}</b> <span>{w.year}</span></p>
             <p className="sg-medium">{l(w.note)}</p>
             <button className="sg-view-enter" onClick={() => enter(w.mode)}>{l({ en: `enter ${w.title.toLowerCase()}`, es: `entrar a ${w.title.toLowerCase()}` })} →</button>

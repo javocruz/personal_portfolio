@@ -154,6 +154,24 @@ html[data-mode=site] .page{animation:none}
 .sg-view-foot b{font-weight:500;text-transform:uppercase;letter-spacing:.04em;font-size:12px}
 .sg-view-foot span{color:var(--s-dim);font-size:11px;margin-left:6px}
 @media(max-width:1023px){.site-gallery{padding:96px 20px 64px}.sg-grid{grid-template-columns:1fr}}
+/* moving through the gallery (see go() in SiteGallery): grow out of the wall, shrink back, wash from work to work */
+::view-transition-old(root),::view-transition-new(root){animation-duration:.45s}
+::view-transition-group(sg-work){animation-duration:.6s;animation-timing-function:cubic-bezier(.2,.7,.1,1)}
+html[data-sg-move=next]::view-transition-group(sg-work),html[data-sg-move=prev]::view-transition-group(sg-work){animation-duration:1s}
+html[data-sg-move=next]::view-transition-image-pair(sg-work),html[data-sg-move=prev]::view-transition-image-pair(sg-work){isolation:auto}
+html[data-sg-move=next]::view-transition-old(sg-work),html[data-sg-move=prev]::view-transition-old(sg-work){mix-blend-mode:normal;animation:sg-recede 1s cubic-bezier(.4,0,.2,1) both}
+html[data-sg-move=next]::view-transition-new(sg-work),html[data-sg-move=prev]::view-transition-new(sg-work){mix-blend-mode:normal;mask-size:300% 100%;mask-repeat:no-repeat;animation:sg-wash 1s cubic-bezier(.55,0,.2,1) both}
+html[data-sg-move=next]::view-transition-new(sg-work){mask-image:url(/art/site/wash-from-right.svg)}
+html[data-sg-move=prev]::view-transition-new(sg-work){mask-image:url(/art/site/wash-from-left.svg);animation-name:sg-wash-back}
+@keyframes sg-wash{from{mask-position:0 0}to{mask-position:100% 0}}
+@keyframes sg-wash-back{from{mask-position:100% 0}to{mask-position:0 0}}
+@keyframes sg-recede{to{transform:scale(.97);filter:brightness(.55) saturate(.8)}}
+/* the label and counter change in the site's stepped poses: out in two, in with three, a beat later */
+::view-transition-group(sg-caption),::view-transition-group(sg-count){animation:none}
+::view-transition-old(sg-caption),::view-transition-old(sg-count){animation:sg-out calc(2 * var(--pose,.0833s)) steps(2,jump-start) both}
+::view-transition-new(sg-caption),::view-transition-new(sg-count){animation:sg-in calc(3 * var(--pose,.0833s)) steps(3,jump-end) calc(4 * var(--pose,.0833s)) both}
+@keyframes sg-out{to{opacity:0;transform:translateY(-4px)}}
+@keyframes sg-in{from{opacity:0;transform:translateY(4px)}}
 
 /* ---- blog */
 .site-blog{max-width:56rem;margin:0 auto;padding:120px 1.5rem 96px}
