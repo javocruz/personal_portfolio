@@ -1,31 +1,43 @@
 import { pick, rng, type PondDef } from './kit'
 
 /**
- * Round three: ponds that run themselves. Cellular automata and small simulations in the site's voice (ink on the dark
- * ground, one accent), stepping at the site's own pace of 12 poses a second. The cursor does nothing; something
- * interesting just keeps happening.
+ * Ponds that run themselves: cellular automata and small simulations in the site's voice, stepping at the site's own
+ * pace of 12 poses a second. The cursor does nothing; something interesting just keeps happening.
+ *
+ * They draw ink (and the odd accent) on a transparent canvas, so the page's own background shows through and the
+ * same code serves the dark and the light theme: setPalette() before make().
  */
-const BG = '#1a1917', INK = [255, 247, 240], BGC = [26, 25, 23], ACC = [224, 122, 63]
-const ink = (a: number) => `rgba(255,247,240,${a})`
-const acc = (a = 1) => `rgba(224,122,63,${a})`
+let INK = [255, 247, 240], ACC = [224, 122, 63]
+export const setPalette = (ink: number[], acc: number[]) => { INK = ink; ACC = acc }
+const ink = (a: number) => `rgba(${INK[0]},${INK[1]},${INK[2]},${a})`
+const acc = (a = 1) => `rgba(${ACC[0]},${ACC[1]},${ACC[2]},${a})`
 const MONO = "'Geist Mono', ui-monospace, monospace"
 const POSE = 1 / 12
 const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map((v) => (v + 0.5) / 16)
-const clear = (ctx: CanvasRenderingContext2D, w: number, h: number) => { ctx.fillStyle = BG; ctx.fillRect(0, 0, w, h) }
+const clear = (ctx: CanvasRenderingContext2D, w: number, h: number) => ctx.clearRect(0, 0, w, h)
 const label = (ctx: CanvasRenderingContext2D, text: string) => { ctx.font = `10px ${MONO}`; ctx.textBaseline = 'top'; ctx.fillStyle = ink(0.4); ctx.fillText(text, 10, 8) }
 
-/** A low-res pixel buffer, drawn back up without smoothing. */
+/** A low-res pixel buffer (transparent where nothing is drawn), drawn back up without smoothing. */
 const pixels = (bw: number, bh: number) => {
   const c = document.createElement('canvas'); c.width = bw; c.height = bh
-  const x = c.getContext('2d')!, img = x.createImageData(bw, bh)
+  const x = c.getContext('2d')!, img = x.createImageData(bw, bh), d = img.data
   return {
-    set(i: number, rgb: number[]) { const o = i * 4; img.data[o] = rgb[0]; img.data[o + 1] = rgb[1]; img.data[o + 2] = rgb[2]; img.data[o + 3] = 255 },
+    /** colour i with `rgb` at opacity a (0..1); a = 0 leaves it clear */
+    set(i: number, rgb: number[], a = 1) { const o = i * 4; d[o] = rgb[0]; d[o + 1] = rgb[1]; d[o + 2] = rgb[2]; d[o + 3] = a * 255 },
     blit(ctx: CanvasRenderingContext2D, S: number) { x.putImageData(img, 0, 0); ctx.imageSmoothingEnabled = false; ctx.drawImage(c, 0, 0, bw * S, bh * S); ctx.imageSmoothingEnabled = true },
   }
 }
-const mix = (t: number) => [BGC[0] + (INK[0] - BGC[0]) * t, BGC[1] + (INK[1] - BGC[1]) * t, BGC[2] + (INK[2] - BGC[2]) * t]
-/** a stepper: call tick(t) every frame, it calls fn once per pose (or n times per pose) */
-const every = (dt: number, fn: () => void) => { let last = -1; return (t: number) => { if (last < 0) last = t; while (t - last >= dt) { last += dt; fn() } } }
+/** Calls fn once per `dt` of time (catching up at most a second, e.g. after the tab was hidden); returns whether it did. */
+const every = (dt: number, fn: () => void) => {
+  let last = -1
+  return (t: number) => {
+    if (last < 0) last = t
+    if (t - last > 1) last = t - dt
+    let ran = false
+    while (t - last >= dt) { last += dt; fn(); ran = true }
+    return ran
+  }
+}
 
 /* Conway's Life on a torus, with seeds when the board goes quiet; their descendants glow for a while */
 const GLIDER = [[1, 0], [2, 1], [0, 2], [1, 2], [2, 2]], RPENT = [[1, 0], [2, 0], [0, 1], [1, 1], [1, 2]], ACORN = [[1, 0], [3, 1], [0, 2], [1, 2], [4, 2], [5, 2], [6, 2]]
@@ -51,7 +63,7 @@ const lifeEngine = (C: number, R: number, seed: number) => {
           const nb = a[up + l] + a[up + x] + a[up + rr] + a[mid + l] + a[mid + rr] + a[dn + l] + a[dn + x] + a[dn + rr]
           const i = mid + x, alive = a[i], v = nb === 3 || (alive && nb === 2) ? 1 : 0
           b[i] = v; pop += v
-          if (alive && !v) trail[i] = 1
+          trail[i] = alive && !v ? 1 : trail[i] * 0.8
           heat2[i] = v ? (alive ? heat[i] * 0.97 : Math.max(heat[up + l], heat[up + x], heat[up + rr], heat[mid + l], heat[mid + rr], heat[dn + l], heat[dn + x], heat[dn + rr]) * 0.94) : 0
         }
       }
@@ -64,17 +76,18 @@ const lifeEngine = (C: number, R: number, seed: number) => {
 }
 
 const life: PondDef = {
-  id: 'life', name: 'Game of Life', tags: ['automata', 'conway'], bg: BG, passive: true,
+  id: 'life', name: 'Game of Life', tags: ['automata', 'conway'], bg: '#1a1917', passive: true,
   idea: 'Conway’s rules at twelve steps a second. Dead cells leave a fading trace; when the board goes quiet a new seed lands, and its children glow.', hint: 'just watch',
   make(ctx, w, h) {
     const S = 5, C = Math.floor(w / S), R = Math.floor(h / S), L = lifeEngine(C, R, 21), tick = every(POSE, L.step)
+    let drawn = false
     return {
       frame(t) {
-        tick(t); clear(ctx, w, h)
+        if (!tick(t) && drawn) return
+        drawn = true; clear(ctx, w, h)
         const on = new Path2D(), hot = new Path2D(), tr = new Path2D()
         for (let i = 0; i < C * R; i++) {
           const x = (i % C) * S, y = Math.floor(i / C) * S
-          L.trail[i] *= 0.93
           if (L.a[i]) (L.heat[i] > 0.25 ? hot : on).rect(x, y, S - 1, S - 1)
           else if (L.trail[i] > 0.15) tr.rect(x + 1, y + 1, S - 3, S - 3)
         }
@@ -87,12 +100,12 @@ const life: PondDef = {
 /* elementary automata: one row at a time, scrolling up; the rule changes every few seconds */
 const RULES = [110, 30, 90, 54, 150, 73, 45, 105, 18]
 const wolfram: PondDef = {
-  id: 'wolfram', name: 'Elementary automata', tags: ['automata', 'wolfram'], bg: BG, passive: true,
+  id: 'wolfram', name: 'Elementary automata', tags: ['automata', 'wolfram'], bg: '#1a1917', passive: true,
   idea: 'One row of cells at a time, each decided by its three neighbours above. Every few seconds the rule changes, and the pattern turns.', hint: 'just watch',
   make(ctx, w, h) {
     const S = 4, C = Math.floor(w / S), R = Math.ceil(h / S), r = rng(110)
     const rows: { cells: Uint8Array; change: boolean }[] = []
-    let rule = 0, count = 0
+    let rule = 0, count = 0, drawn = false
     const first = new Uint8Array(C); for (let i = 0; i < C; i++) first[i] = r() < 0.5 ? 1 : 0
     rows.push({ cells: first, change: false })
     const step = () => {
@@ -107,11 +120,12 @@ const wolfram: PondDef = {
     const tick = every(POSE, step)
     return {
       frame(t) {
-        tick(t); clear(ctx, w, h)
+        if (!tick(t) && drawn) return
+        drawn = true; clear(ctx, w, h)
         const p = new Path2D(), hp = new Path2D(), off = h - rows.length * S
         rows.forEach((row, j) => { for (let x = 0; x < C; x++) if (row.cells[x]) (row.change ? hp : p).rect(x * S, off + j * S, S - 1, S - 1) })
         ctx.fillStyle = ink(0.72); ctx.fill(p); ctx.fillStyle = acc(); ctx.fill(hp)
-        ctx.fillStyle = BG; ctx.fillRect(4, 4, 110, 18); label(ctx, `rule ${RULES[rule]}  gen ${count}`)
+        ctx.clearRect(4, 4, 110, 18); label(ctx, `rule ${RULES[rule]}  gen ${count}`)
       },
     }
   },
@@ -119,14 +133,15 @@ const wolfram: PondDef = {
 
 /* reaction-diffusion (Gray-Scott): two chemicals that make coral and spots, dithered in two tones */
 const turing: PondDef = {
-  id: 'turing', name: 'Reaction-diffusion', tags: ['simulation', 'turing patterns'], bg: BG, passive: true,
+  id: 'turing', name: 'Reaction-diffusion', tags: ['simulation', 'turing patterns'], bg: '#1a1917', passive: true,
   idea: 'Two chemicals feeding and eating each other (Gray-Scott), growing coral like the patterns on shells and fish. A drop lands now and then.', hint: 'just watch',
   make(ctx, w, h) {
-    const S = 3, bw = Math.ceil(w / S), bh = Math.ceil(h / S), n = bw * bh, r = rng(7)
+    // keep the simulation to about 40k cells however big the canvas is
+    const S = Math.max(3, Math.ceil(Math.sqrt((w * h) / 40000))), bw = Math.ceil(w / S), bh = Math.ceil(h / S), n = bw * bh, r = rng(7)
     let A = new Float32Array(n).fill(1), B = new Float32Array(n), A2 = new Float32Array(n), B2 = new Float32Array(n)
     const px = pixels(bw, bh), f = 0.0545, k = 0.062
     const seed = () => { const cx = 4 + Math.floor(r() * (bw - 8)), cy = 4 + Math.floor(r() * (bh - 8)); for (let y = -2; y <= 2; y++) for (let x = -2; x <= 2; x++) B[(cy + y) * bw + cx + x] = 1 }
-    for (let i = 0; i < 8; i++) seed()
+    for (let i = 0; i < Math.max(8, Math.round(n / 4000)); i++) seed()
     let next = 6
     const iterate = () => {
       for (let y = 1; y < bh - 1; y++) for (let x = 1; x < bw - 1; x++) {
@@ -141,9 +156,9 @@ const turing: PondDef = {
     return {
       frame(t) {
         if (t > next) { seed(); next = t + 5 }
-        for (let i = 0; i < 9; i++) iterate()
-        for (let y = 0; y < bh; y++) for (let x = 0; x < bw; x++) { const i = y * bw + x; px.set(i, B[i] * 3.2 > BAYER[(y & 3) * 4 + (x & 3)] ? INK : BGC) }
-        px.blit(ctx, S)
+        for (let i = 0; i < 8; i++) iterate()
+        for (let y = 0; y < bh; y++) for (let x = 0; x < bw; x++) { const i = y * bw + x; px.set(i, INK, B[i] * 3.2 > BAYER[(y & 3) * 4 + (x & 3)] ? 0.85 : 0) }
+        clear(ctx, w, h); px.blit(ctx, S)
       },
     }
   },
@@ -151,7 +166,7 @@ const turing: PondDef = {
 
 /* Langton's ants: two dumb rules, chaos for ten thousand steps, then a highway */
 const ants: PondDef = {
-  id: 'ants', name: 'Langton’s ants', tags: ['automata', 'emergence'], bg: BG, passive: true,
+  id: 'ants', name: 'Langton’s ants', tags: ['automata', 'emergence'], bg: '#1a1917', passive: true,
   idea: 'Three ants with one rule: on a dark cell turn right, on a light one turn left, flip it, step. Chaos for a while, then each builds a highway.', hint: 'just watch',
   make(ctx, w, h) {
     const S = 3, C = Math.floor(w / S), R = Math.floor(h / S), grid = new Uint8Array(C * R), px = pixels(C, R), r = rng(3)
@@ -159,6 +174,7 @@ const ants: PondDef = {
     let crew: { x: number; y: number; d: number }[] = [], steps = 0
     const reset = () => { grid.fill(0); steps = 0; crew = Array.from({ length: 3 }, () => ({ x: Math.floor(C * (0.25 + r() * 0.5)), y: Math.floor(R * (0.25 + r() * 0.5)), d: Math.floor(r() * 4) })) }
     reset()
+    const limit = Math.max(45000, C * R * 1.2)
     return {
       frame() {
         for (let s = 0; s < 60; s++) for (const a of crew) {
@@ -167,10 +183,10 @@ const ants: PondDef = {
           a.x = (a.x + DX[a.d] + C) % C; a.y = (a.y + DY[a.d] + R) % R
         }
         steps += 60
-        if (steps > 45000) reset()
-        for (let i = 0; i < C * R; i++) px.set(i, grid[i] ? mix(0.7) : BGC)
+        if (steps > limit) reset()
+        for (let i = 0; i < C * R; i++) px.set(i, INK, grid[i] ? 0.7 : 0)
         for (const a of crew) px.set(a.y * C + a.x, ACC)
-        px.blit(ctx, S); ctx.fillStyle = BG; ctx.fillRect(4, 4, 96, 18); label(ctx, `step ${steps}`)
+        clear(ctx, w, h); px.blit(ctx, S); ctx.clearRect(4, 4, 96, 18); label(ctx, `step ${steps}`)
       },
     }
   },
@@ -178,7 +194,7 @@ const ants: PondDef = {
 
 /* flocking: boids with three rules, and one that leads */
 const flock: PondDef = {
-  id: 'flock', name: 'Flock', tags: ['simulation', 'boids'], bg: BG, passive: true,
+  id: 'flock', name: 'Flock', tags: ['simulation', 'boids'], bg: '#1a1917', passive: true,
   idea: 'A school of dashes following three rules: keep apart, align, stay close. One of them wanders off, and the rest decide whether to follow.', hint: 'just watch',
   make(ctx, w, h) {
     const r = rng(9), N = 90
@@ -217,10 +233,10 @@ const flock: PondDef = {
 
 /* cyclic automaton: random noise organises itself into turning spirals, dithered */
 const cyclic: PondDef = {
-  id: 'cyclic', name: 'Cyclic spirals', tags: ['automata', 'self-organising'], bg: BG, passive: true,
+  id: 'cyclic', name: 'Cyclic spirals', tags: ['automata', 'self-organising'], bg: '#1a1917', passive: true,
   idea: 'Fourteen states in a loop; a cell moves on when a neighbour is one ahead. Out of pure noise come spirals that turn forever, like ripples that never stop.', hint: 'just watch',
   make(ctx, w, h) {
-    const S = 3, C = Math.ceil(w / S), R = Math.ceil(h / S), N = 14, r = rng(14)
+    const S = Math.max(3, Math.ceil(Math.sqrt((w * h) / 60000))), C = Math.ceil(w / S), R = Math.ceil(h / S), N = 14, r = rng(14)
     let a = new Uint8Array(C * R), b = new Uint8Array(C * R)
     for (let i = 0; i < C * R; i++) a[i] = Math.floor(r() * N)
     const px = pixels(C, R)
@@ -233,11 +249,13 @@ const cyclic: PondDef = {
     }
     for (let i = 0; i < 160; i++) step()
     const tick = every(POSE, step)
+    let drawn = false
     return {
       frame(t) {
-        tick(t)
-        for (let y = 0; y < R; y++) for (let x = 0; x < C; x++) { const i = y * C + x, v = a[i] / (N - 1); px.set(i, v * v * 0.95 > BAYER[(y & 3) * 4 + (x & 3)] ? INK : BGC) }
-        px.blit(ctx, S)
+        if (!tick(t) && drawn) return
+        drawn = true
+        for (let y = 0; y < R; y++) for (let x = 0; x < C; x++) { const i = y * C + x, v = a[i] / (N - 1); px.set(i, INK, v * v * 0.95 > BAYER[(y & 3) * 4 + (x & 3)] ? 0.85 : 0) }
+        clear(ctx, w, h); px.blit(ctx, S)
       },
     }
   },
@@ -245,7 +263,7 @@ const cyclic: PondDef = {
 
 /* Brian's Brain: cells fire, rest, and wake when exactly two neighbours fire; it fills with tiny ships */
 const brain: PondDef = {
-  id: 'brain', name: 'Brian’s Brain', tags: ['automata', 'sparks'], bg: BG, passive: true,
+  id: 'brain', name: 'Brian’s Brain', tags: ['automata', 'sparks'], bg: '#1a1917', passive: true,
   idea: 'Cells fire, rest, then wake when exactly two neighbours fire. Little ships form and shoot across, crashing into storms.', hint: 'just watch',
   make(ctx, w, h) {
     const S = 4, C = Math.floor(w / S), R = Math.floor(h / S), r = rng(2)
@@ -266,9 +284,11 @@ const brain: PondDef = {
       if (on < C * R * 0.01) sprinkle(Math.floor(r() * C), Math.floor(r() * R), 4)
     }
     const tick = every(POSE, step)
+    let drawn = false
     return {
       frame(t) {
-        tick(t); clear(ctx, w, h)
+        if (!tick(t) && drawn) return
+        drawn = true; clear(ctx, w, h)
         const fire = new Path2D(), rest = new Path2D()
         for (let i = 0; i < C * R; i++) if (a[i]) (a[i] === 1 ? fire : rest).rect((i % C) * S, Math.floor(i / C) * S, S - 1, S - 1)
         ctx.fillStyle = ink(0.2); ctx.fill(rest); ctx.fillStyle = ink(0.9); ctx.fill(fire)
@@ -277,14 +297,53 @@ const brain: PondDef = {
   },
 }
 
+/* glyph rain: the dithered surface, rain only, typed in monospace glyphs (11 and 13 together) */
+const RAMP = ['·', '.', ':', '-', '=', '+', '*', '#']
+const glyphrain: PondDef = {
+  id: 'glyphrain', name: 'Dithered glyph rain', tags: ['dither', 'glyphs'], bg: '#1a1917', passive: true,
+  idea: 'The dithered surface and the glyph water together: light falls on the waves, an ordered dither decides which cells speak, and the glyph says how bright. Only rain disturbs it.', hint: 'just watch',
+  make(ctx, w, h) {
+    const G = 12, C = Math.ceil(w / G), R = Math.ceil(h / G), H = new Float32Array(C * R), RING = new Float32Array(C * R)
+    const rings: { x: number; y: number; t0: number }[] = []
+    const tick = every(POSE, () => {})
+    let drawn = false
+    return {
+      frame(t) {
+        if (!tick(t) && drawn) return
+        drawn = true
+        if (Math.random() < 0.08) rings.push({ x: Math.random() * C, y: Math.random() * R, t0: t })
+        for (let i = rings.length - 1; i >= 0; i--) if (t - rings[i].t0 > 5) rings.splice(i, 1)
+        for (let y = 0; y < R; y++) for (let x = 0; x < C; x++) {
+          let v = Math.sin(x * 0.27 + t * 0.6) * 0.5 + Math.sin(y * 0.39 - t * 0.45 + x * 0.09) * 0.4 + Math.sin((x - y) * 0.15 + t * 0.3) * 0.6, ring = 0
+          for (const g of rings) { const age = t - g.t0, d = Math.hypot(x - g.x, y - g.y) - age * 7; if (d > -5 && d < 5) { const k = Math.exp(-(d * d) / 3) * (1 - age / 5); v += Math.cos(d * 1.6) * k * 2; ring = Math.max(ring, k) } }
+          H[y * C + x] = v; RING[y * C + x] = ring
+        }
+        clear(ctx, w, h)
+        ctx.font = `11px ${MONO}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
+        const tones = [0.14, 0.32, 0.55, 0.85], byTone: [string, number, number][][] = [[], [], [], []]
+        for (let y = 0; y < R; y++) for (let x = 0; x < C; x++) {
+          const i = y * C + x, dx = x ? H[i] - H[i - 1] : 0, dy = y ? H[i] - H[i - C] : 0
+          const light = 0.2 + (dx + dy) * 0.55 - (y / R) * 0.1
+          if (light <= BAYER[(y & 3) * 4 + (x & 3)] * 0.9) continue
+          const g = RAMP[Math.max(0, Math.min(7, Math.floor(light * 8)))], cx = (x + 0.5) * G, cy = (y + 0.5) * G
+          if (RING[i] > 0.5) { ctx.fillStyle = acc(0.9); ctx.fillText(g, cx, cy); continue }
+          byTone[Math.max(0, Math.min(3, Math.floor(light * 4)))].push([g, cx, cy])
+        }
+        byTone.forEach((list, k) => { ctx.fillStyle = ink(tones[k]); for (const [g, x, y] of list) ctx.fillText(g, x, y) })
+      },
+    }
+  },
+}
+
 /* maze flood: a maze carves itself, then water floods it from one cell, level by level */
 const maze: PondDef = {
-  id: 'maze', name: 'Maze flood', tags: ['algorithms', 'bfs'], bg: BG, passive: true,
+  id: 'maze', name: 'Maze flood', tags: ['algorithms', 'bfs'], bg: '#1a1917', passive: true,
   idea: 'A depth-first search carves a maze, then a breadth-first flood fills it from one cell, ring by ring like water. Then it drains and starts again.', hint: 'just watch',
   make(ctx, w, h) {
     const G = 12, C = Math.floor(w / G), R = Math.floor(h / G), n = C * R, ox = (w - C * G) / 2 + G / 2, oy = (h - R * G) / 2 + G / 2, r = rng(5)
     const parent = new Int32Array(n), seen = new Uint8Array(n), adj: number[][] = Array.from({ length: n }, () => [])
-    let stack: number[] = [], phase: 'carve' | 'flood' | 'hold' = 'carve', dist = new Int32Array(n), level = 0, maxLevel = 0, hold = 0, carved = 0, head = -1
+    let stack: number[] = [], phase: 'carve' | 'flood' | 'hold' = 'carve', level = 0, maxLevel = 0, hold = 0, carved = 0, head = -1
+    const dist = new Int32Array(n)
     const reset = () => {
       parent.fill(-1); seen.fill(0); adj.forEach((a) => (a.length = 0)); dist.fill(-1)
       const s = Math.floor(r() * n); seen[s] = 1; stack = [s]; phase = 'carve'; carved = 1; level = 0
@@ -330,7 +389,7 @@ const maze: PondDef = {
         ctx.strokeStyle = acc(); ctx.stroke(front)
         if (phase === 'carve' && head >= 0) { const [x, y] = at(head); ctx.fillStyle = acc(); ctx.fillRect(x - 2, y - 2, 4, 4) }
         ctx.lineCap = 'butt'
-        ctx.fillStyle = BG; ctx.fillRect(4, 4, 150, 18)
+        ctx.clearRect(4, 4, 150, 18)
         label(ctx, phase === 'carve' ? `dfs  carved ${carved}/${n}` : `bfs  depth ${Math.min(level, maxLevel)}/${maxLevel}`)
       },
     }
@@ -339,11 +398,11 @@ const maze: PondDef = {
 
 /* sandpile: grains dropped on one cell topple onto their neighbours, and a fractal grows */
 const sand: PondDef = {
-  id: 'sand', name: 'Sandpile', tags: ['math', 'self-organised criticality'], bg: BG, passive: true,
+  id: 'sand', name: 'Sandpile', tags: ['math', 'self-organised criticality'], bg: '#1a1917', passive: true,
   idea: 'Grains dropped on one cell. Any cell with four topples, one to each neighbour, setting off avalanches; a fractal grows out of nothing but that.', hint: 'just watch',
   make(ctx, w, h) {
     const S = 3, C = Math.floor(w / S), R = Math.floor(h / S), g = new Uint32Array(C * R), px = pixels(C, R)
-    const TONE = [BGC, mix(0.28), mix(0.55), mix(0.9)]
+    const TONE = [0, 0.28, 0.55, 0.9]
     let grains = 0, hold = 0
     const cx = C >> 1, cy = R >> 1, stack: number[] = []
     return {
@@ -364,9 +423,9 @@ const sand: PondDef = {
           }
           if (g[cy * C + 1] || g[C + cx]) hold = 90
         }
-        for (let i = 0; i < C * R; i++) px.set(i, TONE[Math.min(3, g[i])])
+        for (let i = 0; i < C * R; i++) px.set(i, INK, TONE[Math.min(3, g[i])])
         px.set(cy * C + cx, ACC)
-        px.blit(ctx, S); ctx.fillStyle = BG; ctx.fillRect(4, 4, 120, 18); label(ctx, `grains ${grains}`)
+        clear(ctx, w, h); px.blit(ctx, S); ctx.clearRect(4, 4, 120, 18); label(ctx, `grains ${grains}`)
       },
     }
   },
@@ -374,19 +433,19 @@ const sand: PondDef = {
 
 /* life in contours: the Game of Life blurred into a height field and drawn as a map */
 const lifemap: PondDef = {
-  id: 'lifemap', name: 'Life, surveyed', tags: ['automata', 'maps'], bg: BG, passive: true,
+  id: 'lifemap', name: 'Life, surveyed', tags: ['automata', 'maps'], bg: '#1a1917', passive: true,
   idea: 'The Game of Life underneath, never shown; only its density, surveyed as contour lines that shift as colonies grow and die.', hint: 'just watch',
   make(ctx, w, h) {
-    const S = 6, C = Math.ceil(w / S) + 1, R = Math.ceil(h / S) + 1, L = lifeEngine(C, R, 44), D = new Float32Array(C * R), F = new Float32Array(C * R), H = new Float32Array(C * R)
+    const S = 6, C = Math.ceil(w / S) + 1, R = Math.ceil(h / S) + 1, L = lifeEngine(C, R, 44), D = new Float32Array(C * R), F = new Float32Array(C * R)
     const tick = every(POSE, L.step), LV = [0.12, 0.22, 0.32, 0.42, 0.52]
     return {
       frame(t) {
         tick(t)
-        for (let i = 0; i < C * R; i++) { D[i] += (L.a[i] - D[i]) * 0.08; H[i] += ((L.heat[i] > 0.2 ? 1 : 0) - H[i]) * 0.08 }
+        for (let i = 0; i < C * R; i++) D[i] += (L.a[i] - D[i]) * 0.08
         for (let y = 0; y < R; y++) for (let x = 0; x < C; x++) {
           let s = 0
           for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) s += D[((y + dy + R) % R) * C + ((x + dx + C) % C)]
-          F[y * C + x] = s / 25 * 2.2
+          F[y * C + x] = (s / 25) * 2.2
         }
         clear(ctx, w, h)
         LV.forEach((Lv, li) => {
@@ -407,4 +466,6 @@ const lifemap: PondDef = {
   },
 }
 
-export const AUTO_PONDS: PondDef[] = [life, wolfram, turing, ants, flock, cyclic, brain, maze, sand, lifemap]
+/** The ponds the home page picks from, one at random per visit. */
+export const HOME_PONDS: PondDef[] = [life, wolfram, turing, ants, cyclic, brain, glyphrain]
+export const AUTO_PONDS: PondDef[] = [life, wolfram, turing, ants, flock, cyclic, brain, maze, sand, lifemap, glyphrain]
