@@ -170,12 +170,21 @@ const turing: PondDef = {
 /* Langton's ants: two dumb rules, chaos for ten thousand steps, then a highway */
 const ants: PondDef = {
   id: 'ants', name: 'Langton’s ants', tags: ['automata', 'emergence'], bg: '#1a1917', passive: true,
-  idea: 'Four to eight ants with one rule: on a dark cell turn right, on a light one turn left, flip it, step. Chaos for a while, then each builds a highway.', hint: 'just watch',
+  idea: 'Eight to ten ants, spread evenly, with one rule: on a dark cell turn right, on a light one turn left, flip it, step. Chaos for a while, then each builds a highway.', hint: 'just watch',
   make(ctx, w, h) {
     const S = 3, C = Math.floor(w / S), R = Math.floor(h / S), grid = new Uint8Array(C * R), px = pixels(C, R), r = fresh(3)
     const DX = [0, 1, 0, -1], DY = [-1, 0, 1, 0]
     let crew: { x: number; y: number; d: number }[] = [], steps = 0
-    const reset = () => { grid.fill(0); steps = 0; crew = Array.from({ length: 4 + Math.floor(r() * 5) }, () => ({ x: Math.floor(C * (0.1 + r() * 0.8)), y: Math.floor(R * (0.1 + r() * 0.8)), d: Math.floor(r() * 4) })) }
+    const reset = () => {
+      grid.fill(0); steps = 0; crew = []
+      // 8 to 10 ants, spread evenly: one per cell of a grid that fits the canvas, at a random spot inside its cell
+      const count = 8 + Math.floor(r() * 3), gx = Math.ceil(Math.sqrt((count * C) / R)), gy = Math.ceil(count / gx)
+      const cells = Array.from({ length: gx * gy }, (_, k) => k).sort(() => r() - 0.5).slice(0, count)
+      for (const k of cells) {
+        const cw = C / gx, ch = R / gy
+        crew.push({ x: Math.floor(((k % gx) + 0.2 + r() * 0.6) * cw), y: Math.floor((Math.floor(k / gx) + 0.2 + r() * 0.6) * ch), d: Math.floor(r() * 4) })
+      }
+    }
     reset()
     const limit = Math.max(45000, C * R * 1.2)
     return {
