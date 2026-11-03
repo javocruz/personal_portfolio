@@ -46,7 +46,7 @@ export default function Ponds() {
       <header className="ponds-head">
         <Link to="/">← site</Link>
         <h1>pond testing room</h1>
-        <p>Twelve ideas for the water on the home page. Each one is live: move over it, and click where it says so. Tell me the numbers you like and I’ll build the full-size version.</p>
+        <p>Round two, in the site’s own voice: ink on dark, monospace, one accent. Nine new ones, then the three you liked from round one. Each is live: move over it, click to drop a stone.</p>
       </header>
       <div className="ponds-grid">
         {PONDS.map((p, i) => (
