@@ -8,6 +8,8 @@ export type PondDef = {
   idea: string
   hint: string
   bg: string
+  /** runs by itself: the cursor does nothing */
+  passive?: boolean
   make: (ctx: CanvasRenderingContext2D, w: number, h: number) => Instance
 }
 
