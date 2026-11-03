@@ -121,7 +121,6 @@ export const ROUNDS: { title: string; note: string; ponds: PondDef[] }[] = [
       ...AUTO_PONDS,
       still(dither, 'Dithered rain', 'The dithered surface with no cursor: only raindrops disturb it.'),
       still(contours, 'Contours, drifting', 'The contour map left alone, slowly drifting.'),
-      still(glyphs, 'Glyph rain', 'The glyph water with only rain on it.'),
     ],
   },
   { title: 'round two · cursor driven', note: 'Move over them, click to drop a stone.', ponds: [...CODE_PONDS, dither, contours, glyphs] },
