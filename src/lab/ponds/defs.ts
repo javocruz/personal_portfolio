@@ -1,5 +1,6 @@
 import { fbm, type PondDef } from './kit'
 import { CODE_PONDS } from './code'
+import { AUTO_PONDS } from './auto'
 
 const near = (ax: number, ay: number, bx: number, by: number) => Math.hypot(ax - bx, ay - by)
 
@@ -109,4 +110,19 @@ const contours: PondDef = {
   },
 }
 
-export const PONDS: PondDef[] = [...CODE_PONDS, dither, contours, glyphs]
+// the three you liked, left to run by themselves: only the rain moves them
+const still = (p: PondDef, name: string, idea: string): PondDef => ({ ...p, id: `${p.id}-still`, name, idea, hint: 'just watch', tags: ['you liked', 'passive'], passive: true })
+
+export const ROUNDS: { title: string; note: string; ponds: PondDef[] }[] = [
+  {
+    title: 'round three · they run themselves',
+    note: 'No cursor. Automata and small simulations stepping at the site’s pace (12 a second), plus the three you liked, left alone in the rain.',
+    ponds: [
+      ...AUTO_PONDS,
+      still(dither, 'Dithered rain', 'The dithered surface with no cursor: only raindrops disturb it.'),
+      still(contours, 'Contours, drifting', 'The contour map left alone, slowly drifting.'),
+      still(glyphs, 'Glyph rain', 'The glyph water with only rain on it.'),
+    ],
+  },
+  { title: 'round two · cursor driven', note: 'Move over them, click to drop a stone.', ponds: [...CODE_PONDS, dither, contours, glyphs] },
+]
