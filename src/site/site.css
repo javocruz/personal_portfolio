@@ -56,8 +56,10 @@ html[data-mode=site] .page{animation:none}
 
 /* ---- home: the pond, then the text in a column that starts at a fifth of the width */
 .site-home{height:100svh;overflow:hidden}
-.pond{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;--pond-o:.34;opacity:var(--pond-o);-webkit-mask-image:linear-gradient(to bottom,#000 30%,rgba(0,0,0,.35) 70%,rgba(0,0,0,.2));mask-image:linear-gradient(to bottom,#000 30%,rgba(0,0,0,.35) 70%,rgba(0,0,0,.2))}
-html[data-site-theme=light] .pond{--pond-o:.42}
+.pond{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;--pond-o:.44;opacity:var(--pond-o);-webkit-mask-image:linear-gradient(to bottom,#000 30%,rgba(0,0,0,.35) 70%,rgba(0,0,0,.2));mask-image:linear-gradient(to bottom,#000 30%,rgba(0,0,0,.35) 70%,rgba(0,0,0,.2))}
+html[data-site-theme=light] .pond{--pond-o:.52}
+/* glyph rain is sparse and fine, so it can sit much closer to full strength */
+html .pond[data-pond=glyphrain]{--pond-o:.95}
 @keyframes s-pond-in{0%{opacity:0}0.1%{opacity:calc(.55 * var(--pond-o))}33.3%{opacity:calc(.88 * var(--pond-o))}66.7%,100%{opacity:var(--pond-o)}}
 .pond-name{position:absolute;right:24px;bottom:20px;z-index:1;background:none;border:0;padding:4px 0;font:400 11px var(--s-mono);text-transform:lowercase;color:var(--s-dim);cursor:pointer}
 .pond-name:hover{color:var(--s-fg)}

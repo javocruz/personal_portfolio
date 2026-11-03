@@ -332,14 +332,14 @@ const glyphrain: PondDef = {
         }
         clear(ctx, w, h)
         ctx.font = `11px ${MONO}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
-        const tones = [0.14, 0.32, 0.55, 0.85], byTone: [string, number, number][][] = [[], [], [], []]
+        const tones = [0.3, 0.5, 0.72, 0.95], byTone: [string, number, number][][] = [[], [], [], []]
         for (let y = 0; y < R; y++) for (let x = 0; x < C; x++) {
           const i = y * C + x, dx = x ? H[i] - H[i - 1] : 0, dy = y ? H[i] - H[i - C] : 0
-          const light = 0.2 + (dx + dy) * 0.55 - (y / R) * 0.1
+          const light = 0.34 + (dx + dy) * 0.8 - (y / R) * 0.08
           if (light <= BAYER[(y & 3) * 4 + (x & 3)] * 0.9) continue
           const g = RAMP[Math.max(0, Math.min(7, Math.floor(light * 8)))], cx = (x + 0.5) * G, cy = (y + 0.5) * G
           if (RING[i] > 0.5) { ctx.fillStyle = acc(0.9); ctx.fillText(g, cx, cy); continue }
-          byTone[Math.max(0, Math.min(3, Math.floor(light * 4)))].push([g, cx, cy])
+          byTone[Math.max(0, Math.min(3, Math.floor(light * 4) + 1))].push([g, cx, cy])
         }
         byTone.forEach((list, k) => { ctx.fillStyle = ink(tones[k]); for (const [g, x, y] of list) ctx.fillText(g, x, y) })
       },

@@ -85,7 +85,7 @@ export function Pond({ ink = '255,247,240', accent = '224,122,63' }: { ink?: str
   }, [pond, ink, accent])
   return (
     <>
-      <canvas ref={ref} className="pond" aria-hidden />
+      <canvas ref={ref} className="pond" data-pond={pond.id} aria-hidden />
       <button className="pond-name" data-pond-avoid onClick={() => setIdx((i) => (i + 1) % HOME_PONDS.length)} title={l({ en: 'Show another pond', es: 'Ver otro estanque' })}>
         ↻ {l(NAMES[pond.id])}
       </button>
