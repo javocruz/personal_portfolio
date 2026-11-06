@@ -6,7 +6,7 @@ This file is the source of truth for how javicruz.dev looks. Read it before chan
 
 - **The site** (`src/site/`) is the front door, modelled closely on daoho.dev: playground, projects, about, gallery, blog.
   - **Type and colour:** Geist Mono only. Warm near-black `#1a1917` with warm off-white `#fff7f0`, and a light theme (`#f5f4f1` / `#262523`) behind a toggle.
-  - **Nav:** lowercase, centred, the current page at full strength and the rest at half, with the time in Madrid at the far left. A one-line footer closes every page.
+  - **Nav:** lowercase, centred, the current page at full strength and the rest at half, with the time in Madrid at the far left. A one-line footer closes every page except the playground.
   - **Playground (the home page):** one self-running automaton or simulation, picked at random per visit and started from a new seed, faint behind the text and clear of it (`[data-pond-avoid]`). The cursor does nothing. In code it is still called the pond; candidates live at `/lab/ponds`.
   - **Projects:** a two-column grid that scrolls down, each painting hung on a blurred wash of its own colours. Project pages follow daoho's: hero band, story, the build, photos, previous and next.
   - **About:** plain lists: experience, leadership, recognition, education, skills, contact. Rows open for detail.

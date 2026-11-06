@@ -133,7 +133,7 @@ function Shell() {
             <Route path="*" element={<NotFound />} />
           </Routes>
       </div>
-      {!inLab && !mode && <SiteFooter />}
+      {!inLab && !mode && location.pathname !== '/' && <SiteFooter />}
     </>
   )
 }

@@ -2,7 +2,7 @@ import { useI18n } from '../lib/i18n'
 import { profile } from '../content/profile'
 import { StepLink } from './steps'
 
-/** The site's last line. On pages that fill the screen (home, the empty blog) it sits in the bottom corner instead. */
+/** The site's last line, on every page but the playground. On the empty blog, which fills the screen, it sits in the corner. */
 export function SiteFooter() {
   const { l } = useI18n()
   return (
