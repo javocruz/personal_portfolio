@@ -26,8 +26,9 @@ html[data-mode=site] .page{animation:none}
 @keyframes s-sink-out{100%{opacity:0;transform:translateY(var(--drop))}}
 @keyframes s-block-in{0%{opacity:0;transform:translateY(var(--drop))}0.1%{opacity:.55;transform:translateY(calc(.45 * var(--drop)))}33.3%{opacity:.88;transform:translateY(calc(.12 * var(--drop)))}66.7%,100%{opacity:1;transform:none}}
 @media (prefers-reduced-motion:no-preference){
-  html[data-mode=site][data-phase=out] .site-main{animation:s-sink-out calc(2 * var(--pose)) steps(2,jump-start) forwards}
+  html[data-mode=site][data-phase=out] .site-main,html[data-mode=site][data-phase=out] .sfoot{animation:s-sink-out calc(2 * var(--pose)) steps(2,jump-start) forwards}
   html[data-mode=site][data-phase=in] .site-main [data-block]{animation:s-block-in calc(3 * var(--pose)) step-end calc(2 * var(--pose) + var(--order,0) * var(--pose)) both}
+  html[data-mode=site][data-phase=in] .sfoot{animation:s-block-in calc(3 * var(--pose)) step-end calc(2 * var(--pose) + 6 * var(--pose)) both}
   html[data-mode=site][data-phase=in] .pond{animation:s-pond-in calc(3 * var(--pose)) step-end both}
 }
 
@@ -40,6 +41,7 @@ html[data-mode=site] .page{animation:none}
 .snav a,.snav-tool{color:var(--s-fg);opacity:.5;text-decoration:none;transition:opacity .15s;background:none;border:0;padding:0;font:inherit;cursor:pointer;display:inline-flex;align-items:center}
 .snav a[aria-current],.snav a:hover,.snav-tool:hover{opacity:1}
 .snav-tool{margin-left:-8px}
+.snav-clock{position:absolute;left:32px;top:32px;color:var(--s-fg);opacity:.5;font-variant-numeric:tabular-nums}
 .snav-m{display:none}
 @media(max-width:1023px){
   .snav{display:none}
@@ -52,6 +54,7 @@ html[data-mode=site] .page{animation:none}
   .snav-m-list a[aria-current]{opacity:1}
   .snav-m-tools{display:flex;gap:18px;padding-top:6px;border-top:1px solid var(--s-line)}
   .snav-m-tools .snav-tool{margin:0;opacity:.6}
+  .snav-m-tools .snav-clock{position:static;font-size:12px;margin-left:auto;white-space:nowrap}
 }
 
 /* ---- home: the pond, then the text in a column that starts at a fifth of the width */
@@ -76,7 +79,7 @@ html .pond[data-pond=glyphrain]{--pond-o:.95}
 .home-form .form input,.home-form .form textarea{background:transparent;border:1px solid var(--s-line);border-radius:0;font:400 14px var(--s-mono);color:var(--s-fg);backdrop-filter:none}
 .home-form .btn.solid{background:var(--s-fg);border-color:var(--s-fg);color:var(--s-bg);border-radius:0;font:500 12px var(--s-mono);text-transform:lowercase;letter-spacing:0}
 .site-home:has(.home-form){overflow:auto}
-@media(max-width:1023px){.home-col{left:20px;right:20px;bottom:auto;top:44vh}.home-prose,.home-tag{width:auto}}
+@media(max-width:1023px){.home-col{left:20px;right:20px;bottom:52px}.home-prose,.home-tag{width:auto}}
 
 /* ---- projects: two columns that scroll down */
 .site-projects{max-width:56rem;margin:0 auto;padding:120px 1.5rem 96px}
@@ -89,6 +92,7 @@ html .pond[data-pond=glyphrain]{--pond-o:.95}
 .proj-title b{font-weight:500}
 .proj-title span{color:var(--s-dim);font-size:11px;margin-left:6px}
 .proj-line{margin:0;color:var(--s-dim);font-size:13px}
+.proj-also{margin:44px 0 0;font-size:13px;color:var(--s-dim)}
 @media(max-width:1023px){.site-projects{padding:96px 20px 64px}.proj-grid{grid-template-columns:minmax(0,1fr);gap:36px}}
 
 /* a painting hung on a soft wash of its own colours */
@@ -178,6 +182,36 @@ html[data-sg-move=prev]::view-transition-new(sg-work){mask-image:url(/art/site/w
 ::view-transition-new(sg-caption),::view-transition-new(sg-count){animation:sg-in calc(3 * var(--pose,.0833s)) steps(3,jump-end) calc(4 * var(--pose,.0833s)) both}
 @keyframes sg-out{to{opacity:0;transform:translateY(-4px)}}
 @keyframes sg-in{from{opacity:0;transform:translateY(4px)}}
+
+/* ---- about */
+.site-about{max-width:56rem;margin:0 auto;padding:120px 1.5rem 96px}
+.sa-bio{margin:0 0 64px;max-width:44rem}
+.sa-sec{display:grid;grid-template-columns:9rem minmax(0,1fr);gap:16px;margin-bottom:52px;font-size:13px;scroll-margin-top:96px}
+.sa-sec h2{margin:0;font:400 13px var(--s-mono);letter-spacing:0;color:var(--s-dim)}
+.sa-sec b{font-weight:500}
+.sa-sec p{margin:0}
+.sa-row{border-bottom:1px solid var(--s-line)}
+.sa-row:first-child{border-top:1px solid var(--s-line)}
+.sa-row summary{display:flex;justify-content:space-between;gap:20px;padding:10px 0;cursor:pointer;list-style:none}
+.sa-row summary::-webkit-details-marker{display:none}
+.sa-row summary:hover b{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px}
+.sa-row i{font-style:normal;color:var(--s-dim);margin-left:6px}
+.sa-row time{flex:none;color:var(--s-dim);font-size:11px;line-height:inherit}
+.sa-row ul,.sa-row p{margin:0;padding:0 0 14px;color:rgba(var(--s-ink),.75)}
+.sa-row ul{list-style:none}
+.sa-row li{margin-bottom:6px}
+.sa-list{list-style:none;margin:0;padding:0}
+.sa-list li{margin-bottom:10px}
+.sa-list span{display:block;color:var(--s-dim)}
+.sa-links{margin-bottom:8px!important}
+@media(max-width:1023px){.site-about{padding:96px 20px 64px}.sa-sec{grid-template-columns:minmax(0,1fr);gap:10px}.sa-row summary{flex-direction:column;gap:2px}.sa-row i{display:block;margin:0}}
+
+/* ---- footer: a last line, or a corner of the screen on pages that fill it */
+.sfoot{display:flex;justify-content:space-between;gap:20px;max-width:56rem;margin:0 auto;padding:0 1.5rem 32px;font:400 11px var(--s-mono);color:var(--s-dim)}
+.sfoot a{color:inherit;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px;text-decoration-color:rgba(var(--s-ink),.35)}
+.sfoot a:hover{color:var(--s-fg)}
+html:has(.site-home) .sfoot,html:has(.site-blog-empty) .sfoot{position:fixed;left:24px;bottom:24px;z-index:1;max-width:none;margin:0;padding:0;gap:16px}
+@media(max-width:1023px){.sfoot{padding:0 20px 28px}html:has(.site-home) .sfoot,html:has(.site-blog-empty) .sfoot{left:20px;padding:0}html:has(.site-home) .sfoot-long,html:has(.site-blog-empty) .sfoot-long{display:none}}
 
 /* ---- blog */
 .site-blog{max-width:56rem;margin:0 auto;padding:120px 1.5rem 96px}
