@@ -207,7 +207,7 @@ html[data-sg-move=prev]::view-transition-new(sg-work){mask-image:url(/art/site/w
 @media(max-width:1023px){.site-about{padding:96px 20px 64px}.sa-sec{grid-template-columns:minmax(0,1fr);gap:10px}.sa-row summary{flex-direction:column;gap:2px}.sa-row i{display:block;margin:0}}
 
 /* ---- footer: a last line, or a corner of the screen on the empty blog */
-.sfoot{display:flex;justify-content:space-between;gap:20px;max-width:56rem;margin:0 auto;padding:0 1.5rem 32px;font:400 11px var(--s-mono);color:var(--s-dim)}
+.sfoot{display:flex;justify-content:space-between;gap:20px;border:0;max-width:56rem;margin:0 auto;padding:0 1.5rem 32px;font:400 11px var(--s-mono);color:var(--s-dim)}
 .sfoot a{color:inherit;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px;text-decoration-color:rgba(var(--s-ink),.35)}
 .sfoot a:hover{color:var(--s-fg)}
 html:has(.site-blog-empty) .sfoot{position:fixed;left:24px;bottom:24px;z-index:1;max-width:none;margin:0;padding:0;gap:16px}
