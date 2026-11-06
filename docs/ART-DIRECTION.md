@@ -4,11 +4,12 @@ This file is the source of truth for how javicruz.dev looks. Read it before chan
 
 ## The site, and two sites in its gallery
 
-- **The site** (`src/site/`) is the front door, modelled closely on daoho.dev: pond, projects, gallery, blog.
+- **The site** (`src/site/`) is the front door, modelled closely on daoho.dev: playground, projects, about, gallery, blog.
   - **Type and colour:** Geist Mono only. Warm near-black `#1a1917` with warm off-white `#fff7f0`, and a light theme (`#f5f4f1` / `#262523`) behind a toggle.
-  - **Nav:** lowercase, centred, the current page at full strength and the rest at half.
-  - **Pond:** a placeholder ASCII pond that keeps clear of text (`[data-pond-avoid]`). It will be replaced.
-  - **Projects:** one row of large cards that scrolls sideways, each painting hung on a blurred wash of its own colours. Project pages follow daoho's: hero band, story, the build, photos, previous and next.
+  - **Nav:** lowercase, centred, the current page at full strength and the rest at half, with the time in Madrid at the far left. A one-line footer closes every page.
+  - **Playground (the home page):** one self-running automaton or simulation, picked at random per visit and started from a new seed, faint behind the text and clear of it (`[data-pond-avoid]`). The cursor does nothing. In code it is still called the pond; candidates live at `/lab/ponds`.
+  - **Projects:** a two-column grid that scrolls down, each painting hung on a blurred wash of its own colours. Project pages follow daoho's: hero band, story, the build, photos, previous and next.
+  - **About:** plain lists: experience, leadership, recognition, education, skills, contact. Rows open for detail.
   - **Gallery:** Core and Complete hang as works. The viewer has an "enter" button that steps into that whole site.
   - **Page changes:** stepped, after marcvendrell.cat. Everything runs on 12 poses a second: the page sinks 4px and goes in 2 poses, then each `[data-block]` steps in, in its `--order` (`src/site/steps.tsx`).
 - **Core** and **Complete** are exhibits. Entering one lasts for the tab. Their header (`Nav.tsx`) has a "← gallery" link back out.

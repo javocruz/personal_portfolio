@@ -1,6 +1,6 @@
 import { useI18n } from '../lib/i18n'
 import { useHead } from '../lib/head'
-import { projects } from '../content/projects'
+import { projects, builds } from '../content/projects'
 import { plateSrc, plateSet } from '../content/art'
 import { StepLink } from './steps'
 
@@ -32,6 +32,9 @@ export default function SiteProjects() {
           </StepLink>
         ))}
       </div>
+      <p className="proj-also" data-block style={{ ['--order' as string]: projects.length }}>
+        {l({ en: 'Also: ', es: 'También: ' })}{builds.map((b, i) => <span key={b.title}>{i ? ', ' : ''}{b.href ? <a href={b.href} target="_blank" rel="noreferrer">{b.title}</a> : b.title}</span>)}.
+      </p>
     </main>
   )
 }

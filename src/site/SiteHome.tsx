@@ -20,7 +20,7 @@ function useTyped(text: string, delay = 500, speed = 42) {
   return text.slice(0, n)
 }
 
-/** The site's home (after daoho.dev): the pond, a two-line tagline that types itself, a short intro and the links. */
+/** The site's home (after daoho.dev): the playground, a two-line tagline that types itself, a short intro and the links. */
 export default function SiteHome() {
   const { l } = useI18n()
   const { light } = useSiteTheme()
@@ -45,7 +45,7 @@ export default function SiteHome() {
             <StepLink to="/projects/snapfrost">BCG Platinion</StepLink>{l({ en: ', 1st @ ', es: ', 1er lugar @ ' })}
             <StepLink to="/projects/los-panaderos">HackSpain</StepLink>.
           </p>
-          <p>{l({ en: 'Currently, studying CS & AI @ ', es: 'Ahora, estudio CS e IA @ ' })}<a href="https://www.ie.edu/" target="_blank" rel="noreferrer">IE University</a>{l({ en: ', and partnerships @ IE Tech Club.', es: ' y llevo alianzas @ IE Tech Club.' })}</p>
+          <p>{l({ en: 'Currently, studying CS & AI @ ', es: 'Ahora, estudio CS e IA @ ' })}<a href="https://www.ie.edu/" target="_blank" rel="noreferrer">IE University</a>{l({ en: ', partnerships @ IE Tech Club, and part of the MXT program.', es: ', llevo alianzas @ IE Tech Club y soy parte del programa MXT.' })}</p>
           <p className="home-links">
             <a href={profile.github} target="_blank" rel="noreferrer">github</a> / <a href={profile.linkedin} target="_blank" rel="noreferrer">linkedin</a> / <a href={`mailto:${profile.email}`}>email</a> / <a href={profile.cv} download>cv</a> / <button className="home-write" aria-expanded={writing} onClick={() => setWriting((v) => !v)}>{l({ en: 'write to me', es: 'escríbeme' })}</button>
           </p>

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useI18n } from '../lib/i18n'
 import { useFx } from '../lib/fx'
+import { useMode } from '../lib/mode'
 import { profile } from '../content/profile'
 import { projects } from '../content/projects'
 import { posts } from '../posts'
@@ -11,6 +12,7 @@ type Item = { id: string; group: string; label: string; hint?: string; run: () =
 export function CommandPalette({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { t, l, lang, setLang } = useI18n()
   const { toggleHyper, say } = useFx()
+  const { mode } = useMode()
   const nav = useNavigate()
   const [q, setQ] = useState('')
   const [sel, setSel] = useState(0)
@@ -22,9 +24,9 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
     return [
       { id: 'home', group: t('pal.g.go'), label: t('pal.home'), run: go('/') },
       { id: 'work', group: t('pal.g.go'), label: t('nav.work'), run: go('/work') },
-      { id: 'xp', group: t('pal.g.go'), label: t('nav.experience'), run: hash('/#experience') },
+      { id: 'xp', group: t('pal.g.go'), label: t('nav.experience'), run: hash(mode ? '/#experience' : '/about') },
       { id: 'blog', group: t('pal.g.go'), label: t('nav.writing'), run: go('/blog') },
-      { id: 'contact', group: t('pal.g.go'), label: t('nav.contact'), run: hash('/#contact') },
+      { id: 'contact', group: t('pal.g.go'), label: t('nav.contact'), run: hash(mode ? '/#contact' : '/about#contact') },
       ...projects.map((p) => ({ id: p.slug, group: t('pal.g.projects'), label: p.title, hint: l(p.badge), run: go(`/work/${p.slug}`) })),
       ...posts.map((p) => ({ id: `post-${p.slug}`, group: t('pal.g.writing'), label: p.title, hint: p.tags.join(', '), run: go(`/blog/${p.slug}`) })),
       { id: 'lang', group: t('pal.g.actions'), label: t('pal.lang'), run: () => { setLang(lang === 'en' ? 'es' : 'en'); onClose() } },
@@ -34,7 +36,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
       { id: 'li', group: t('pal.g.actions'), label: t('pal.linkedin'), run: () => { onClose(); window.open(profile.linkedin, '_blank') } },
       { id: 'hyper', group: t('pal.g.actions'), label: 'Engage hyperdrive ✦', run: () => { onClose(); toggleHyper() } },
     ]
-  }, [t, l, lang, setLang, toggleHyper, say, nav, onClose])
+  }, [t, l, lang, setLang, toggleHyper, say, nav, onClose, mode])
 
   const shown = useMemo(() => {
     const s = q.trim().toLowerCase()

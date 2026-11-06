@@ -9,6 +9,7 @@ import { CommandPalette } from './components/CommandPalette'
 import CoreHome from './pages/CoreHome'
 import SiteHome from './site/SiteHome'
 import { SiteNav } from './site/SiteNav'
+import { SiteFooter } from './site/SiteFooter'
 import { useArrive } from './site/steps'
 import './site/site.css'
 import NotFound from './pages/NotFound'
@@ -25,6 +26,7 @@ const SiteProjects = lazy(() => import('./site/SiteProjects'))
 const SiteProject = lazy(() => import('./site/SiteProject'))
 const SiteGallery = lazy(() => import('./site/SiteGallery'))
 const SiteBlog = lazy(() => import('./site/SiteBlog'))
+const SiteAbout = lazy(() => import('./site/SiteAbout'))
 // Design lab (prototypes)
 const LabIndex = lazy(() => import('./lab/LabIndex'))
 const Heroes = lazy(() => import('./lab/Heroes'))
@@ -52,6 +54,14 @@ function WorkCase() {
   const { slug } = useParams()
   return mode ? <CaseStudy /> : <Navigate to={`/projects/${slug}`} replace />
 }
+function About() {
+  const { mode } = useMode()
+  return mode ? <Navigate to="/#about" replace /> : <SiteAbout />
+}
+function Cv() {
+  const { mode } = useMode()
+  return <Navigate to={mode ? '/#contact' : '/about#contact'} replace />
+}
 function Blog() {
   const { mode } = useMode()
   return mode ? <BlogIndex /> : <SiteBlog />
@@ -73,7 +83,7 @@ function Shell() {
   useEffect(() => {
     if (inLab) return
     const go = !mode
-      ? () => { import('./site/SiteProjects'); import('./site/SiteProject'); import('./site/SiteGallery') }
+      ? () => { import('./site/SiteProjects'); import('./site/SiteProject'); import('./site/SiteGallery'); import('./site/SiteAbout') }
       : mode === 'complete'
         ? () => { import('./pages/Gallery'); import('./pages/CaseStudy'); import('./pages/CompleteHome') }
         : () => { import('./pages/CaseStudy'); import('./pages/Blog') }
@@ -105,11 +115,12 @@ function Shell() {
             <Route path="/work/:slug" element={lz(<WorkCase />)} />
             <Route path="/projects" element={lz(<SiteProjects />)} />
             <Route path="/projects/:slug" element={lz(<SiteProject />)} />
+            <Route path="/about" element={lz(<About />)} />
             <Route path="/gallery" element={lz(<SiteGallery />)} />
             <Route path="/blog" element={lz(<Blog />)} />
             <Route path="/blog/:slug" element={lz(<BlogPost />)} />
             {/* the CV is a download in the contact section now; old links land there */}
-            <Route path="/cv" element={<Navigate to="/#contact" replace />} />
+            <Route path="/cv" element={<Cv />} />
             <Route path="/lab" element={lz(<LabIndex />)} />
             <Route path="/lab/heroes" element={lz(<Heroes />)} />
             <Route path="/lab/plates" element={lz(<Plates />)} />
@@ -122,6 +133,7 @@ function Shell() {
             <Route path="*" element={<NotFound />} />
           </Routes>
       </div>
+      {!inLab && !mode && <SiteFooter />}
     </>
   )
 }

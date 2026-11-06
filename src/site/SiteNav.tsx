@@ -16,9 +16,16 @@ export function useSiteTheme() {
 const Sun = () => <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden><circle cx="8" cy="8" r="3" /><path d="M8 1.5v1.6M8 12.9v1.6M1.5 8h1.6M12.9 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1" /></svg>
 const Moon = () => <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden><path d="M13.4 9.6A5.6 5.6 0 0 1 6.4 2.6a5.6 5.6 0 1 0 7 7Z" /></svg>
 
+/** The time where I am, ticking. */
+function Clock() {
+  const [now, setNow] = useState(() => new Date())
+  useEffect(() => { const id = window.setInterval(() => setNow(new Date()), 1000); return () => clearInterval(id) }, [])
+  return <time className="snav-clock">madrid {now.toLocaleTimeString('en-GB', { timeZone: 'Europe/Madrid' })}</time>
+}
+
 /**
  * The site's header (after daoho.dev): lowercase, centred, the current page at full strength and the rest at half.
- * On phones it becomes a single bar with the name and a menu.
+ * The time in Madrid sits at the far left. On phones it becomes a single bar with the name and a menu.
  */
 export function SiteNav() {
   const { l, lang, setLang } = useI18n()
@@ -27,8 +34,9 @@ export function SiteNav() {
   const [open, setOpen] = useState(false)
   useEffect(() => setOpen(false), [pathname])
   const links: [string, string][] = [
-    ['/', l({ en: 'pond', es: 'estanque' })],
+    ['/', 'playground'],
     ['/projects', l({ en: 'projects', es: 'proyectos' })],
+    ['/about', l({ en: 'about', es: 'sobre mí' })],
     ['/gallery', l({ en: 'gallery', es: 'galería' })],
     ['/blog', 'blog'],
   ]
@@ -42,6 +50,7 @@ export function SiteNav() {
   return (
     <>
       <nav className="snav" aria-label="Main" data-pond-avoid>
+        <Clock />
         {links.map(([to, label]) => <StepLink key={to} to={to} aria-current={current(to) ? 'page' : undefined}>{label}</StepLink>)}
         {tools}
       </nav>
@@ -53,7 +62,7 @@ export function SiteNav() {
         {open && (
           <div className="snav-m-list">
             {links.map(([to, label]) => <StepLink key={to} to={to} aria-current={current(to) ? 'page' : undefined}>{label}</StepLink>)}
-            <div className="snav-m-tools">{tools}</div>
+            <div className="snav-m-tools">{tools}<Clock /></div>
           </div>
         )}
       </div>
