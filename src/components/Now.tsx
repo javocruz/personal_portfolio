@@ -3,10 +3,10 @@ import { useI18n } from '../lib/i18n'
 import { now } from '../content/profile'
 
 type Ev = { id: string; type: string; repo: { name: string }; created_at: string; payload: { commits?: unknown[]; size?: number } }
-const CACHE = 'gh-events-v1'
+const CACHE = 'gh-events-v2'
 
-export function Now() {
-  const { t, l } = useI18n()
+/** My latest public pushes on GitHub (cached for ten minutes); null while loading, 'err' if GitHub can't be reached. */
+export function useGithubPushes(n = 4) {
   const [events, setEvents] = useState<Ev[] | null | 'err'>(null)
 
   useEffect(() => {
@@ -18,18 +18,24 @@ export function Now() {
     fetch('https://api.github.com/users/javocruz/events/public?per_page=30')
       .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
       .then((all: Ev[]) => {
-        const ev = all.filter((e) => e.type === 'PushEvent').slice(0, 4)
+        const ev = all.filter((e) => e.type === 'PushEvent').slice(0, 10)
         try { sessionStorage.setItem(CACHE, JSON.stringify({ at: Date.now(), events: ev })) } catch { /* ignore */ }
         if (!dead) setEvents(ev)
       })
       .catch(() => !dead && setEvents('err'))
     return () => { dead = true }
   }, [])
+  return Array.isArray(events) ? events.slice(0, n) : events
+}
 
-  const ago = (iso: string) => {
-    const d = Math.max(1, Math.round((Date.now() - new Date(iso).getTime()) / 3_600_000))
-    return d < 24 ? `${d}h` : `${Math.round(d / 24)}d`
-  }
+export const ago = (iso: string) => {
+  const d = Math.max(1, Math.round((Date.now() - new Date(iso).getTime()) / 3_600_000))
+  return d < 24 ? `${d}h` : `${Math.round(d / 24)}d`
+}
+
+export function Now() {
+  const { t, l } = useI18n()
+  const events = useGithubPushes()
 
   return (
     <div className="now">
