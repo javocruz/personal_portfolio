@@ -64,6 +64,11 @@ export default function SiteProject() {
         <dl className="sp-meta" data-block style={{ ['--order' as string]: 4 }}>
           {meta.map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}
         </dl>
+        {p.numbers && (
+          <ul className="sp-nums" data-block style={{ ['--order' as string]: 4 }}>
+            {p.numbers.map((n) => <li key={n.value + n.label.en}><b>{n.value}</b><span>{l(n.label)}</span></li>)}
+          </ul>
+        )}
         <section data-block style={{ ['--order' as string]: 5 }}>
           <h2>{l({ en: 'The build', es: 'Lo construido' })}</h2>
           <ul className="sp-list">{p.built.map((b, k) => <li key={k}>{l(b)}</li>)}</ul>
