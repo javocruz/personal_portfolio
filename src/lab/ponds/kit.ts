@@ -10,6 +10,8 @@ export type PondDef = {
   bg: string
   /** runs by itself: the cursor does nothing */
   passive?: boolean
+  /** the canvas's shape in the lab, as a css aspect-ratio (16/10 if absent) */
+  aspect?: string
   make: (ctx: CanvasRenderingContext2D, w: number, h: number) => Instance
 }
 
