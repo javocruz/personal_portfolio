@@ -4,12 +4,14 @@ import { useHead } from '../lib/head'
 import { useMode } from '../lib/mode'
 import { AsciiArt } from '../components/AsciiArt'
 import { isle } from '../content/art'
+import { SiteNotFound } from '../site/SiteNotFound'
 
 
 export default function NotFound() {
   const { t, l } = useI18n()
   const { mode } = useMode()
   useHead(`${t('404.title')} · Javier Cruz Villarreal`)
+  if (!mode) return <SiteNotFound />
   // Complete: the last of Cole's paintings, Desolation, as text
   const complete = mode === 'complete'
   return (

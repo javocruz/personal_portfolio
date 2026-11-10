@@ -38,6 +38,12 @@ export function Pond({ ink = '255,247,240', accent = '224,122,63' }: { ink?: str
   const [idx, setIdx] = useState(firstPick)
   const pond = HOME_PONDS[idx]
   useEffect(() => { try { localStorage.setItem(KEY, pond.id) } catch { /* storage blocked */ } }, [pond])
+  // the command menu's "another playground"
+  useEffect(() => {
+    const next = () => setIdx((i) => (i + 1) % HOME_PONDS.length)
+    addEventListener('pond-next', next)
+    return () => removeEventListener('pond-next', next)
+  }, [])
   useEffect(() => {
     const canvas = ref.current!, ctx = canvas.getContext('2d')!
     const still = matchMedia('(prefers-reduced-motion: reduce)').matches

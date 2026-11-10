@@ -6,6 +6,8 @@ import { useMode } from '../lib/mode'
 import { profile } from '../content/profile'
 import { projects } from '../content/projects'
 import { posts } from '../posts'
+import { useSiteTheme } from '../site/SiteNav'
+import { useStepGo } from '../site/steps'
 
 type Item = { id: string; group: string; label: string; hint?: string; run: () => void }
 
@@ -14,6 +16,8 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
   const { toggleHyper, say } = useFx()
   const { mode } = useMode()
   const nav = useNavigate()
+  const step = useStepGo()
+  const { light, toggle } = useSiteTheme()
   const [q, setQ] = useState('')
   const [sel, setSel] = useState(0)
   const input = useRef<HTMLInputElement>(null)
@@ -21,6 +25,31 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
   const items = useMemo<Item[]>(() => {
     const go = (to: string) => () => { onClose(); nav(to) }
     const hash = (h: string) => () => { onClose(); location.href = h }
+    const act = t('pal.g.actions')
+    const shared: Item[] = [
+      { id: 'lang', group: act, label: t('pal.lang'), run: () => { setLang(lang === 'en' ? 'es' : 'en'); onClose() } },
+      { id: 'copy', group: act, label: t('pal.copy'), hint: profile.email, run: () => { navigator.clipboard?.writeText(profile.email); say(t('pal.copied')); onClose() } },
+      { id: 'cvdl', group: act, label: t('pal.cv'), run: () => { onClose(); window.open(profile.cv, '_blank') } },
+      { id: 'gh', group: act, label: t('pal.github'), run: () => { onClose(); window.open(profile.github, '_blank') } },
+      { id: 'li', group: act, label: t('pal.linkedin'), run: () => { onClose(); window.open(profile.linkedin, '_blank') } },
+    ]
+    // the site: its own pages, stepped page changes, its theme and the playground
+    if (!mode) {
+      const to = (path: string) => () => { onClose(); step(path) }
+      const g = t('pal.g.go')
+      return [
+        { id: 'home', group: g, label: 'playground', run: to('/') },
+        { id: 'projects', group: g, label: l({ en: 'projects', es: 'proyectos' }), run: to('/projects') },
+        { id: 'about', group: g, label: l({ en: 'about', es: 'sobre mí' }), run: to('/about') },
+        { id: 'blog', group: g, label: 'blog', run: to('/blog') },
+        { id: 'contact', group: g, label: l({ en: 'contact', es: 'contacto' }), run: to('/about#contact') },
+        ...projects.map((p) => ({ id: p.slug, group: t('pal.g.projects'), label: p.title, hint: l(p.badge), run: to(`/projects/${p.slug}`) })),
+        ...posts.map((p) => ({ id: `post-${p.slug}`, group: t('pal.g.writing'), label: p.title, hint: p.tags.join(', '), run: to(`/blog/${p.slug}`) })),
+        { id: 'theme', group: act, label: light ? l({ en: 'Dark theme', es: 'Tema oscuro' }) : l({ en: 'Light theme', es: 'Tema claro' }), run: () => { toggle(); onClose() } },
+        { id: 'pond', group: act, label: l({ en: 'Another playground', es: 'Otro playground' }), run: () => { onClose(); if (location.pathname === '/') dispatchEvent(new Event('pond-next')); else step('/') } },
+        ...shared,
+      ]
+    }
     return [
       { id: 'home', group: t('pal.g.go'), label: t('pal.home'), run: go('/') },
       { id: 'work', group: t('pal.g.go'), label: t('nav.work'), run: go('/work') },
@@ -29,14 +58,10 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
       { id: 'contact', group: t('pal.g.go'), label: t('nav.contact'), run: hash(mode ? '/#contact' : '/about#contact') },
       ...projects.map((p) => ({ id: p.slug, group: t('pal.g.projects'), label: p.title, hint: l(p.badge), run: go(`/work/${p.slug}`) })),
       ...posts.map((p) => ({ id: `post-${p.slug}`, group: t('pal.g.writing'), label: p.title, hint: p.tags.join(', '), run: go(`/blog/${p.slug}`) })),
-      { id: 'lang', group: t('pal.g.actions'), label: t('pal.lang'), run: () => { setLang(lang === 'en' ? 'es' : 'en'); onClose() } },
-      { id: 'copy', group: t('pal.g.actions'), label: t('pal.copy'), hint: profile.email, run: () => { navigator.clipboard?.writeText(profile.email); say(t('pal.copied')); onClose() } },
-      { id: 'cvdl', group: t('pal.g.actions'), label: t('pal.cv'), run: () => { onClose(); window.open(profile.cv, '_blank') } },
-      { id: 'gh', group: t('pal.g.actions'), label: t('pal.github'), run: () => { onClose(); window.open(profile.github, '_blank') } },
-      { id: 'li', group: t('pal.g.actions'), label: t('pal.linkedin'), run: () => { onClose(); window.open(profile.linkedin, '_blank') } },
+      ...shared,
       { id: 'hyper', group: t('pal.g.actions'), label: 'Engage hyperdrive ✦', run: () => { onClose(); toggleHyper() } },
     ]
-  }, [t, l, lang, setLang, toggleHyper, say, nav, onClose, mode])
+  }, [t, l, lang, setLang, toggleHyper, say, nav, onClose, mode, step, light, toggle])
 
   const shown = useMemo(() => {
     const s = q.trim().toLowerCase()
