@@ -40,11 +40,13 @@
           document.head.appendChild(l)
         }
       } catch (e) {}
+      // fonts load without blocking the first paint (added here, not with an inline onload, so the CSP can stay strict)
+      var f = document.createElement('link')
+      f.rel = 'stylesheet'; f.href = 'https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=JetBrains+Mono:wght@400&family=Geist+Mono:wght@400;500&display=swap'
+      document.head.appendChild(f)
     </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- fonts load without blocking the first paint -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=JetBrains+Mono:wght@400&family=Geist+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
     <noscript><link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500&family=JetBrains+Mono:wght@400&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" /></noscript>
   </head>
   <body>
