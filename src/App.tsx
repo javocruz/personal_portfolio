@@ -83,7 +83,7 @@ function Shell() {
   useEffect(() => {
     if (inLab) return
     const go = !mode
-      ? () => { import('./site/SiteProjects'); import('./site/SiteProject'); import('./site/SiteGallery'); import('./site/SiteAbout') }
+      ? () => { import('./site/SiteProjects'); import('./site/SiteProject'); import('./site/SiteAbout') }
       : mode === 'complete'
         ? () => { import('./pages/Gallery'); import('./pages/CaseStudy'); import('./pages/CompleteHome') }
         : () => { import('./pages/CaseStudy'); import('./pages/Blog') }
