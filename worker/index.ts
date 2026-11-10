@@ -5,6 +5,8 @@ interface Env {
   EMAIL: SendEmail
   /** Where messages are delivered. A verified Email Routing destination, set as a plain-text variable in the Cloudflare dashboard. */
   FORWARD_TO?: string
+  /** A few messages a minute per visitor; absent on preview deployments. */
+  CONTACT_LIMIT?: { limit(o: { key: string }): Promise<{ success: boolean }> }
 }
 
 const FROM = 'contact@javicruz.dev'
@@ -29,9 +31,13 @@ export default {
     if (url.pathname !== '/api/contact') return json({ error: 'not_found' }, 404)
     if (request.method !== 'POST') return json({ error: 'method_not_allowed' }, 405)
 
-    // Same-origin only: browsers always send Origin on cross-site POSTs.
-    const origin = request.headers.get('origin')
-    if (origin && origin !== url.origin) return json({ error: 'forbidden' }, 403)
+    // Same-origin only: browsers send Origin on every POST, so a request without it is not the site's form.
+    if (request.headers.get('origin') !== url.origin) return json({ error: 'forbidden' }, 403)
+    if (!(request.headers.get('content-type') ?? '').includes('application/json')) return json({ error: 'bad_request' }, 400)
+
+    // At most three messages a minute from one address, so the form can't be used to flood the inbox.
+    const ip = request.headers.get('cf-connecting-ip') ?? 'unknown'
+    if (env.CONTACT_LIMIT && !(await env.CONTACT_LIMIT.limit({ key: ip })).success) return json({ error: 'slow_down' }, 429)
 
     let data: Record<string, unknown>
     try {

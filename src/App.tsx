@@ -75,7 +75,7 @@ function Shell() {
   useArrive()
 
   useEffect(() => {
-    if (location.hash) setTimeout(() => document.querySelector(location.hash)?.scrollIntoView(), 80)
+    if (location.hash) setTimeout(() => document.getElementById(decodeURIComponent(location.hash.slice(1)))?.scrollIntoView(), 80)
     else scrollTo(0, 0)
   }, [location.pathname, location.hash, mode])
 

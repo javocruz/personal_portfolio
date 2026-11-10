@@ -3,7 +3,8 @@
  * HTML file with correct <title>, description and social tags, plus a preview image, sitemap and RSS feed.
  * Crawlers and link-preview bots (LinkedIn, WhatsApp, Slack, X) read these tags without running any JavaScript.
  */
-import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'node:fs'
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync, appendFileSync } from 'node:fs'
+import { createHash } from 'node:crypto'
 import { join, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import satori from 'satori'
@@ -107,6 +108,37 @@ for (const r of routes) {
     writeFileSync(join(dist, r.path, 'index.html'), html)
   }
 }
+
+// ---------- security headers ----------
+// A strict Content-Security-Policy: scripts only from this site, plus the one inline script in index.html, allowed by
+// its hash (worked out here, so editing that script can't silently break the page). Appended to dist/_headers.
+const inline = [...readFileSync(join(dist, 'index.html'), 'utf8').matchAll(/<script(?![^>]*\bsrc=)(?![^>]*application\/ld\+json)[^>]*>([\s\S]*?)<\/script>/g)]
+  .map((m) => `'sha256-${createHash('sha256').update(m[1]).digest('base64')}'`)
+const csp = [
+  `default-src 'self'`,
+  `script-src 'self' ${inline.join(' ')}`,
+  `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com`,
+  `font-src 'self' https://fonts.gstatic.com`,
+  `img-src 'self' data: blob:`,
+  `connect-src 'self' https://api.github.com`,
+  `worker-src 'self' blob:`,
+  `object-src 'none'`, `base-uri 'self'`, `form-action 'self'`, `frame-ancestors 'none'`,
+].join('; ')
+appendFileSync(join(dist, '_headers'), `
+# Security headers for every page (written by scripts/prerender.ts).
+/*
+  Content-Security-Policy: ${csp}
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Cross-Origin-Opener-Policy: same-origin
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+# The design lab is a workshop, not a page for search engines.
+/lab/*
+  X-Robots-Tag: noindex
+`)
 
 // ---------- sitemap, RSS ----------
 const today = new Date().toISOString().slice(0, 10)
