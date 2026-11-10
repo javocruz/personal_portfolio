@@ -9,6 +9,7 @@ This file is the source of truth for how javicruz.dev looks. Read it before chan
   - **Nav:** lowercase, centred, the current page at full strength and the rest at half, with the time in Madrid at the far left. A one-line footer closes every page except the playground.
   - **Playground (the home page):** one self-running automaton or simulation, picked at random per visit and started from a new seed, faint behind the text and clear of it (`[data-pond-avoid]`). The cursor does nothing. In code it is still called the pond; candidates live at `/lab/ponds`.
   - **Projects:** a two-column grid that scrolls down, each painting hung on a blurred wash of its own colours. Project pages follow daoho's: hero band, story, the build, photos, previous and next.
+  - **Small touches:** a ⌘K command menu (nav button and shortcut) styled like the site; project names in the home bio show their painting beside the cursor; About's "now" lists live GitHub pushes; the 404 keeps the playground running behind one line. Project pages carry a strip of real figures (`numbers` in `projects.ts`), each one traceable to a repo, the CV or a README.
   - **About:** plain lists: experience, leadership, recognition, education, skills, contact. Rows open for detail.
   - **Gallery:** Core and Complete hang as works. The viewer has an "enter" button that steps into that whole site.
   - **Page changes:** stepped, after marcvendrell.cat. Everything runs on 12 poses a second: the page sinks 4px and goes in 2 poses, then each `[data-block]` steps in, in its `--order` (`src/site/steps.tsx`).
