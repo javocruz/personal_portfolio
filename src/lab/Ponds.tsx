@@ -37,7 +37,7 @@ function Tank({ pond }: { pond: PondDef }) {
       c.removeEventListener('pointermove', move); c.removeEventListener('pointerleave', leave); c.removeEventListener('pointerdown', down)
     }
   }, [pond])
-  return <canvas ref={ref} className="tank-canvas" style={{ background: pond.bg }} />
+  return <canvas ref={ref} className="tank-canvas" style={{ background: pond.bg, aspectRatio: pond.aspect }} />
 }
 
 export default function Ponds() {
@@ -45,8 +45,8 @@ export default function Ponds() {
     <main className="ponds">
       <header className="ponds-head">
         <Link to="/">← site</Link>
-        <h1>pond testing room</h1>
-        <p>Ideas for the water on the home page, in the site’s own voice. Newest round first.</p>
+        <h1>testing room</h1>
+        <p>Work in progress for the playground and the project art, in the site’s own voice. Newest first.</p>
       </header>
       {ROUNDS.map((round) => (
         <section key={round.title} className="ponds-round">

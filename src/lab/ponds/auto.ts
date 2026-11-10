@@ -9,14 +9,14 @@ import { pick, rng, type PondDef } from './kit'
  */
 let INK = [255, 247, 240], ACC = [224, 122, 63]
 export const setPalette = (ink: number[], acc: number[]) => { INK = ink; ACC = acc }
-const ink = (a: number) => `rgba(${INK[0]},${INK[1]},${INK[2]},${a})`
-const acc = (a = 1) => `rgba(${ACC[0]},${ACC[1]},${ACC[2]},${a})`
-const MONO = "'Geist Mono', ui-monospace, monospace"
-const POSE = 1 / 12
+export const ink = (a: number) => `rgba(${INK[0]},${INK[1]},${INK[2]},${a})`
+export const acc = (a = 1) => `rgba(${ACC[0]},${ACC[1]},${ACC[2]},${a})`
+export const MONO = "'Geist Mono', ui-monospace, monospace"
+export const POSE = 1 / 12
 // a fresh start on every load: each pond's seed is offset by this
 const LOAD = (Math.random() * 2 ** 31) | 0
-const fresh = (n: number) => rng(LOAD + n)
-const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map((v) => (v + 0.5) / 16)
+export const fresh = (n: number) => rng(LOAD + n)
+export const BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map((v) => (v + 0.5) / 16)
 const clear = (ctx: CanvasRenderingContext2D, w: number, h: number) => ctx.clearRect(0, 0, w, h)
 const label = (ctx: CanvasRenderingContext2D, text: string) => { ctx.font = `10px ${MONO}`; ctx.textBaseline = 'top'; ctx.fillStyle = ink(0.4); ctx.fillText(text, 10, 8) }
 
@@ -31,7 +31,7 @@ const pixels = (bw: number, bh: number) => {
   }
 }
 /** Calls fn once per `dt` of time (catching up at most a second, e.g. after the tab was hidden); returns whether it did. */
-const every = (dt: number, fn: () => void) => {
+export const every = (dt: number, fn: () => void) => {
   let last = -1
   return (t: number) => {
     if (last < 0) last = t

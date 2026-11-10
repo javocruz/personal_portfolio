@@ -1,6 +1,8 @@
 import { fbm, type PondDef } from './kit'
 import { CODE_PONDS } from './code'
 import { AUTO_PONDS } from './auto'
+import { EMPIRE_PONDS } from './empire'
+import { PLATE_PONDS } from './plates'
 
 const near = (ax: number, ay: number, bx: number, by: number) => Math.hypot(ax - bx, ay - by)
 
@@ -114,6 +116,16 @@ const contours: PondDef = {
 const still = (p: PondDef, name: string, idea: string): PondDef => ({ ...p, id: `${p.id}-still`, name, idea, hint: 'just watch', tags: ['you liked', 'passive'], passive: true })
 
 export const ROUNDS: { title: string; note: string; ponds: PondDef[] }[] = [
+  {
+    title: 'the course of empire · a playground in five stages',
+    note: 'After the five Cole paintings in Complete, in the site’s voice. The first one is the whole cycle (about 90 seconds); the other four open the same world at a later stage.',
+    ponds: EMPIRE_PONDS,
+  },
+  {
+    title: 'project art · in the site’s voice',
+    note: 'One still drawing per project, made from what the project does. Candidates to replace the watercolours.',
+    ponds: PLATE_PONDS,
+  },
   {
     title: 'round three · they run themselves',
     note: 'No cursor. Automata and small simulations stepping at the site’s pace (12 a second), plus the three you liked, left alone in the rain.',
