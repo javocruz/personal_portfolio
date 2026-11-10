@@ -37,7 +37,6 @@ export function SiteNav() {
     ['/', 'playground'],
     ['/projects', l({ en: 'projects', es: 'proyectos' })],
     ['/about', l({ en: 'about', es: 'sobre mí' })],
-    ['/gallery', l({ en: 'gallery', es: 'galería' })],
     ['/blog', 'blog'],
   ]
   const current = (to: string) => (to === '/' ? pathname === '/' : pathname === to || pathname.startsWith(to + '/'))
