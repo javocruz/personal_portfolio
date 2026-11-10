@@ -1,8 +1,33 @@
 import type { ReactNode } from 'react'
 import { useI18n } from '../lib/i18n'
 import { useHead } from '../lib/head'
-import { certs, education, experience, leadership, profile, skills, stats, summary } from '../content/profile'
+import { certs, education, experience, leadership, mxt, now, profile, skills, stats, summary } from '../content/profile'
 import { ContactForm } from '../components/ContactForm'
+import { ago, useGithubPushes } from '../components/Now'
+
+/** Links the program's name where it appears. */
+const withMxt = (text: string) => {
+  const [a, b] = text.split('IE MxT')
+  return b === undefined ? text : <>{a}<a href={mxt} target="_blank" rel="noreferrer">IE MxT</a>{b}</>
+}
+
+/** The last few public pushes, live from GitHub. Quietly absent if GitHub can't be reached. */
+function Pushes() {
+  const { l } = useI18n()
+  const all = useGithubPushes(10)
+  if (!Array.isArray(all) || !all.length) return null
+  // one line per repo, latest first
+  const events = all.filter((e, i) => all.findIndex((x) => x.repo.name === e.repo.name) === i).slice(0, 3)
+  return (
+    <ul className="sa-pushes" aria-label={l({ en: 'Latest pushes on GitHub', es: 'Últimos pushes en GitHub' })}>
+      {events.map((e) => (
+        <li key={e.id}>
+          <span className="sa-dot" aria-hidden /> {l({ en: 'pushed to', es: 'push a' })} <a href={`https://github.com/${e.repo.name}`} target="_blank" rel="noreferrer">{e.repo.name.replace('javocruz/', '')}</a> · {ago(e.created_at)}
+        </li>
+      ))}
+    </ul>
+  )
+}
 
 /** One section: a quiet label on the left, the list on the right. */
 function Sec({ title, order, id, children }: { title: string; order: number; id?: string; children: ReactNode }) {
@@ -31,7 +56,11 @@ export default function SiteAbout() {
   return (
     <main className="site-main site-about">
       <p className="sa-bio" data-block style={{ ['--order' as string]: 0 }}>{l(summary)}</p>
-      <Sec title={l({ en: 'experience', es: 'experiencia' })} order={1}>
+      <Sec title={l({ en: 'now', es: 'ahora' })} order={1}>
+        <ul className="sa-list sa-now">{now.map((n) => <li key={n.en}>{withMxt(l(n))}</li>)}</ul>
+        <Pushes />
+      </Sec>
+      <Sec title={l({ en: 'experience', es: 'experiencia' })} order={2}>
         {experience.map((x) => (
           <Row key={x.org + l(x.when)} title={l(x.role)} sub={x.org} when={l(x.when)}>
             <ul>{x.bullets.map((b) => <li key={b.en}>{l(b)}</li>)}</ul>

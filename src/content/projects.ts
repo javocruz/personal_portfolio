@@ -49,6 +49,12 @@ export const projects: Project[] = [
       en: '14% lower forecast error than the raw ECMWF forecast on 358 unseen nights (1.50 to 1.29 °C). Built in two days; 1st in Madrid, then 2nd in the EMEA final against the winners of the other BCG Platinion hubs. A prototype, with a pilot proposed.',
       es: 'Un 14% menos de error de pronóstico que el pronóstico ECMWF sin corregir en 358 noches no vistas (de 1.50 a 1.29 °C). Hecho en dos días; 1º en Madrid y después 2º en la final EMEA frente a los ganadores de los demás hubs de BCG Platinion. Un prototipo, con un piloto propuesto.',
     },
+    numbers: [
+      { value: '−14%', label: { en: 'forecast error vs the raw ECMWF forecast, on 358 unseen nights', es: 'error de pronóstico frente al ECMWF crudo, en 358 noches no vistas' } },
+      { value: '85–93%', label: { en: 'of frost nights at 2 m warned in the backtest', es: 'de las noches de helada a 2 m avisadas en la prueba retrospectiva' } },
+      { value: '8 h', label: { en: 'median warning ahead of the frost', es: 'de anticipación mediana antes de la helada' } },
+      { value: '2 days', label: { en: 'from idea to a working field station', es: 'de la idea a una estación de campo funcionando' } },
+    ],
     stack: ['Python', 'FastAPI', 'SQLite', 'scikit-learn', 'pandas', 'React', 'TypeScript', 'Vite', 'Three.js', 'Raspberry Pi 5', 'I2C', 'Open-Meteo / ERA5-Land', 'Twilio', 'Pytest', 'Playwright'],
     // team repo (github.com/arribasgomezmarcos-svg/SnapFrost) is private for now; link it once it is public
     links: [],
@@ -101,6 +107,12 @@ export const projects: Project[] = [
       en: '1st place in the HappyRobot track, one of five tracks, at HackSpain 2026: 36 hours, about 250 builders. A prototype.',
       es: '1er lugar en el track de HappyRobot, uno de cinco tracks, en HackSpain 2026: 36 horas y unos 250 participantes. Un prototipo.',
     },
+    numbers: [
+      { value: '1 / 5', label: { en: 'tracks won, the HappyRobot track', es: 'tracks ganados, el de HappyRobot' } },
+      { value: '36 h', label: { en: 'to build it, against ~250 builders', es: 'para construirlo, frente a ~250 participantes' } },
+      { value: '145', label: { en: 'automated tests on the simulator and dashboard', es: 'tests automáticos del simulador y el panel' } },
+      { value: '4', label: { en: 'people on the team', es: 'personas en el equipo' } },
+    ],
     stack: ['Python', 'Custom simulation engine', 'JavaScript', 'Canvas', 'HappyRobot', 'MCP'],
     links: [
       { label: { en: 'Live demo', es: 'Demo en vivo' }, href: 'https://hackspain.g-villar.tech' },
@@ -148,6 +160,12 @@ export const projects: Project[] = [
       en: 'Delivered a working compliance and authenticity API to the client over a five-month engagement. The code is public on GitHub.',
       es: 'Entregamos al cliente una API funcional de cumplimiento y autenticidad en cinco meses de colaboración. El código es público en GitHub.',
     },
+    numbers: [
+      { value: '77/77', label: { en: 'golden-set images scored correctly in regression', es: 'imágenes del conjunto de referencia puntuadas correctamente' } },
+      { value: '≥85%', label: { en: 'scoring accuracy gate passed, with false positives and negatives ≤10%', es: 'umbral de precisión superado, con falsos positivos y negativos ≤10%' } },
+      { value: '176', label: { en: 'automated tests', es: 'tests automáticos' } },
+      { value: '7', label: { en: 'people led over five months', es: 'personas lideradas durante cinco meses' } },
+    ],
     stack: ['LlamaIndex', 'Qdrant', 'Mistral Large', 'FastAPI', 'OpenCV', 'W3C VC', 'Railway'],
     links: [{ label: { en: 'Code', es: 'Código' }, href: 'https://github.com/javocruz/sybol-compliance-engine' }],
   },
@@ -188,6 +206,11 @@ export const projects: Project[] = [
       en: 'An MVP in progress, currently on hold. Pre-revenue, aimed at Series A–C biotechs.',
       es: 'Un MVP en curso, ahora en pausa. Sin ingresos, orientado a biotecnológicas en Series A–C.',
     },
+    numbers: [
+      { value: '16', label: { en: 'regulatory rules checked against each document', es: 'reglas regulatorias contrastadas con cada documento' } },
+      { value: '4', label: { en: 'frameworks: 21 CFR, EU GMP, ICH and eCTD', es: 'marcos: 21 CFR, EU GMP, ICH y eCTD' } },
+      { value: '3', label: { en: 'severity levels, each finding with a citation and a fix', es: 'niveles de gravedad, cada hallazgo con cita y corrección' } },
+    ],
     stack: ['Next.js', 'Fastify', 'tRPC', 'FastAPI', 'Turborepo', 'Hash-chained audit log'],
     links: [{ label: { en: 'pharmable.dev', es: 'pharmable.dev' }, href: 'https://pharmable.dev' }],
   },
@@ -228,6 +251,11 @@ export const projects: Project[] = [
       en: 'Shipped a production MVP for a real restaurant client.',
       es: 'Entregamos un MVP en producción para un cliente real de restauración.',
     },
+    numbers: [
+      { value: '3', label: { en: 'impacts per order: CO₂, water and land', es: 'impactos por pedido: CO₂, agua y suelo' } },
+      { value: '3', label: { en: 'people on the team, which I led', es: 'personas en el equipo, que lideré' } },
+      { value: '1', label: { en: 'real restaurant client, in production', es: 'cliente real, un restaurante, en producción' } },
+    ],
     stack: ['React', 'TypeScript', 'Node.js', 'Express', 'Supabase', 'CI/CD'],
     links: [{ label: { en: 'Code', es: 'Código' }, href: 'https://github.com/javocruz/frutas-prohibidas-mvp' }],
   },

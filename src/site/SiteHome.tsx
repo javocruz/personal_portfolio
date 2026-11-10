@@ -1,11 +1,24 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { useI18n } from '../lib/i18n'
 import { useHead } from '../lib/head'
-import { profile } from '../content/profile'
+import { mxt, profile } from '../content/profile'
 import { ContactForm } from '../components/ContactForm'
 import { Pond } from './Pond'
 import { StepLink } from './steps'
 import { useSiteTheme } from './SiteNav'
+import { plateSrc } from '../content/art'
+
+/** A link to a project that shows its painting beside the cursor while you hover it (pointers that can hover only). */
+function Peek({ slug, children }: { slug: string; children: ReactNode }) {
+  const [at, setAt] = useState<{ x: number; y: number } | null>(null)
+  const move = (e: React.PointerEvent) => { if (e.pointerType === 'mouse') setAt({ x: e.clientX, y: e.clientY }) }
+  return (
+    <>
+      <StepLink to={`/projects/${slug}`} onPointerMove={move} onPointerLeave={() => setAt(null)}>{children}</StepLink>
+      {at && <img className="peek" src={plateSrc(slug)} alt="" aria-hidden style={{ left: at.x + 18, top: at.y - 150 }} />}
+    </>
+  )
+}
 
 /** Types `text` out one character at a time, then holds. Reduced motion shows it whole. */
 function useTyped(text: string, delay = 500, speed = 42) {
@@ -41,11 +54,11 @@ export default function SiteHome() {
           <p>{l({ en: 'CTO @ Hospitia, building an AI inspection platform for hotels.', es: 'CTO @ Hospitia, construyendo una plataforma de inspección con IA para hoteles.' })}</p>
           <p>
             {l({ en: 'Before that, ', es: 'Antes, ' })}
-            <StepLink to="/projects/sybol-compliance-engine">Sybol</StepLink>, Outamation{l({ en: ', and a few hackathons: 1st in Madrid @ ', es: ' y algunos hackathons: 1er lugar en Madrid @ ' })}
-            <StepLink to="/projects/snapfrost">BCG Platinion</StepLink>{l({ en: ', 1st @ ', es: ', 1er lugar @ ' })}
-            <StepLink to="/projects/los-panaderos">HackSpain</StepLink>.
+            <Peek slug="sybol-compliance-engine">Sybol</Peek>, Outamation{l({ en: ', and a few hackathons: 1st in Madrid @ ', es: ' y algunos hackathons: 1er lugar en Madrid @ ' })}
+            <Peek slug="snapfrost">BCG Platinion</Peek>{l({ en: ', 1st @ ', es: ', 1er lugar @ ' })}
+            <Peek slug="los-panaderos">HackSpain</Peek>.
           </p>
-          <p>{l({ en: 'Currently, studying CS & AI @ ', es: 'Ahora, estudio CS e IA @ ' })}<a href="https://www.ie.edu/" target="_blank" rel="noreferrer">IE University</a>{l({ en: ', partnerships @ IE Tech Club, and part of the MXT program.', es: ', llevo alianzas @ IE Tech Club y soy parte del programa MXT.' })}</p>
+          <p>{l({ en: 'Currently, studying CS & AI @ ', es: 'Ahora, estudio CS e IA @ ' })}<a href="https://www.ie.edu/" target="_blank" rel="noreferrer">IE University</a>{l({ en: ', partnerships @ IE Tech Club, and part of ', es: ', llevo alianzas @ IE Tech Club y soy parte de ' })}<a href={mxt} target="_blank" rel="noreferrer">IE MxT</a>.</p>
           <p className="home-links">
             <a href={profile.github} target="_blank" rel="noreferrer">github</a> / <a href={profile.linkedin} target="_blank" rel="noreferrer">linkedin</a> / <a href={`mailto:${profile.email}`}>email</a> / <a href={profile.cv} download>cv</a> / <button className="home-write" aria-expanded={writing} onClick={() => setWriting((v) => !v)}>{l({ en: 'write to me', es: 'escríbeme' })}</button>
           </p>

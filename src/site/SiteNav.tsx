@@ -7,9 +7,17 @@ import { StepLink } from './steps'
 export function useSiteTheme() {
   const [light, setLight] = useState(() => document.documentElement.dataset.siteTheme === 'light')
   useEffect(() => {
+    if (light === (document.documentElement.dataset.siteTheme === 'light')) return
     if (light) document.documentElement.dataset.siteTheme = 'light'; else delete document.documentElement.dataset.siteTheme
     try { localStorage.setItem('siteTheme', light ? 'light' : 'dark') } catch { /* ignore */ }
+    dispatchEvent(new Event('site-theme'))
   }, [light])
+  // the header and the command menu each hold one: keep them in step
+  useEffect(() => {
+    const sync = () => setLight(document.documentElement.dataset.siteTheme === 'light')
+    addEventListener('site-theme', sync)
+    return () => removeEventListener('site-theme', sync)
+  }, [])
   return { light, toggle: () => setLight((v) => !v) }
 }
 
@@ -27,7 +35,7 @@ function Clock() {
  * The site's header (after daoho.dev): lowercase, centred, the current page at full strength and the rest at half.
  * The time in Madrid sits at the far left. On phones it becomes a single bar with the name and a menu.
  */
-export function SiteNav() {
+export function SiteNav({ openPalette }: { openPalette: () => void }) {
   const { l, lang, setLang } = useI18n()
   const { pathname } = useLocation()
   const { light, toggle } = useSiteTheme()
@@ -43,6 +51,7 @@ export function SiteNav() {
   const tools = (
     <>
       <button className="snav-tool" onClick={() => setLang(lang === 'en' ? 'es' : 'en')} aria-label={lang === 'en' ? 'Cambiar a español' : 'Switch to English'}>{lang === 'en' ? 'es' : 'en'}</button>
+      <button className="snav-tool snav-k" onClick={openPalette} aria-label={l({ en: 'Open the command menu', es: 'Abrir el menú de comandos' })}>{/Mac|iPhone|iPad/.test(navigator.platform) ? '⌘K' : 'ctrl K'}</button>
       <button className="snav-tool" onClick={toggle} aria-label={light ? l({ en: 'Dark theme', es: 'Tema oscuro' }) : l({ en: 'Light theme', es: 'Tema claro' })}>{light ? <Moon /> : <Sun />}</button>
     </>
   )

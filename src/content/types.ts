@@ -21,6 +21,8 @@ export type Project = {
   problem: L
   built: L[]
   outcome: L
+  /** a few real figures, shown as a strip on the project page */
+  numbers?: { value: string; label: L }[]
   stack: string[]
   links: Link[]
   /** real photos from the project; `name` maps to /art/photos/{name}-{800|1600}.jpg */

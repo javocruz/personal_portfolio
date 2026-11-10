@@ -43,6 +43,14 @@ html[data-mode=site] .page{animation:none}
 .snav-tool{margin-left:-8px}
 .snav-clock{position:absolute;left:32px;top:32px;color:var(--s-fg);opacity:.5;font-variant-numeric:tabular-nums}
 .snav-m{display:none}
+.snav-k{font-size:11px;letter-spacing:.02em;margin-left:0}
+/* the command menu, in the site's voice */
+html[data-mode=site] .pal-backdrop{background:color-mix(in srgb,var(--s-bg) 70%,transparent)}
+html[data-mode=site] .pal{border-radius:0;background:var(--s-bg);box-shadow:none}
+html[data-mode=site] .pal input{font:400 14px var(--s-mono);padding:16px 18px}
+html[data-mode=site] .pal li{font-size:13px;border-radius:0}
+html[data-mode=site] .pal li.on{background:rgba(var(--s-ink),.07)}
+html[data-mode=site] .pal .pal-group{text-transform:lowercase;letter-spacing:0;font-size:11px}
 @media(max-width:1023px){
   .snav{display:none}
   .snav-m{display:flex;position:fixed;z-index:30;top:10px;left:10px;right:10px;align-items:center;justify-content:space-between;padding:12px 16px;border-radius:999px;
@@ -74,6 +82,8 @@ html .pond[data-pond=glyphrain]{--pond-o:.95}
 .home-write{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px;text-decoration-color:rgba(var(--s-ink),.35)}
 .home-write:hover,.home-write[aria-expanded=true]{text-decoration-color:currentColor}
 .home-form{margin-top:18px;max-width:30rem}
+/* a project's painting beside the cursor while its name is hovered */
+.peek{position:fixed;z-index:40;width:112px;height:auto;pointer-events:none;box-shadow:0 10px 30px rgba(0,0,0,.35)}
 .home-form .form{margin:0}
 .home-form .form label{font-size:12px;color:var(--s-dim);text-transform:lowercase;letter-spacing:0}
 .home-form .form input,.home-form .form textarea{background:transparent;border:1px solid var(--s-line);border-radius:0;font:400 14px var(--s-mono);color:var(--s-fg);backdrop-filter:none}
@@ -115,6 +125,9 @@ html .pond[data-pond=glyphrain]{--pond-o:.95}
 .sp-meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px 24px;margin:0 0 44px;padding:16px 0;border-top:1px solid var(--s-line);border-bottom:1px solid var(--s-line);font-size:13px}
 .sp-meta dt{color:var(--s-dim);font-size:11px;text-transform:lowercase}
 .sp-meta dd{margin:2px 0 0}
+.sp-nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:20px 24px;list-style:none;margin:-12px 0 44px;padding:0}
+.sp-nums b{display:block;font-weight:400;font-size:22px;letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+.sp-nums span{display:block;margin-top:4px;font-size:11px;line-height:1.5;color:var(--s-dim)}
 .sp-col section{margin:0 0 40px}
 .sp-col h2{font:500 14px var(--s-mono);letter-spacing:0;margin:0 0 10px}
 .sp-list{margin:0;padding-left:1.1em;max-width:48rem}
@@ -204,7 +217,22 @@ html[data-sg-move=prev]::view-transition-new(sg-work){mask-image:url(/art/site/w
 .sa-list li{margin-bottom:10px}
 .sa-list span{display:block;color:var(--s-dim)}
 .sa-links{margin-bottom:8px!important}
+.sa-now li{margin-bottom:6px}
+.sa-pushes{list-style:none;margin:14px 0 0;padding:0;font-size:11px;color:var(--s-dim)}
+.sa-pushes li{margin-bottom:2px}
+.sa-pushes a{color:inherit}
+.sa-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#e07a3f;vertical-align:1px;animation:caret 2.12s steps(1) infinite}
 @media(max-width:1023px){.site-about{padding:96px 20px 64px}.sa-sec{grid-template-columns:minmax(0,1fr);gap:10px}.sa-row summary{flex-direction:column;gap:2px}.sa-row i{display:block;margin:0}}
+
+/* ---- a post, set like the rest of the site: one size of text, headings by weight */
+html[data-mode=site] .post{max-width:44rem;padding:120px 1.5rem 72px;font-family:var(--s-mono)}
+html[data-mode=site] .post .back,html[data-mode=site] .post .meta{font-size:11px;text-decoration:none}
+html[data-mode=site] .post h1{font:500 22px/1.35 var(--s-mono);letter-spacing:-.01em;margin:14px 0 0}
+html[data-mode=site] .post .prose{margin-top:36px;font-size:14px;line-height:1.8;color:rgba(var(--s-ink),.82)}
+html[data-mode=site] .post .prose h2,html[data-mode=site] .post .prose h3{font:500 14px/1.5 var(--s-mono);color:var(--s-fg);margin:2.4em 0 .6em;letter-spacing:0}
+html[data-mode=site] .post .prose a{color:var(--s-fg);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px;text-decoration-color:rgba(var(--s-ink),.35)}
+html[data-mode=site] .post .prose strong{color:var(--s-fg);font-weight:500}
+@media(max-width:1023px){html[data-mode=site] .post{padding:96px 20px 56px}}
 
 /* ---- footer: a last line, or a corner of the screen on the empty blog */
 .sfoot{display:flex;justify-content:space-between;gap:20px;border:0;max-width:56rem;margin:0 auto;padding:0 1.5rem 32px;font:400 11px var(--s-mono);color:var(--s-dim)}

@@ -149,7 +149,8 @@ export const testimonials: { quote: L; name: string; role: string }[] = []
 
 // Short, hand-edited "now" list shown next to live GitHub activity.
 export const now: L[] = [
-  { en: 'CTO at Hospitia, taking an AI inspection platform to production.', es: 'CTO en Hospitia, llevando a producción una plataforma de inspección con IA.' },
-  { en: '3rd year of CS & AI at IE University.', es: '3.er año de Ciencias de la Computación e IA en IE University.' },
-  { en: 'Partnerships Officer at IE’s Technology & Innovation Club, bringing HappyRobot in as a partner for the next edition.', es: 'Responsable de alianzas del Technology & Innovation Club de IE, sumando a HappyRobot como socio para la próxima edición.' },
+  { en: 'Working on Hospitia as CTO, taking its AI inspection platform to production.', es: 'Trabajando en Hospitia como CTO, llevando a producción su plataforma de inspección con IA.' },
+  { en: 'In IE MxT, IE’s Management & Technology program, with a 10% acceptance rate across all of IE’s bachelor’s and master’s students.', es: 'En IE MxT, el programa de Gestión y Tecnología de IE, con un 10% de admisión entre todos los estudiantes de grado y máster de IE.' },
+  { en: 'Building personal projects, like this site and its playground.', es: 'Construyendo proyectos personales, como este sitio y su playground.' },
 ]
+export const mxt = 'https://www.iemxt.org/'

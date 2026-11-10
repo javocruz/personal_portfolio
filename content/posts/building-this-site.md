@@ -1,30 +1,52 @@
 ---
-title: Building this site with WebGPU shaders
-date: 2026-10-09
-summary: How javicruz.dev is put together: React, WebGPU shader backgrounds, Cloudflare for hosting, DNS and email, and a blog that is just Markdown files.
-tags: meta, web
-draft: true
+title: I built three websites to end up with a simple one
+date: 2026-11-10
+summary: Shaders, two exhibitions painted in code, thirty ideas for a pond. Then I took most of it away, and the site got better every time.
+tags: meta, design
 ---
 
-> **Draft written by Claude as a starting point.** Rewrite it in your own voice, then delete the `draft: true` line to publish.
+This site is the third version of itself, and it is by far the plainest. One typeface, two colours, a header and a column of text. Getting here took a lot more work than the busy versions did.
 
-This site is a small React app. The interesting part is what runs around it.
+## Version one: everything
 
-## The visuals
+The first version was a dark page with WebGPU shaders moving behind the text, a command palette, a hidden "hyperdrive" mode and a lot of motion. Every piece was fun to build. Together they were noise. It was easy to watch the background and miss the part about what I actually do.
 
-The backgrounds on the home page and on each project are real-time **WebGPU shaders** from the open-source [`shaders`](https://github.com/shader-effects-inc/shaders) library. Each project gets its own palette, and if a browser has no WebGPU the page falls back to a plain CSS gradient. The shader code is loaded only when a scene scrolls into view, which keeps the first load small.
+## Version two: two exhibitions
 
-## Hosting, DNS and email
+So I went the other way and made it about art. I split the site into two whole sites.
 
-Everything lives on Cloudflare: the code deploys from GitHub on every push to `main`, DNS and HTTPS are handled there too, and `contact@javicruz.dev` is an Email Routing address that forwards to my inbox. The contact form is a tiny Worker that validates a message and sends it through the same system.
+**Core** is the quick version: one page, laid out like a studio index. Every project has a painting in the style of Rothko (and Mondrian, built but hidden), generated with JavaScript from that project's real numbers and baked to an image.
 
-## The blog
+**Complete** is the long version: Thomas Cole's *The Course of Empire* told by scroll, one painting dissolving into the next, with Böcklin's *Isle of the Dead* and Dan Hillier's *Eye of Nature* (used with permission).
 
-Posts are Markdown files in a folder. To publish one, I add a file and commit it:
+I am still proud of both. But they were exhibitions, and a portfolio is not an exhibition. You had to understand the concept before you could find my CV.
 
-```ts
-// content/posts/my-post.md becomes /blog/my-post
-const url = `/blog/${slug}`
-```
+## Version three: take things away
 
-That is the whole CMS.
+Two sites changed my mind: [daoho.dev](https://www.daoho.dev/) and [marcvendrell.cat](https://marcvendrell.cat/). Both are almost nothing, and both feel more personal than anything I had built. So I rebuilt the front door to be almost nothing too:
+
+- **One font, two colours.** Geist Mono, warm near-black, warm off-white, a light theme behind a toggle.
+- **Pages that step instead of slide.** Everything moves at 12 poses a second, like hand-drawn animation on twos. A page sinks four pixels and goes in two steps, then the next one arrives block by block.
+- **Plain lists.** Projects in a grid, experience as rows you can open, a footer that is one line long.
+
+The paintings did not disappear. Each project still hangs its watercolour, and Core and Complete still exist. They just stopped being the first thing you have to get through.
+
+## The pond
+
+The hardest part was the background on the home page. It started as a placeholder: an ASCII pond with ripples.
+
+I made a testing room and built twelve replacements: Monet's water lilies in brushstrokes, fireflies that slowly blink in sync, water striders, ink drops, an engraved eye. All of them were prettier than what is there now, and all of them changed the mood of the site. The three I liked were the most boring ones: a dither, a contour map and the original glyphs.
+
+Round two was nine more in that voice: halftones, a vector field, a hex dump, an oscilloscope. Better, but the cursor made them messy. Moving your mouse over a page to read it should not set it on fire.
+
+Round three took the cursor away. What runs behind the text now is one of seven systems that play out by themselves: Conway's Game of Life, elementary cellular automata, reaction-diffusion, Langton's ants, cyclic spirals, Brian's Brain, or rain on dithered glyphs. One is picked at random on every visit, from a fresh seed, faint enough to sit behind the words. The name sits in the corner if you want to know what you are looking at.
+
+I renamed it from pond to playground, because there are no fish anymore.
+
+## What I learned
+
+Everything I removed worked. That was the hard part: none of it was broken, it just did not earn its place.
+
+Simple is not the absence of work. It is the result of trying the complicated version, looking at it honestly, and keeping only what the person on the other side actually needs. For a portfolio, that is short: who I am, what I built, and how to reach me. Everything else should stay quiet.
+
+The site is a small Vite and React app on Cloudflare, and this blog is just Markdown files. The source is [on GitHub](https://github.com/javocruz/personal_portfolio) if you want to see all the versions it took.
