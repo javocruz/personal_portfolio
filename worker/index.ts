@@ -1,4 +1,7 @@
 import { EmailMessage } from 'cloudflare:email'
+import type { Guestbook } from './guestbook'
+
+export { Guestbook } from './guestbook'
 
 interface Env {
   ASSETS: Fetcher
@@ -7,6 +10,8 @@ interface Env {
   FORWARD_TO?: string
   /** A few messages a minute per visitor; absent on preview deployments. */
   CONTACT_LIMIT?: { limit(o: { key: string }): Promise<{ success: boolean }> }
+  GUESTBOOK_LIMIT?: { limit(o: { key: string }): Promise<{ success: boolean }> }
+  GUESTBOOK: DurableObjectNamespace<Guestbook>
 }
 
 const FROM = 'contact@javicruz.dev'
@@ -28,6 +33,7 @@ const encodedWord = (s: string) => `=?UTF-8?B?${b64(s)}?=`
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url)
+    if (url.pathname.startsWith('/api/guestbook')) return guestbook(request, env, url)
     if (url.pathname !== '/api/contact') return json({ error: 'not_found' }, 404)
     if (request.method !== 'POST') return json({ error: 'method_not_allowed' }, 405)
 
@@ -88,3 +94,50 @@ export default {
     return json({ ok: true })
   },
 }
+
+// ---------- the guestbook ----------
+const NO_LINKS = /(https?:|www\.|\.(com|net|org|io|dev|xyz|ru|cn|info|biz|ly|me)\b|\/\/)/i
+async function guestbook(request: Request, env: Env, url: URL): Promise<Response> {
+  const book = env.GUESTBOOK.get(env.GUESTBOOK.idFromName('main'))
+  const sameOrigin = request.headers.get('origin') === url.origin
+
+  // the review page from the email: GET shows the signature with two buttons, POST (from those buttons) acts
+  if (url.pathname === '/api/guestbook/review') {
+    const id = Number(url.searchParams.get('id')), sig = url.searchParams.get('sig') ?? ''
+    if (!Number.isInteger(id) || id < 1) return json({ error: 'not_found' }, 404)
+    if (request.method === 'GET') return book.review(id, sig, null)
+    if (request.method !== 'POST' || !sameOrigin) return json({ error: 'forbidden' }, 403)
+    const a = (await request.formData()).get('a')
+    return book.review(id, sig, a === 'approve' || a === 'delete' ? a : null)
+  }
+  if (url.pathname !== '/api/guestbook') return json({ error: 'not_found' }, 404)
+
+  if (request.method === 'GET') {
+    return new Response(JSON.stringify({ entries: await book.list() }), { headers: { 'content-type': 'application/json', 'cache-control': 'public, max-age=30' } })
+  }
+  if (request.method !== 'POST') return json({ error: 'method_not_allowed' }, 405)
+  if (!sameOrigin) return json({ error: 'forbidden' }, 403)
+  if (!(request.headers.get('content-type') ?? '').includes('application/json')) return json({ error: 'bad_request' }, 400)
+  let data: Record<string, unknown>
+  try {
+    const text = await request.text()
+    if (text.length > 4000) return json({ error: 'too_large' }, 413)
+    data = JSON.parse(text)
+  } catch {
+    return json({ error: 'bad_request' }, 400)
+  }
+  const started = Number(data.t)
+  if (String(data.company ?? '') !== '') return json({ ok: true }) // the honeypot: pretend, keep nothing
+  if (!Number.isFinite(started) || Date.now() - started < 2500 || Date.now() - started > 86_400_000) return json({ error: 'bad_request' }, 400)
+  const name = clean(String(data.name ?? '')).replace(/\s+/g, ' ').slice(0, 40)
+  const message = clean(String(data.message ?? '')).replace(/\s+/g, ' ').slice(0, 140)
+  const mark = String(data.mark ?? '')
+  if (!name || message.length < 2 || !/^([0-7][0-9a-f]){7}$/.test(mark)) return json({ error: 'invalid' }, 400)
+  if (NO_LINKS.test(name) || NO_LINKS.test(message)) return json({ error: 'no_links' }, 400)
+  // only signatures that would be kept count towards the limit, so a typo doesn't lock anyone out
+  const ip = request.headers.get('cf-connecting-ip') ?? 'unknown'
+  if (env.GUESTBOOK_LIMIT && !(await env.GUESTBOOK_LIMIT.limit({ key: ip })).success) return json({ error: 'slow_down' }, 429)
+  const r = await book.add(name, message, mark, url.origin)
+  return r === 'ok' ? json({ ok: true }) : json({ error: r }, r === 'not_configured' ? 503 : 502)
+}
+

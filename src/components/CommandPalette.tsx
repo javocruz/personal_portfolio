@@ -43,6 +43,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
         { id: 'about', group: g, label: l({ en: 'about', es: 'sobre mí' }), run: to('/about') },
         { id: 'blog', group: g, label: 'blog', run: to('/blog') },
         { id: 'contact', group: g, label: l({ en: 'contact', es: 'contacto' }), run: to('/about#contact') },
+        { id: 'guestbook', group: g, label: l({ en: 'guestbook', es: 'libro de visitas' }), run: to('/guestbook') },
         ...projects.map((p) => ({ id: p.slug, group: t('pal.g.projects'), label: p.title, hint: l(p.badge), run: to(`/projects/${p.slug}`) })),
         ...posts.map((p) => ({ id: `post-${p.slug}`, group: t('pal.g.writing'), label: p.title, hint: p.tags.join(', '), run: to(`/blog/${p.slug}`) })),
         { id: 'theme', group: act, label: light ? l({ en: 'Dark theme', es: 'Tema oscuro' }) : l({ en: 'Light theme', es: 'Tema claro' }), run: () => { toggle(); onClose() } },
