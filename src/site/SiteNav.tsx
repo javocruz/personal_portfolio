@@ -43,6 +43,7 @@ export function SiteNav({ openPalette }: { openPalette: () => void }) {
   useEffect(() => setOpen(false), [pathname])
   const links: [string, string][] = [
     ['/', 'playground'],
+    ['/guestbook', l({ en: 'guestbook', es: 'libro de visitas' })],
     ['/projects', l({ en: 'projects', es: 'proyectos' })],
     ['/about', l({ en: 'about', es: 'sobre mí' })],
     ['/blog', 'blog'],
