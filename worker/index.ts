@@ -1,5 +1,5 @@
 import { EmailMessage } from 'cloudflare:email'
-import type { Guestbook } from './guestbook'
+import { strokes, type Guestbook } from './guestbook'
 
 export { Guestbook } from './guestbook'
 
@@ -108,7 +108,16 @@ async function guestbook(request: Request, env: Env, url: URL): Promise<Response
     if (request.method === 'GET') return book.review(id, sig, null)
     if (request.method !== 'POST' || !sameOrigin) return json({ error: 'forbidden' }, 403)
     const a = (await request.formData()).get('a')
-    return book.review(id, sig, a === 'approve' || a === 'delete' ? a : null)
+    return book.review(id, sig, a === 'approve' || a === 'hide' || a === 'delete' ? a : null)
+  }
+  // the review queue: every waiting and published signature on one page
+  if (url.pathname === '/api/guestbook/queue') {
+    const key = url.searchParams.get('key') ?? ''
+    if (request.method === 'GET') return book.queue(key, null)
+    if (request.method !== 'POST' || !sameOrigin) return json({ error: 'forbidden' }, 403)
+    const f = await request.formData(), id = Number(f.get('id')), a = f.get('a')
+    if (!Number.isInteger(id) || id < 1 || (a !== 'approve' && a !== 'hide' && a !== 'delete')) return book.queue(key, null)
+    return book.queue(key, { id, a })
   }
   if (url.pathname !== '/api/guestbook') return json({ error: 'not_found' }, 404)
 
@@ -121,7 +130,7 @@ async function guestbook(request: Request, env: Env, url: URL): Promise<Response
   let data: Record<string, unknown>
   try {
     const text = await request.text()
-    if (text.length > 4000) return json({ error: 'too_large' }, 413)
+    if (text.length > 12_000) return json({ error: 'too_large' }, 413)
     data = JSON.parse(text)
   } catch {
     return json({ error: 'bad_request' }, 400)
@@ -131,8 +140,11 @@ async function guestbook(request: Request, env: Env, url: URL): Promise<Response
   if (!Number.isFinite(started) || Date.now() - started < 2500 || Date.now() - started > 86_400_000) return json({ error: 'bad_request' }, 400)
   const name = clean(String(data.name ?? '')).replace(/\s+/g, ' ').slice(0, 40)
   const message = clean(String(data.message ?? '')).replace(/\s+/g, ' ').slice(0, 140)
+  // the drawing: base64 strokes on a 255 x 255 board (see worker/guestbook.ts), at most 6000 bytes
   const mark = String(data.mark ?? '')
-  if (!name || message.length < 2 || !/^([0-7][0-9a-f]){7}$/.test(mark)) return json({ error: 'invalid' }, 400)
+  const drawn = mark.length <= 8000 && /^[A-Za-z0-9+/]+={0,2}$/.test(mark) ? strokes(mark) : null
+  const points = drawn?.reduce((n, s) => n + s.length, 0) ?? 0
+  if (!name || message.length < 2 || !drawn || points < 2) return json({ error: 'invalid' }, 400)
   if (NO_LINKS.test(name) || NO_LINKS.test(message)) return json({ error: 'no_links' }, 400)
   // only signatures that would be kept count towards the limit, so a typo doesn't lock anyone out
   const ip = request.headers.get('cf-connecting-ip') ?? 'unknown'

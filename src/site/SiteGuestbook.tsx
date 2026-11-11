@@ -3,38 +3,80 @@ import { useI18n } from '../lib/i18n'
 import { useHead } from '../lib/head'
 
 /**
- * The guestbook: sign with a name, one line and a 7x7 mark you draw. Signatures go to Javier first and appear here
- * once he's approved them (worker/guestbook.ts). A mark is stored as seven rows of seven bits, two hex digits a row.
+ * The guestbook: sign with a name, one line and a drawing. Signatures go to Javier first and appear here once he's
+ * approved them (worker/guestbook.ts). A drawing is pen strokes on a 255 x 255 board, sent as base64 bytes: x, y pairs
+ * (0-254) with 255 between strokes, up to 6000 bytes. The first signatures were 7x7 grids (14 hex digits).
  */
 type Entry = { id: number; name: string; message: string; mark: string; at: string }
-const N = 7
-const encode = (cells: boolean[]) => Array.from({ length: N }, (_, r) => cells.slice(r * N, r * N + N).reduce((v, on) => (v << 1) | (on ? 1 : 0), 0).toString(16).padStart(2, '0')).join('')
-const decode = (mark: string) => Array.from({ length: N * N }, (_, i) => ((parseInt(mark.slice(Math.floor(i / N) * 2, Math.floor(i / N) * 2 + 2), 16) >> (N - 1 - (i % N))) & 1) === 1)
+type Stroke = [number, number][]
+const BOARD = 255, MAX_BYTES = 6000
+const bytesOf = (s: Stroke[]) => s.reduce((n, st) => n + st.length * 2 + 1, 0)
+const encode = (s: Stroke[]) => { let bin = ''; s.forEach((st, k) => { if (k) bin += String.fromCharCode(255); for (const [x, y] of st) bin += String.fromCharCode(x, y) }); return btoa(bin) }
+const decode = (mark: string): Stroke[] => {
+  if (/^([0-7][0-9a-f]){7}$/.test(mark)) {
+    const out: Stroke[] = []
+    for (let r = 0; r < 7; r++) for (let c = 0; c < 7; c++) if ((parseInt(mark.slice(r * 2, r * 2 + 2), 16) >> (6 - c)) & 1) { const x = 18 + c * 36, y = 18 + r * 36; out.push([[x - 10, y], [x + 10, y], [x + 10, y + 1], [x - 10, y + 1]]) }
+    return out
+  }
+  try {
+    const b = Uint8Array.from(atob(mark), (ch) => ch.charCodeAt(0)), out: Stroke[] = []
+    let cur: Stroke = []
+    for (let i = 0; i < b.length;) { if (b[i] === 255) { if (cur.length) out.push(cur); cur = []; i++ } else { cur.push([b[i], b[i + 1]]); i += 2 } }
+    if (cur.length) out.push(cur)
+    return out
+  } catch { return [] }
+}
+const path = (st: Stroke) => st.map(([x, y], i) => `${i ? 'L' : 'M'}${x} ${y}`).join('') + (st.length === 1 ? 'l0.1 0' : '')
 
-/** A signer's mark, drawn small. */
-function Mark({ mark, size = 42 }: { mark: string; size?: number }) {
-  const cells = decode(mark)
+/** A signer's drawing. */
+function Mark({ mark, size = 96 }: { mark: string; size?: number }) {
   return (
-    <svg className="gb-mark" width={size} height={size} viewBox={`0 0 ${N} ${N}`} aria-hidden>
-      {cells.map((on, i) => <rect key={i} x={(i % N) + 0.1} y={Math.floor(i / N) + 0.1} width={0.8} height={0.8} opacity={on ? 0.9 : 0.1} />)}
+    <svg className="gb-mark" width={size} height={size} viewBox={`0 0 ${BOARD} ${BOARD}`} aria-hidden>
+      {decode(mark).map((st, i) => <path key={i} d={path(st)} />)}
     </svg>
   )
 }
 
-/** The pad you draw your mark on: click or drag across cells. */
-function Pad({ cells, set }: { cells: boolean[]; set: React.Dispatch<React.SetStateAction<boolean[]>> }) {
+/** The board you draw on: a pen that follows the pointer, with undo and clear. */
+function Pad({ strokes, set }: { strokes: Stroke[]; set: React.Dispatch<React.SetStateAction<Stroke[]>> }) {
   const { l } = useI18n()
-  const paint = useRef<boolean | null>(null)
-  const apply = (i: number, v: boolean) => set((prev) => { if (prev[i] === v) return prev; const c = prev.slice(); c[i] = v; return c })
-  useEffect(() => { const up = () => { paint.current = null }; addEventListener('pointerup', up); return () => removeEventListener('pointerup', up) }, [])
+  const ref = useRef<SVGSVGElement>(null)
+  const drawing = useRef(false)
+  const at = (e: React.PointerEvent): [number, number] => {
+    const b = ref.current!.getBoundingClientRect()
+    const c = (v: number) => Math.max(0, Math.min(254, Math.round(v)))
+    return [c(((e.clientX - b.left) / b.width) * BOARD), c(((e.clientY - b.top) / b.height) * BOARD)]
+  }
+  const down = (e: React.PointerEvent) => {
+    if (e.button !== 0) return
+    e.currentTarget.setPointerCapture(e.pointerId); drawing.current = true
+    const p = at(e)
+    set((s) => (bytesOf(s) + 3 > MAX_BYTES ? s : [...s, [p]]))
+  }
+  const move = (e: React.PointerEvent) => {
+    if (!drawing.current) return
+    const p = at(e)
+    set((s) => {
+      const last = s[s.length - 1]
+      if (!last || bytesOf(s) + 2 > MAX_BYTES) return s
+      const q = last[last.length - 1]
+      if (Math.hypot(p[0] - q[0], p[1] - q[1]) < 2.5) return s
+      return [...s.slice(0, -1), [...last, p]]
+    })
+  }
+  const up = () => { drawing.current = false }
+  const used = bytesOf(strokes) / MAX_BYTES
   return (
-    <div className="gb-pad" role="group" aria-label={l({ en: 'Your mark, 7 by 7', es: 'Tu marca, de 7 por 7' })} onPointerLeave={() => { paint.current = null }}>
-      {cells.map((on, i) => (
-        <button key={i} type="button" aria-pressed={on} aria-label={`${Math.floor(i / N) + 1}, ${(i % N) + 1}`}
-          onPointerDown={(e) => { e.preventDefault(); paint.current = !on; apply(i, !on) }}
-          onPointerEnter={() => { if (paint.current !== null) apply(i, paint.current) }}
-          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); apply(i, !on) } }} />
-      ))}
+    <div className="gb-padwrap">
+      <svg ref={ref} className="gb-pad" viewBox={`0 0 ${BOARD} ${BOARD}`} role="img" aria-label={l({ en: 'Drawing board', es: 'Lienzo para dibujar' })}
+        onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}>
+        {strokes.map((st, i) => <path key={i} d={path(st)} />)}
+      </svg>
+      <p className="gb-tools">
+        <button type="button" onClick={() => set((s) => s.slice(0, -1))} disabled={!strokes.length}>{l({ en: 'undo', es: 'deshacer' })}</button>
+        <button type="button" onClick={() => set([])} disabled={!strokes.length}>{l({ en: 'clear', es: 'borrar' })}</button>
+        <span className="gb-ink" aria-hidden><i style={{ width: `${Math.min(100, used * 100)}%` }} /></span>
+      </p>
     </div>
   )
 }
@@ -43,8 +85,8 @@ export default function SiteGuestbook() {
   const { l, lang } = useI18n()
   useHead('Guestbook · Javier Cruz Villarreal', l({ en: 'Leave a mark: a name, one line and a little drawing.', es: 'Deja tu marca: un nombre, una línea y un pequeño dibujo.' }))
   const [entries, setEntries] = useState<Entry[] | null | 'err'>(null)
-  const [cells, setCells] = useState<boolean[]>(() => Array(N * N).fill(false))
-  const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'invalid' | 'no_links' | 'slow_down' | 'error' | 'local'>('idle')
+  const [strokes, setStrokes] = useState<Stroke[]>([])
+  const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'invalid' | 'empty' | 'no_links' | 'slow_down' | 'error' | 'local'>('idle')
   const [msg, setMsg] = useState('')
   const started = useRef(Date.now())
 
@@ -57,15 +99,16 @@ export default function SiteGuestbook() {
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const f = new FormData(e.currentTarget)
+    if (strokes.reduce((n, st) => n + st.length, 0) < 2) return setState('empty')
     setState('sending')
     try {
       const r = await fetch('/api/guestbook', {
         method: 'POST', headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ name: String(f.get('name') ?? ''), message: String(f.get('message') ?? ''), mark: encode(cells), company: String(f.get('company') ?? ''), t: started.current }),
+        body: JSON.stringify({ name: String(f.get('name') ?? ''), message: String(f.get('message') ?? ''), mark: encode(strokes), company: String(f.get('company') ?? ''), t: started.current }),
       })
       if (r.status === 404 && import.meta.env.DEV) return setState('local')
       const d = await r.json().catch(() => ({}))
-      if (r.ok) { setState('sent'); (e.target as HTMLFormElement).reset(); setMsg(''); setCells(Array(N * N).fill(false)) }
+      if (r.ok) { setState('sent'); (e.target as HTMLFormElement).reset(); setMsg(''); setStrokes([]) }
       else setState(d.error === 'no_links' ? 'no_links' : r.status === 429 ? 'slow_down' : r.status === 400 ? 'invalid' : 'error')
     } catch { setState('error') }
   }
@@ -74,6 +117,7 @@ export default function SiteGuestbook() {
     idle: '', sending: l({ en: 'sending…', es: 'enviando…' }),
     sent: l({ en: 'thank you. it shows up here once I’ve read it.', es: 'gracias. aparece aquí cuando la lea.' }),
     invalid: l({ en: 'a name and a line, please.', es: 'un nombre y una línea, por favor.' }),
+    empty: l({ en: 'draw something first.', es: 'dibuja algo primero.' }),
     no_links: l({ en: 'no links, please.', es: 'sin enlaces, por favor.' }),
     slow_down: l({ en: 'one moment, then try again.', es: 'un momento y vuelve a intentarlo.' }),
     error: l({ en: 'that didn’t go through. try again later.', es: 'no se envió. inténtalo más tarde.' }),
@@ -85,18 +129,17 @@ export default function SiteGuestbook() {
     <main className="site-main site-guestbook">
       <header className="gb-head" data-block style={{ ['--order' as string]: 0 }}>
         <h1>{l({ en: 'guestbook', es: 'libro de visitas' })}</h1>
-        <p>{l({ en: 'Leave a mark: draw something small, add your name and a line. I read every one before it goes up.', es: 'Deja tu marca: dibuja algo pequeño, pon tu nombre y una línea. Leo cada una antes de publicarla.' })}</p>
+        <p>{l({ en: 'Leave a mark: draw something, sign it, add a line. I read every one before it goes up.', es: 'Deja tu marca: dibuja algo, fírmalo y añade una línea. Leo cada una antes de publicarla.' })}</p>
       </header>
 
       <form className="gb-form" onSubmit={submit} data-block style={{ ['--order' as string]: 1 }}>
-        <Pad cells={cells} set={setCells} />
+        <Pad strokes={strokes} set={setStrokes} />
         <div className="gb-fields">
           <label>{l({ en: 'name', es: 'nombre' })}<input name="name" required maxLength={40} autoComplete="nickname" /></label>
           <label>{l({ en: 'one line', es: 'una línea' })}<input name="message" required minLength={2} maxLength={140} value={msg} onChange={(e) => setMsg(e.target.value)} /></label>
           <label className="hp" aria-hidden="true">Company<input name="company" tabIndex={-1} autoComplete="off" /></label>
           <p className="gb-row">
             <button type="submit" disabled={state === 'sending'}>{l({ en: 'sign', es: 'firmar' })} →</button>
-            <button type="button" className="gb-clear" onClick={() => setCells(Array(N * N).fill(false))}>{l({ en: 'clear the mark', es: 'borrar la marca' })}</button>
             <span className="gb-count">{msg.length}/140</span>
           </p>
           <p className="gb-note" role="status">{note[state]}</p>
