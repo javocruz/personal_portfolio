@@ -27,6 +27,7 @@ const SiteProject = lazy(() => import('./site/SiteProject'))
 const SiteGallery = lazy(() => import('./site/SiteGallery'))
 const SiteBlog = lazy(() => import('./site/SiteBlog'))
 const SiteAbout = lazy(() => import('./site/SiteAbout'))
+const SiteGuestbook = lazy(() => import('./site/SiteGuestbook'))
 // Design lab (prototypes)
 const LabIndex = lazy(() => import('./lab/LabIndex'))
 const Heroes = lazy(() => import('./lab/Heroes'))
@@ -57,6 +58,10 @@ function WorkCase() {
 function About() {
   const { mode } = useMode()
   return mode ? <Navigate to="/#about" replace /> : <SiteAbout />
+}
+function Guestbook() {
+  const { mode } = useMode()
+  return mode ? <Navigate to="/" replace /> : <SiteGuestbook />
 }
 function Cv() {
   const { mode } = useMode()
@@ -116,6 +121,7 @@ function Shell() {
             <Route path="/projects" element={lz(<SiteProjects />)} />
             <Route path="/projects/:slug" element={lz(<SiteProject />)} />
             <Route path="/about" element={lz(<About />)} />
+            <Route path="/guestbook" element={lz(<Guestbook />)} />
             <Route path="/gallery" element={lz(<SiteGallery />)} />
             <Route path="/blog" element={lz(<Blog />)} />
             <Route path="/blog/:slug" element={lz(<BlogPost />)} />

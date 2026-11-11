@@ -14,7 +14,14 @@
   // Sends the contact-form email through Email Routing (only to verified destination addresses).
   "send_email": [{ "name": "EMAIL" }],
   // Rate limit for the contact form: 3 messages a minute per visitor.
-  "ratelimits": [{ "name": "CONTACT_LIMIT", "namespace_id": "1001", "simple": { "limit": 3, "period": 60 } }],
+  "ratelimits": [
+    { "name": "CONTACT_LIMIT", "namespace_id": "1001", "simple": { "limit": 3, "period": 60 } },
+    // the guestbook: 2 signatures a minute per visitor
+    { "name": "GUESTBOOK_LIMIT", "namespace_id": "1002", "simple": { "limit": 2, "period": 60 } }
+  ],
+  // the guestbook lives in one Durable Object with its own SQLite storage (worker/guestbook.ts)
+  "durable_objects": { "bindings": [{ "name": "GUESTBOOK", "class_name": "Guestbook" }] },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Guestbook"] }],
   // Branch/PR preview deployments ("wrangler preview") need their own copy of the bindings.
   "previews": {
     "send_email": [{ "name": "EMAIL" }]

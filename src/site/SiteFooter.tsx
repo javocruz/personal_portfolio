@@ -8,7 +8,7 @@ export function SiteFooter() {
   return (
     <footer className="sfoot" data-pond-avoid>
       <span>© {new Date().getFullYear()} <span className="sfoot-long">Javier Cruz Villarreal · {l({ en: 'every painting is code', es: 'cada pintura es código' })}</span></span>
-      <span><StepLink to="/about#contact">{l({ en: 'contact', es: 'contacto' })}</StepLink> · <a href={`${profile.github}/personal_portfolio`} target="_blank" rel="noreferrer">{l({ en: 'source', es: 'código' })} ↗</a></span>
+      <span><StepLink to="/guestbook">{l({ en: 'guestbook', es: 'libro de visitas' })}</StepLink> · <StepLink to="/about#contact">{l({ en: 'contact', es: 'contacto' })}</StepLink> · <a href={`${profile.github}/personal_portfolio`} target="_blank" rel="noreferrer">{l({ en: 'source', es: 'código' })} ↗</a></span>
     </footer>
   )
 }
