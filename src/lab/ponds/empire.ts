@@ -14,7 +14,7 @@ const E = 0, GROUND = 1, WATER = 2, TREE = 3, STONE = 4, FIRE = 5, RUIN = 6, IVY
 export const STAGES = ['the savage state', 'the arcadian state', 'the consummation of empire', 'destruction', 'desolation']
 const NUM = ['i', 'ii', 'iii', 'iv', 'v']
 const LEN = 216 // steps per stage
-const PER_POSE = 3 // steps per pose: 216 / 3 / 12 = 6 seconds a stage, 30 seconds a pass, the same for every version
+const RATE = 1.5 // steps per pose: 216 / 1.5 / 12 = 12 seconds a stage (one day), a minute a pass, the same for every version
 /** A point that moves at constant speed along an arch from x0 to x1, rising A cells: f in [0, 1] gives [x, rise]. */
 const arch = (x0: number, x1: number, A: number) => {
   const N = 256, L = new Float64Array(N + 1)
@@ -175,37 +175,31 @@ const world = (C: number, R: number, seed: number, horizon = 0.72) => {
   return { grid, ridge, ground, waterRow, bayL, bayR, step, get s() { return s }, get plan() { return plan } }
 }
 
-type Opts = { days?: boolean; horizon?: number; randomStart?: boolean }
+type Opts = { randomStart?: boolean }
 const empireAt = (start: number, o: Opts = {}): PondDef => ({
   id: start ? `empire-${start}` : 'empire', name: start ? `${NUM[start]} · ${STAGES[start]}` : 'The Course of Empire', tags: start ? ['empire', `starts at ${NUM[start]}`] : ['after thomas cole', 'five stages'], bg: '#1a1917', passive: true,
-  idea: start ? `The same world, opened at stage ${NUM[start]}. It carries on round the cycle from there.` : 'One bay through one day: a forest, a village, an empire built column by column, its fire and fall, then ivy over the ruins around one last column. About 30 seconds a cycle, then it begins again.',
+  idea: start ? `The same world, opened at stage ${NUM[start]}. It carries on round the cycle from there.` : 'One bay over five days, one stage a day: a forest, a village, an empire built column by column, its fire and fall, then ivy over the ruins around one last column. Twelve seconds a day, a minute a cycle, then it begins again.',
   hint: 'just watch',
   make(ctx, w, h) {
-    const S = Math.max(3, Math.ceil(w / 230)), C = Math.ceil(w / S), R = Math.ceil(h / S), W = world(C, R, 1836, o.horizon)
+    const S = Math.max(3, Math.ceil(w / 230)), C = Math.ceil(w / S), R = Math.ceil(h / S), W = world(C, R, 1836, 0.5)
     const first = o.randomStart ? Math.floor(Math.random() * 5) : start
     for (let j = 0; j < first * LEN; j++) W.step()
-    const tick = every(POSE, () => { for (let k = 0; k < PER_POSE; k++) W.step() })
-    const sunArc = arch(C * 0.06, C * 0.94, W.waterRow * 0.78), moonArc = arch(C * 0.15, C * 0.85, W.waterRow * 0.45)
+    // 1.5 steps a pose: the world catches up to a fractional clock, and the sun reads that clock, so it never jitters
+    let clock = first * LEN
+    const tick = every(POSE, () => { clock += RATE; while (W.s < clock) W.step() })
+    const sunArc = arch(C * 0.06, C * 0.94, W.waterRow * 0.78)
     let drawn = false
     return {
       frame(t) {
         if (!tick(t) && drawn) return
         drawn = true; ctx.clearRect(0, 0, w, h)
         const { grid, ridge, waterRow } = W, s = W.s, pos = s % (LEN * 5), stage = Math.floor(pos / LEN), u = (pos % LEN) / LEN, T = stage + u
-        // the sun crosses from dawn to dusk over the first four stages; the moon rises over the last
-        let sp = (T - 0.1) / 3.9, sunOn = T > 0.1 && T < 4
-        let [bx, by] = sunOn ? sunArc(sp) : [C * (0.62 - 0.1 * u), u * waterRow * 0.55]
-        by = waterRow - (sunOn ? 2 : 3) - by
-        let bodyOn = sunOn || stage === 4, night = stage === 4 ? sm(u * 2.5) : stage === 0 ? 1 - sm(u * 3) : 0
-        if (o.days) {
-          // every stage is one day: the sun rises on the left and sets on the right, then a short night under the moon,
-          // and the next stage begins at dawn. Five days to build an empire and lose it, then round again.
-          const D0 = 0.08, D1 = 0.84, mp = u > 0.5 ? (u - 0.86) / 0.2 : (u + 0.14) / 0.2, moonOn = mp > 0 && mp < 1
-          sp = (u - D0) / (D1 - D0); sunOn = u > D0 && u < D1; bodyOn = sunOn || moonOn
-          night = Math.max(1 - sm((u - 0.02) / 0.1), sm((u - 0.8) / 0.12))
-          if (sunOn) { [bx, by] = sunArc(sp); by = waterRow - 2 - by }
-          else { [bx, by] = moonArc(mp); by = waterRow - 3 - by }
-        }
+        // every stage is one day: the same sun on the same arc at the same speed, rising left and setting right, then a
+        // short starry night, and the next stage begins at dawn. Five days to build an empire and lose it, then again.
+        const day = (clock % LEN) / LEN, D0 = 0.08, D1 = 0.84, sp = (day - D0) / (D1 - D0), sunOn = day > D0 && day < D1, bodyOn = sunOn
+        const night = Math.max(1 - sm((day - 0.02) / 0.1), sm((day - 0.8) / 0.12))
+        let [bx, by] = sunArc(sp)
+        by = waterRow - 2 - by
         const lowSun = sunOn ? 1 - (waterRow - 2 - by) / (waterRow * 0.78) : 0, storm = stage === 3 ? sm(u * 5) : stage === 4 ? 1 - sm(u * 4) : 0
         const sky = new Path2D(), mount = new Path2D(), edge = new Path2D(), groundTop = new Path2D(), soil = new Path2D(), water = new Path2D(), glint = new Path2D()
         const treeA = new Path2D(), treeB = new Path2D(), stone = new Path2D(), ruin = new Path2D(), ivy = new Path2D(), fire = new Path2D(), smoke = new Path2D()
@@ -216,7 +210,7 @@ const empireAt = (start: number, o: Opts = {}): PondDef => ({
             if (y >= ridge[x] && y < waterRow) { if (y === ridge[x]) edge.rect(px, py, S, S); else if ((x * 3 + y * 5) % 7 === 0) mount.rect(px, py, S - 1, S - 1); continue }
             if (y >= waterRow) continue
             let b = (0.07 + lowSun * 0.3) * Math.exp(-(waterRow - y) / (waterRow * 0.2))
-            if (bodyOn) { const d2 = (x - bx) ** 2 + (y - by) ** 2; b += (sunOn ? 0.55 - storm * 0.4 : 0.4) * Math.exp(-d2 / (2 * rad * rad)) }
+            if (bodyOn) { const d2 = (x - bx) ** 2 + (y - by) ** 2; b += (0.55 - storm * 0.4) * Math.exp(-d2 / (2 * rad * rad)) }
             if (storm) b += storm * 0.6 * sm((noise(x * 0.035 + s * 0.012, y * 0.09 + 7) - 0.42) * 4)
             if (b > BAYER[(y & 3) * 4 + (x & 3)] || (night && h2(x, y) < 0.012 * night && h2(x + (s >> 3), y) > 0.25)) sky.rect(px, py, S - 1, S - 1)
             // smoke above anything burning, and rain in the storm
@@ -233,7 +227,7 @@ const empireAt = (start: number, o: Opts = {}): PondDef => ({
           else if (c === IVY) { if ((x + y) % 2 === 0) ivy.rect(px, py, S - 1, S - 1) }
           else if (c === FIRE && h2(i, s) < 0.85) fire.rect(px, py, S, S)
         }
-        if (bodyOn) { const body = new Path2D(); body.arc(bx * S, by * S, S * (sunOn ? 2.6 : 2.2), 0, Math.PI * 2); ctx.fillStyle = ink(sunOn ? 0.9 - storm * 0.6 : 0.85); ctx.fill(body) }
+        if (bodyOn) { const body = new Path2D(); body.arc(bx * S, by * S, S * 2.6, 0, Math.PI * 2); ctx.fillStyle = ink(0.9); ctx.fill(body) }
         // hearth smoke from the huts, banners on what is finished, ships while there is a city to sail to
         for (const b of W.plan) {
           if (b.hut && stage === 1 && b.at > 12) { const i0 = b.cells[b.cells.length - 1], x0 = i0 % C, y0 = Math.floor(i0 / C); for (let k = 1; k < 9; k++) if (h2(x0 + k, s >> 2) < 0.7) smoke.rect((x0 + Math.round(Math.sin((s + k * 4) * 0.12) * k * 0.3)) * S, (y0 - k) * S, S - 1, S - 1) }
@@ -272,7 +266,7 @@ const empireAt = (start: number, o: Opts = {}): PondDef => ({
 export const empire = empireAt(0)
 /** The playground's version: a day per stage, the horizon at mid-height so the home text sits over water and land. */
 export const empireDays: PondDef = {
-  ...empireAt(0, { days: true, horizon: 0.5, randomStart: true }), id: 'empire-days', name: 'A day per stage',
+  ...empireAt(0, { randomStart: true }), id: 'empire-days', name: 'A day per stage',
   tags: ['empire', 'playground'], idea: 'The same world, but each stage is one day: sunrise, sunset, a short night, and the next stage at dawn. Opens on a random stage.',
 }
 export const EMPIRE_PONDS: PondDef[] = [empireDays, empire, ...[1, 2, 3, 4].map((k) => empireAt(k))]
