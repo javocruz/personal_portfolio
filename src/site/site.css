@@ -71,6 +71,8 @@ html[data-mode=site] .pal .pal-group{text-transform:lowercase;letter-spacing:0;f
 html[data-site-theme=light] .pond{--pond-o:.52}
 /* glyph rain is sparse and fine, so it can sit much closer to full strength */
 html .pond[data-pond=glyphrain]{--pond-o:.95}
+/* the empire is mostly fine dither, with the city in the middle band: a little stronger, and a softer fade */
+html .pond[data-pond=empire-days]{--pond-o:.6;-webkit-mask-image:linear-gradient(to bottom,#000 55%,rgba(0,0,0,.35));mask-image:linear-gradient(to bottom,#000 55%,rgba(0,0,0,.35))}
 @keyframes s-pond-in{0%{opacity:0}0.1%{opacity:calc(.55 * var(--pond-o))}33.3%{opacity:calc(.88 * var(--pond-o))}66.7%,100%{opacity:var(--pond-o)}}
 .pond-name{position:absolute;right:24px;bottom:20px;z-index:1;background:none;border:0;padding:4px 0;font:400 11px var(--s-mono);text-transform:lowercase;color:var(--s-dim);cursor:pointer}
 .pond-name:hover{color:var(--s-fg)}

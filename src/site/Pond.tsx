@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { useI18n } from '../lib/i18n'
-import { HOME_PONDS, setPalette } from '../lab/ponds/auto'
+import { HOME_PONDS as AUTO, setPalette } from '../lab/ponds/auto'
+import { empireDays } from '../lab/ponds/empire'
 
 /**
  * The pond: one of a few self-running systems (Life, elementary automata, reaction-diffusion, Langton's ants, cyclic
- * spirals, Brian's Brain, dithered glyph rain), picked at random on each visit and never the same one twice running.
+ * spirals, Brian's Brain, dithered glyph rain, the Course of Empire a day per stage), picked at random on each visit and never the same one twice running.
  * A small label in the corner names it and steps to the next.
  *
  * Ink on a transparent canvas over the page's own background, so it follows the theme. Anything marked
@@ -12,6 +13,7 @@ import { HOME_PONDS, setPalette } from '../lab/ponds/auto'
  * screen; reduced motion gets a single, settled frame.
  */
 const KEY = 'pond'
+const HOME_PONDS = [...AUTO, empireDays]
 const NAMES: Record<string, { en: string; es: string }> = {
   life: { en: 'game of life', es: 'juego de la vida' },
   wolfram: { en: 'elementary automata', es: 'autómatas elementales' },
@@ -20,6 +22,7 @@ const NAMES: Record<string, { en: string; es: string }> = {
   cyclic: { en: 'cyclic spirals', es: 'espirales cíclicas' },
   brain: { en: 'brian’s brain', es: 'cerebro de brian' },
   glyphrain: { en: 'glyph rain', es: 'lluvia de glifos' },
+  'empire-days': { en: 'the course of empire', es: 'el curso del imperio' },
 }
 const firstPick = () => {
   // ?pond=life shows a given one (handy for sharing and checking)

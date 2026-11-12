@@ -20,10 +20,10 @@ const sm = (t: number) => { t = Math.max(0, Math.min(1, t)); return t * t * (3 -
 type Structure = { cells: number[]; type: number; at: number; from: number; rate: number; hut?: boolean; apex?: number }
 type Tree = { x: number; h: number; lvl: number; cells: number[] }
 
-const world = (C: number, R: number, seed: number) => {
+const world = (C: number, R: number, seed: number, horizon = 0.72) => {
   const n = C * R, r = rng(seed)
   const grid = new Uint8Array(n), base = new Uint8Array(n), life = new Uint8Array(n), was = new Uint8Array(n)
-  const waterRow = Math.floor(R * 0.72), bayL = Math.floor(C * 0.38), bayR = Math.floor(C * 0.62), zoneW = Math.floor(C * 0.2)
+  const waterRow = Math.floor(R * horizon), bayL = Math.floor(C * 0.38), bayR = Math.floor(C * 0.62), zoneW = Math.floor(C * 0.2)
   const ground = new Int16Array(C)
   for (let x = 0; x < C; x++) {
     const d = x < bayL ? bayL - x : x > bayR ? x - bayR : 0
@@ -163,13 +163,15 @@ const world = (C: number, R: number, seed: number) => {
   return { grid, ridge, ground, waterRow, bayL, bayR, step, get s() { return s }, get plan() { return plan } }
 }
 
-const empireAt = (start: number): PondDef => ({
+type Opts = { days?: boolean; horizon?: number; randomStart?: boolean }
+const empireAt = (start: number, o: Opts = {}): PondDef => ({
   id: start ? `empire-${start}` : 'empire', name: start ? `${NUM[start]} · ${STAGES[start]}` : 'The Course of Empire', tags: start ? ['empire', `starts at ${NUM[start]}`] : ['after thomas cole', 'five stages'], bg: '#1a1917', passive: true,
   idea: start ? `The same world, opened at stage ${NUM[start]}. It carries on round the cycle from there.` : 'One bay through one day: a forest, a village, an empire built column by column, its fire and fall, then ivy over the ruins around one last column. About 90 seconds a cycle, then it begins again.',
   hint: 'just watch',
   make(ctx, w, h) {
-    const S = Math.max(3, Math.ceil(w / 230)), C = Math.ceil(w / S), R = Math.ceil(h / S), W = world(C, R, 1836)
-    for (let j = 0; j < start * LEN; j++) W.step()
+    const S = Math.max(3, Math.ceil(w / 230)), C = Math.ceil(w / S), R = Math.ceil(h / S), W = world(C, R, 1836, o.horizon)
+    const first = o.randomStart ? Math.floor(Math.random() * 5) : start
+    for (let j = 0; j < first * LEN; j++) W.step()
     const tick = every(POSE, W.step)
     let drawn = false
     return {
@@ -178,9 +180,18 @@ const empireAt = (start: number): PondDef => ({
         drawn = true; ctx.clearRect(0, 0, w, h)
         const { grid, ridge, waterRow } = W, s = W.s, pos = s % (LEN * 5), stage = Math.floor(pos / LEN), u = (pos % LEN) / LEN, T = stage + u
         // the sun crosses from dawn to dusk over the first four stages; the moon rises over the last
-        const sp = (T - 0.1) / 3.9, sunOn = T > 0.1 && T < 4
-        const bx = sunOn ? C * (0.06 + 0.88 * sp) : C * (0.62 - 0.1 * u), by = sunOn ? waterRow - 2 - Math.sin(Math.PI * sp) * waterRow * 0.78 : waterRow - 3 - u * waterRow * 0.55
-        const bodyOn = sunOn || stage === 4, night = stage === 4 ? sm(u * 2.5) : stage === 0 ? 1 - sm(u * 3) : 0
+        let sp = (T - 0.1) / 3.9, sunOn = T > 0.1 && T < 4
+        let bx = sunOn ? C * (0.06 + 0.88 * sp) : C * (0.62 - 0.1 * u), by = sunOn ? waterRow - 2 - Math.sin(Math.PI * sp) * waterRow * 0.78 : waterRow - 3 - u * waterRow * 0.55
+        let bodyOn = sunOn || stage === 4, night = stage === 4 ? sm(u * 2.5) : stage === 0 ? 1 - sm(u * 3) : 0
+        if (o.days) {
+          // every stage is one day: the sun rises on the left and sets on the right, then a short night under the moon,
+          // and the next stage begins at dawn. Five days to build an empire and lose it, then round again.
+          const D0 = 0.08, D1 = 0.84, mp = u > 0.5 ? (u - 0.86) / 0.2 : (u + 0.14) / 0.2, moonOn = mp > 0 && mp < 1
+          sp = (u - D0) / (D1 - D0); sunOn = u > D0 && u < D1; bodyOn = sunOn || moonOn
+          night = Math.max(1 - sm((u - 0.02) / 0.1), sm((u - 0.8) / 0.12))
+          if (sunOn) { bx = C * (0.06 + 0.88 * sp); by = waterRow - 2 - Math.sin(Math.PI * sp) * waterRow * 0.78 }
+          else { bx = C * (0.15 + 0.7 * mp); by = waterRow - 3 - Math.sin(Math.PI * mp) * waterRow * 0.45 }
+        }
         const lowSun = sunOn ? 1 - Math.sin(Math.PI * sp) : 0, storm = stage === 3 ? sm(u * 5) : stage === 4 ? 1 - sm(u * 4) : 0
         const sky = new Path2D(), mount = new Path2D(), edge = new Path2D(), groundTop = new Path2D(), soil = new Path2D(), water = new Path2D(), glint = new Path2D()
         const treeA = new Path2D(), treeB = new Path2D(), stone = new Path2D(), ruin = new Path2D(), ivy = new Path2D(), fire = new Path2D(), smoke = new Path2D()
@@ -245,4 +256,9 @@ const empireAt = (start: number): PondDef => ({
 })
 
 export const empire = empireAt(0)
-export const EMPIRE_PONDS: PondDef[] = [empire, ...[1, 2, 3, 4].map(empireAt)]
+/** The playground's version: a day per stage, the horizon at mid-height so the home text sits over water and land. */
+export const empireDays: PondDef = {
+  ...empireAt(0, { days: true, horizon: 0.5, randomStart: true }), id: 'empire-days', name: 'A day per stage',
+  tags: ['empire', 'playground'], idea: 'The same world, but each stage is one day: sunrise, sunset, a short night, and the next stage at dawn. Opens on a random stage.',
+}
+export const EMPIRE_PONDS: PondDef[] = [empireDays, empire, ...[1, 2, 3, 4].map((k) => empireAt(k))]
