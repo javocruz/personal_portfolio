@@ -13,7 +13,19 @@ import { acc, BAYER, every, ink, MONO, POSE } from './auto'
 const E = 0, GROUND = 1, WATER = 2, TREE = 3, STONE = 4, FIRE = 5, RUIN = 6, IVY = 7, PILLAR = 8
 export const STAGES = ['the savage state', 'the arcadian state', 'the consummation of empire', 'destruction', 'desolation']
 const NUM = ['i', 'ii', 'iii', 'iv', 'v']
-const LEN = 216 // steps per stage: 18 seconds
+const LEN = 216 // steps per stage
+const PER_POSE = 3 // steps per pose: 216 / 3 / 12 = 6 seconds a stage, 30 seconds a pass, the same for every version
+/** A point that moves at constant speed along an arch from x0 to x1, rising A cells: f in [0, 1] gives [x, rise]. */
+const arch = (x0: number, x1: number, A: number) => {
+  const N = 256, L = new Float64Array(N + 1)
+  for (let i = 1; i <= N; i++) L[i] = L[i - 1] + Math.hypot((x1 - x0) / N, A * (Math.sin((Math.PI * i) / N) - Math.sin((Math.PI * (i - 1)) / N)))
+  return (f: number): [number, number] => {
+    const d = Math.max(0, Math.min(1, f)) * L[N]
+    let i = 1; while (i < N && L[i] < d) i++
+    const p = (i - 1 + (d - L[i - 1]) / (L[i] - L[i - 1] || 1)) / N
+    return [x0 + (x1 - x0) * p, Math.sin(Math.PI * p) * A]
+  }
+}
 const h2 = (x: number, y: number) => { let h = (x * 374761393 + y * 668265263) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) >>> 0) / 4294967296 }
 const sm = (t: number) => { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t) }
 
@@ -166,13 +178,14 @@ const world = (C: number, R: number, seed: number, horizon = 0.72) => {
 type Opts = { days?: boolean; horizon?: number; randomStart?: boolean }
 const empireAt = (start: number, o: Opts = {}): PondDef => ({
   id: start ? `empire-${start}` : 'empire', name: start ? `${NUM[start]} · ${STAGES[start]}` : 'The Course of Empire', tags: start ? ['empire', `starts at ${NUM[start]}`] : ['after thomas cole', 'five stages'], bg: '#1a1917', passive: true,
-  idea: start ? `The same world, opened at stage ${NUM[start]}. It carries on round the cycle from there.` : 'One bay through one day: a forest, a village, an empire built column by column, its fire and fall, then ivy over the ruins around one last column. About 90 seconds a cycle, then it begins again.',
+  idea: start ? `The same world, opened at stage ${NUM[start]}. It carries on round the cycle from there.` : 'One bay through one day: a forest, a village, an empire built column by column, its fire and fall, then ivy over the ruins around one last column. About 30 seconds a cycle, then it begins again.',
   hint: 'just watch',
   make(ctx, w, h) {
     const S = Math.max(3, Math.ceil(w / 230)), C = Math.ceil(w / S), R = Math.ceil(h / S), W = world(C, R, 1836, o.horizon)
     const first = o.randomStart ? Math.floor(Math.random() * 5) : start
     for (let j = 0; j < first * LEN; j++) W.step()
-    const tick = every(POSE, W.step)
+    const tick = every(POSE, () => { for (let k = 0; k < PER_POSE; k++) W.step() })
+    const sunArc = arch(C * 0.06, C * 0.94, W.waterRow * 0.78), moonArc = arch(C * 0.15, C * 0.85, W.waterRow * 0.45)
     let drawn = false
     return {
       frame(t) {
@@ -181,7 +194,8 @@ const empireAt = (start: number, o: Opts = {}): PondDef => ({
         const { grid, ridge, waterRow } = W, s = W.s, pos = s % (LEN * 5), stage = Math.floor(pos / LEN), u = (pos % LEN) / LEN, T = stage + u
         // the sun crosses from dawn to dusk over the first four stages; the moon rises over the last
         let sp = (T - 0.1) / 3.9, sunOn = T > 0.1 && T < 4
-        let bx = sunOn ? C * (0.06 + 0.88 * sp) : C * (0.62 - 0.1 * u), by = sunOn ? waterRow - 2 - Math.sin(Math.PI * sp) * waterRow * 0.78 : waterRow - 3 - u * waterRow * 0.55
+        let [bx, by] = sunOn ? sunArc(sp) : [C * (0.62 - 0.1 * u), u * waterRow * 0.55]
+        by = waterRow - (sunOn ? 2 : 3) - by
         let bodyOn = sunOn || stage === 4, night = stage === 4 ? sm(u * 2.5) : stage === 0 ? 1 - sm(u * 3) : 0
         if (o.days) {
           // every stage is one day: the sun rises on the left and sets on the right, then a short night under the moon,
@@ -189,10 +203,10 @@ const empireAt = (start: number, o: Opts = {}): PondDef => ({
           const D0 = 0.08, D1 = 0.84, mp = u > 0.5 ? (u - 0.86) / 0.2 : (u + 0.14) / 0.2, moonOn = mp > 0 && mp < 1
           sp = (u - D0) / (D1 - D0); sunOn = u > D0 && u < D1; bodyOn = sunOn || moonOn
           night = Math.max(1 - sm((u - 0.02) / 0.1), sm((u - 0.8) / 0.12))
-          if (sunOn) { bx = C * (0.06 + 0.88 * sp); by = waterRow - 2 - Math.sin(Math.PI * sp) * waterRow * 0.78 }
-          else { bx = C * (0.15 + 0.7 * mp); by = waterRow - 3 - Math.sin(Math.PI * mp) * waterRow * 0.45 }
+          if (sunOn) { [bx, by] = sunArc(sp); by = waterRow - 2 - by }
+          else { [bx, by] = moonArc(mp); by = waterRow - 3 - by }
         }
-        const lowSun = sunOn ? 1 - Math.sin(Math.PI * sp) : 0, storm = stage === 3 ? sm(u * 5) : stage === 4 ? 1 - sm(u * 4) : 0
+        const lowSun = sunOn ? 1 - (waterRow - 2 - by) / (waterRow * 0.78) : 0, storm = stage === 3 ? sm(u * 5) : stage === 4 ? 1 - sm(u * 4) : 0
         const sky = new Path2D(), mount = new Path2D(), edge = new Path2D(), groundTop = new Path2D(), soil = new Path2D(), water = new Path2D(), glint = new Path2D()
         const treeA = new Path2D(), treeB = new Path2D(), stone = new Path2D(), ruin = new Path2D(), ivy = new Path2D(), fire = new Path2D(), smoke = new Path2D()
         const rad = waterRow * 0.3
