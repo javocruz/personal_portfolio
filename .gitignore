@@ -8,3 +8,4 @@ dist
 art-src/
 # other sessions' worktrees
 .claude/worktrees/
+*.tsbuildinfo
