@@ -58,7 +58,7 @@ export function SiteNav({ openPalette }: { openPalette: () => void }) {
   )
   return (
     <>
-      <nav className="snav" aria-label="Main" data-pond-avoid>
+      <nav className="snav" aria-label="Main" data-pond-avoid="flush">
         <Clock />
         {links.map(([to, label]) => <StepLink key={to} to={to} aria-current={current(to) ? 'page' : undefined}>{label}</StepLink>)}
         {tools}

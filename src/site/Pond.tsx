@@ -52,8 +52,9 @@ export function Pond({ ink = '255,247,240', accent = '224,122,63' }: { ink?: str
     const measure = () => {
       const b = canvas.getBoundingClientRect()
       avoid = [...document.querySelectorAll('[data-pond-avoid]')].map((el) => {
-        const r = el.getBoundingClientRect()
-        return new DOMRect(r.left - b.left - 20, r.top - b.top - 16, r.width + 40, r.height + 32)
+        // data-pond-avoid="flush" clears just the element's box (the nav bar), so it stays even top and bottom
+        const r = el.getBoundingClientRect(), px = (el as HTMLElement).dataset.pondAvoid === 'flush' ? 0 : 20, py = px ? 16 : 0
+        return new DOMRect(r.left - b.left - px, r.top - b.top - py, r.width + px * 2, r.height + py * 2)
       })
     }
     const draw = (t: number) => { inst!.frame(t, { x: 0, y: 0, on: false }); for (const r of avoid) ctx.clearRect(r.x, r.y, r.width, r.height) }
