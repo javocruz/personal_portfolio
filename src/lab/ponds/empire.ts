@@ -1,5 +1,5 @@
 import { noise, rng, type PondDef } from './kit'
-import { acc, BAYER, every, ink, MONO, POSE } from './auto'
+import { acc, BAYER, ink, MONO, POSE } from './auto'
 
 /**
  * The Course of Empire (after Thomas Cole's five paintings, 1833-36), as one self-running world in the site's voice.
@@ -184,31 +184,37 @@ const empireAt = (start: number, o: Opts = {}): PondDef => ({
     const S = Math.max(3, Math.ceil(w / 230)), C = Math.ceil(w / S), R = Math.ceil(h / S), W = world(C, R, 1836, 0.5)
     const first = o.randomStart ? Math.floor(Math.random() * 5) : start
     for (let j = 0; j < first * LEN; j++) W.step()
-    // 1.5 steps a pose: the world catches up to a fractional clock, and the sun reads that clock, so it never jitters
-    let clock = first * LEN
-    const tick = every(POSE, () => { clock += RATE; while (W.s < clock) W.step() })
-    const sunArc = arch(C * 0.06, C * 0.94, W.waterRow * 0.78)
-    let drawn = false
+    // a continuous clock (1.5 steps a pose): the world steps whenever the clock passes a whole step, and the sun reads
+    // the clock itself, so it glides every frame instead of jumping
+    let clock = first * LEN, tPrev = -1
+    // the sun's path: the same arch every day, from below the horizon on the left to below it on the right, so it rises
+    // from behind the hills and sets behind the crag
+    const SUN_A = W.waterRow * 0.85, SUN_Y0 = W.waterRow + 6, sunArc = arch(C * 0.02, C * 0.98, SUN_A)
+    // the sun is light, not a ball: a small solid core that thins into ordered dither, the same 4x4 Bayer pattern as the
+    // sky, carried with the sun and placed at its exact (sub-cell) position
+    const DISC: [number, number][] = []
+    for (let j = -7; j <= 7; j++) for (let i = -7; i <= 7; i++) { const d = Math.hypot(i, j), v = d <= 1.6 ? 1 : (1 - (d - 1.6) / 5.4) ** 1.6; if (d <= 7 && v > BAYER[(j & 3) * 4 + (i & 3)]) DISC.push([i, j]) }
     return {
       frame(t) {
-        if (!tick(t) && drawn) return
-        drawn = true; ctx.clearRect(0, 0, w, h)
+        clock += tPrev < 0 ? 0 : (Math.min(0.25, Math.max(0, t - tPrev)) * RATE) / POSE; tPrev = t
+        while (W.s < clock) W.step()
+        ctx.clearRect(0, 0, w, h)
         const { grid, ridge, waterRow } = W, s = W.s, pos = s % (LEN * 5), stage = Math.floor(pos / LEN), u = (pos % LEN) / LEN, T = stage + u
         // every stage is one day: the same sun on the same arc at the same speed, rising left and setting right, then a
         // short starry night, and the next stage begins at dawn. Five days to build an empire and lose it, then again.
-        const day = (clock % LEN) / LEN, D0 = 0.08, D1 = 0.84, sp = (day - D0) / (D1 - D0), sunOn = day > D0 && day < D1, bodyOn = sunOn
-        const night = Math.max(1 - sm((day - 0.02) / 0.1), sm((day - 0.8) / 0.12))
-        let [bx, by] = sunArc(sp)
-        by = waterRow - 2 - by
-        const lowSun = sunOn ? 1 - (waterRow - 2 - by) / (waterRow * 0.78) : 0, storm = stage === 3 ? sm(u * 5) : stage === 4 ? 1 - sm(u * 4) : 0
+        const day = (clock % LEN) / LEN, D0 = 0.03, D1 = 0.9, sp = (day - D0) / (D1 - D0), sunOn = day > D0 && day < D1
+        const [bx, rise] = sunArc(sp), by = SUN_Y0 - rise, up = sunOn ? (waterRow - by) / SUN_A : -1, bodyOn = up > -0.05
+        const night = 1 - sm((up + 0.05) / 0.2)
+        const lowSun = bodyOn ? 1 - Math.max(0, Math.min(1, up)) : 0, storm = stage === 3 ? sm(u * 5) : stage === 4 ? 1 - sm(u * 4) : 0
         const sky = new Path2D(), mount = new Path2D(), edge = new Path2D(), groundTop = new Path2D(), soil = new Path2D(), water = new Path2D(), glint = new Path2D()
         const treeA = new Path2D(), treeB = new Path2D(), stone = new Path2D(), ruin = new Path2D(), ivy = new Path2D(), fire = new Path2D(), smoke = new Path2D()
-        const rad = waterRow * 0.3
+        const rad = waterRow * 0.3, open = new Path2D()
         for (let y = 0; y < R; y++) for (let x = 0; x < C; x++) {
           const i = y * C + x, c = grid[i], px = x * S, py = y * S
           if (c === E) {
             if (y >= ridge[x] && y < waterRow) { if (y === ridge[x]) edge.rect(px, py, S, S); else if ((x * 3 + y * 5) % 7 === 0) mount.rect(px, py, S - 1, S - 1); continue }
             if (y >= waterRow) continue
+            open.rect(px, py, S, S)
             let b = (0.07 + lowSun * 0.3) * Math.exp(-(waterRow - y) / (waterRow * 0.2))
             if (bodyOn) { const d2 = (x - bx) ** 2 + (y - by) ** 2; b += (0.55 - storm * 0.4) * Math.exp(-d2 / (2 * rad * rad)) }
             if (storm) b += storm * 0.6 * sm((noise(x * 0.035 + s * 0.012, y * 0.09 + 7) - 0.42) * 4)
@@ -219,7 +225,7 @@ const empireAt = (start: number, o: Opts = {}): PondDef => ({
           } else if (c === GROUND) { if (grid[i - C] !== GROUND) groundTop.rect(px, py, S, S); else if ((x + y) % 2 === 0 && (x + y * 3) % 3 === 0) soil.rect(px, py, S - 1, S - 1) }
           else if (c === WATER) {
             const depth = y - waterRow
-            if (bodyOn && Math.abs(x - bx) < 1.5 + depth * 0.6 && h2(x + (s >> 1), y) < 0.55 - storm * 0.3) glint.rect(px, py, S, Math.max(1, S - 2))
+            if (bodyOn && up > 0 && Math.abs(x - bx) < 1.5 + depth * 0.6 && h2(x + (s >> 1), y) < 0.55 - storm * 0.3) glint.rect(px, py, S, Math.max(1, S - 2))
             else if ((x + y * 3 + (s >> 2)) % 5 === 0) water.rect(px, py, S, 1)
           } else if (c === TREE) ((x + y) % 2 ? treeB : treeA).rect(px, py, S - 1, S - 1)
           else if (c === STONE || c === PILLAR) stone.rect(px, py, S, S)
@@ -227,7 +233,6 @@ const empireAt = (start: number, o: Opts = {}): PondDef => ({
           else if (c === IVY) { if ((x + y) % 2 === 0) ivy.rect(px, py, S - 1, S - 1) }
           else if (c === FIRE && h2(i, s) < 0.85) fire.rect(px, py, S, S)
         }
-        if (bodyOn) { const body = new Path2D(); body.arc(bx * S, by * S, S * 2.6, 0, Math.PI * 2); ctx.fillStyle = ink(0.9); ctx.fill(body) }
         // hearth smoke from the huts, banners on what is finished, ships while there is a city to sail to
         for (const b of W.plan) {
           if (b.hut && stage === 1 && b.at > 12) { const i0 = b.cells[b.cells.length - 1], x0 = i0 % C, y0 = Math.floor(i0 / C); for (let k = 1; k < 9; k++) if (h2(x0 + k, s >> 2) < 0.7) smoke.rect((x0 + Math.round(Math.sin((s + k * 4) * 0.12) * k * 0.3)) * S, (y0 - k) * S, S - 1, S - 1) }
@@ -240,6 +245,12 @@ const empireAt = (start: number, o: Opts = {}): PondDef => ({
           p.rect((x - 1) * S, y * S, S * 4, S); p.rect(x * S, (y - 4) * S, S, S * 4); p.rect((x + 1) * S, (y - 3) * S, S, S * 2)
         }
         ctx.fillStyle = ink(0.26); ctx.fill(sky)
+        // the sun, drawn only over open sky: hills, the crag, trees, buildings and smoke all pass in front of it
+        if (bodyOn) {
+          const disc = new Path2D()
+          for (const [i, j] of DISC) disc.rect((bx + i - 0.5) * S, (by + j - 0.5) * S, S - 1, S - 1)
+          ctx.save(); ctx.clip(open); ctx.fillStyle = ink(0.85); ctx.fill(disc); ctx.restore()
+        }
         ctx.fillStyle = ink(0.1); ctx.fill(mount); ctx.fillStyle = ink(0.34); ctx.fill(edge)
         ctx.fillStyle = ink(0.2); ctx.fill(smoke)
         ctx.fillStyle = ink(0.2); ctx.fill(water); ctx.fillStyle = ink(0.6); ctx.fill(glint)
