@@ -35,6 +35,7 @@ const rgb = (s: string) => s.split(',').map(Number)
 export function Pond({ ink = '255,247,240', accent = '224,122,63' }: { ink?: string; accent?: string }) {
   const { l } = useI18n()
   const ref = useRef<HTMLCanvasElement>(null)
+  const statRef = useRef<HTMLSpanElement>(null)
   const [idx, setIdx] = useState(firstPick)
   const pond = HOME_PONDS[idx]
   useEffect(() => { try { localStorage.setItem(KEY, pond.id) } catch { /* storage blocked */ } }, [pond])
@@ -57,7 +58,10 @@ export function Pond({ ink = '255,247,240', accent = '224,122,63' }: { ink?: str
         return new DOMRect(r.left - b.left - px, r.top - b.top - py, r.width + px * 2, r.height + py * 2)
       })
     }
-    const draw = (t: number) => { inst!.frame(t, { x: 0, y: 0, on: false }); for (const r of avoid) ctx.clearRect(r.x, r.y, r.width, r.height) }
+    // the live reading in the corner (generation, population...), written straight to the DOM a few times a second
+    let shown = ''
+    const readout = () => { const v = inst?.stat?.() ?? ''; if (v !== shown && statRef.current) statRef.current.textContent = shown = v }
+    const draw = (t: number) => { inst!.frame(t, { x: 0, y: 0, on: false }); for (const r of avoid) ctx.clearRect(r.x, r.y, r.width, r.height); readout() }
     const settle = () => { for (let k = 0; k < 48; k++) inst!.frame(k / 12, { x: 0, y: 0, on: false }); draw(4) }
     const size = () => {
       W = canvas.clientWidth; H = canvas.clientHeight
@@ -93,6 +97,7 @@ export function Pond({ ink = '255,247,240', accent = '224,122,63' }: { ink?: str
   return (
     <>
       <canvas ref={ref} className="pond" data-pond={pond.id} aria-hidden />
+      <span ref={statRef} className="pond-stat" data-pond-avoid aria-hidden />
       <button className="pond-name" data-pond-avoid onClick={() => setIdx((i) => (i + 1) % HOME_PONDS.length)} title={l({ en: 'Show another', es: 'Ver otro' })}>
         ↻ {l(NAMES[pond.id])}
       </button>
