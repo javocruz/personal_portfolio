@@ -13,6 +13,9 @@ export const ink = (a: number) => `rgba(${INK[0]},${INK[1]},${INK[2]},${a})`
 export const acc = (a = 1) => `rgba(${ACC[0]},${ACC[1]},${ACC[2]},${a})`
 export const MONO = "'Geist Mono', ui-monospace, monospace"
 export const POSE = 1 / 12
+/** 1204 -> '1,204', for the corner readings */
+export const fmt = (n: number) => n.toLocaleString('en-US')
+const count = (n: number, word: string) => `${fmt(n)} ${word}${n === 1 ? '' : 's'}`
 // a fresh start on every load: each pond's seed is offset by this
 const LOAD = (Math.random() * 2 ** 31) | 0
 export const fresh = (n: number) => rng(LOAD + n)
@@ -50,13 +53,13 @@ const lifeEngine = (C: number, R: number, seed: number) => {
   let heat = new Float32Array(n), heat2 = new Float32Array(n)
   const trail = new Float32Array(n), hist: number[] = []
   for (let i = 0; i < n; i++) a[i] = r() < 0.2 ? 1 : 0
-  let gen = 0
+  let gen = 0, alive = a.reduce((k, v) => k + v, 0)
   const drop = () => {
     const s = pick(r, [RPENT, ACORN, GLIDER, RPENT]), cx = Math.floor(r() * C), cy = Math.floor(r() * R)
     for (const [dx, dy] of s) { const i = ((cy + dy) % R) * C + ((cx + dx) % C); a[i] = 1; heat[i] = 1 }
   }
   return {
-    get a() { return a }, get heat() { return heat }, trail,
+    get a() { return a }, get heat() { return heat }, trail, get gen() { return gen }, get alive() { return alive },
     step() {
       let pop = 0
       for (let y = 0; y < R; y++) {
@@ -70,7 +73,7 @@ const lifeEngine = (C: number, R: number, seed: number) => {
           heat2[i] = v ? (alive ? heat[i] * 0.97 : Math.max(heat[up + l], heat[up + x], heat[up + rr], heat[mid + l], heat[mid + rr], heat[dn + l], heat[dn + x], heat[dn + rr]) * 0.94) : 0
         }
       }
-      ;[a, b] = [b, a]; [heat, heat2] = [heat2, heat]; gen++
+      ;[a, b] = [b, a]; [heat, heat2] = [heat2, heat]; gen++; alive = pop
       hist.push(pop); if (hist.length > 36) hist.shift()
       const flat = hist.length === 36 && Math.max(...hist) - Math.min(...hist) < 8
       if (flat || pop < n * 0.04 || gen % 240 === 0) { drop(); hist.length = 0 }
@@ -85,6 +88,7 @@ const life: PondDef = {
     const S = 5, C = Math.floor(w / S), R = Math.floor(h / S), L = lifeEngine(C, R, 21), tick = every(POSE, L.step)
     let drawn = false
     return {
+      stat: () => `gen ${fmt(L.gen)} · ${fmt(L.alive)} alive`,
       frame(t) {
         if (!tick(t) && drawn) return
         drawn = true; clear(ctx, w, h)
@@ -122,6 +126,7 @@ const wolfram: PondDef = {
     for (let i = 0; i < R; i++) step()
     const tick = every(POSE, step)
     return {
+      stat: () => `rule ${RULES[rule]} · gen ${fmt(count)}`,
       frame(t) {
         if (!tick(t) && drawn) return
         drawn = true; clear(ctx, w, h)
@@ -144,8 +149,9 @@ const turing: PondDef = {
     let A = new Float32Array(n).fill(1), B = new Float32Array(n), A2 = new Float32Array(n), B2 = new Float32Array(n)
     const px = pixels(bw, bh), f = 0.0545, k = 0.062
     const seed = () => { const cx = 4 + Math.floor(r() * (bw - 8)), cy = 4 + Math.floor(r() * (bh - 8)); for (let y = -2; y <= 2; y++) for (let x = -2; x <= 2; x++) B[(cy + y) * bw + cx + x] = 1 }
-    for (let i = 0; i < Math.max(8, Math.round(n / 4000)); i++) seed()
-    let next = 6
+    const first = Math.max(8, Math.round(n / 4000))
+    for (let i = 0; i < first; i++) seed()
+    let next = 6, its = 0, drops = first
     const iterate = () => {
       for (let y = 1; y < bh - 1; y++) for (let x = 1; x < bw - 1; x++) {
         const i = y * bw + x, a = A[i], b = B[i]
@@ -157,9 +163,11 @@ const turing: PondDef = {
       ;[A, A2] = [A2, A]; [B, B2] = [B2, B]
     }
     return {
+      stat: () => `step ${fmt(its)} · ${count(drops, 'drop')}`,
       frame(t) {
-        if (t > next) { seed(); next = t + 5 }
+        if (t > next) { seed(); next = t + 5; drops++ }
         for (let i = 0; i < 8; i++) iterate()
+        its += 8
         for (let y = 0; y < bh; y++) for (let x = 0; x < bw; x++) { const i = y * bw + x; px.set(i, INK, B[i] * 3.2 > BAYER[(y & 3) * 4 + (x & 3)] ? 0.85 : 0) }
         clear(ctx, w, h); px.blit(ctx, S)
       },
@@ -188,6 +196,7 @@ const ants: PondDef = {
     reset()
     const limit = Math.max(45000, C * R * 1.2)
     return {
+      stat: () => `${crew.length} ants · step ${fmt(steps)}`,
       frame() {
         for (let s = 0; s < 60; s++) for (const a of crew) {
           const i = a.y * C + a.x
@@ -259,10 +268,12 @@ const cyclic: PondDef = {
       }
       ;[a, b] = [b, a]
     }
+    let gen = 0
     for (let i = 0; i < 160; i++) step()
-    const tick = every(POSE, step)
+    const tick = every(POSE, () => { step(); gen++ })
     let drawn = false
     return {
+      stat: () => `${N} states · gen ${fmt(gen)}`,
       frame(t) {
         if (!tick(t) && drawn) return
         drawn = true
@@ -282,8 +293,10 @@ const brain: PondDef = {
     let a = new Uint8Array(C * R), b = new Uint8Array(C * R)
     const sprinkle = (cx: number, cy: number, rad: number) => { for (let y = -rad; y <= rad; y++) for (let x = -rad; x <= rad; x++) if (r() < 0.5) a[((cy + y + R) % R) * C + ((cx + x + C) % C)] = 1 }
     sprinkle(C >> 1, R >> 1, 8); sprinkle(C >> 2, R >> 2, 5)
+    let gen = 0, firing = 0
     const step = () => {
       let on = 0
+      gen++
       for (let y = 0; y < R; y++) for (let x = 0; x < C; x++) {
         const i = y * C + x
         if (a[i] === 1) { b[i] = 2; continue }
@@ -292,12 +305,13 @@ const brain: PondDef = {
         for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if ((dx || dy) && a[((y + dy + R) % R) * C + ((x + dx + C) % C)] === 1) n++
         b[i] = n === 2 ? 1 : 0; on += b[i]
       }
-      ;[a, b] = [b, a]
+      ;[a, b] = [b, a]; firing = on
       if (on < C * R * 0.01) sprinkle(Math.floor(r() * C), Math.floor(r() * R), 4)
     }
     const tick = every(POSE, step)
     let drawn = false
     return {
+      stat: () => `gen ${fmt(gen)} · ${fmt(firing)} firing`,
       frame(t) {
         if (!tick(t) && drawn) return
         drawn = true; clear(ctx, w, h)
@@ -318,12 +332,13 @@ const glyphrain: PondDef = {
     const G = 12, C = Math.ceil(w / G), R = Math.ceil(h / G), H = new Float32Array(C * R), RING = new Float32Array(C * R)
     const rings: { x: number; y: number; t0: number }[] = []
     const tick = every(POSE, () => {})
-    let drawn = false
+    let drawn = false, drops = 0
     return {
+      stat: () => `${count(drops, 'drop')} · ${count(rings.length, 'ring')}`,
       frame(t) {
         if (!tick(t) && drawn) return
         drawn = true
-        if (Math.random() < 0.08) rings.push({ x: Math.random() * C, y: Math.random() * R, t0: t })
+        if (Math.random() < 0.08) { rings.push({ x: Math.random() * C, y: Math.random() * R, t0: t }); drops++ }
         for (let i = rings.length - 1; i >= 0; i--) if (t - rings[i].t0 > 5) rings.splice(i, 1)
         for (let y = 0; y < R; y++) for (let x = 0; x < C; x++) {
           let v = Math.sin(x * 0.27 + t * 0.6) * 0.5 + Math.sin(y * 0.39 - t * 0.45 + x * 0.09) * 0.4 + Math.sin((x - y) * 0.15 + t * 0.3) * 0.6, ring = 0

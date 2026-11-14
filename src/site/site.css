@@ -40,6 +40,10 @@ html[data-mode=site] .page{animation:none}
 .site-home~.snav::before,html:has(.site-home) .snav::before{display:none}
 .snav a,.snav-tool{color:var(--s-fg);opacity:.5;text-decoration:none;transition:opacity .15s;background:none;border:0;padding:0;font:inherit;cursor:pointer;display:inline-flex;align-items:center}
 .snav a[aria-current],.snav a:hover,.snav-tool:hover{opacity:1}
+/* the current page in brackets, [playground]; the brackets hang outside so the words don't shift */
+.snav a{position:relative}
+.snav a[aria-current]::before{content:'[';position:absolute;right:100%;margin-right:.15em}
+.snav a[aria-current]::after{content:']';position:absolute;left:100%;margin-left:.15em}
 .snav-tool{margin-left:-8px}
 .snav-clock{position:absolute;left:24px;top:50%;transform:translateY(-50%);color:var(--s-fg);opacity:.5;font-variant-numeric:tabular-nums}
 .snav-m{display:none}
@@ -74,6 +78,9 @@ html .pond[data-pond=glyphrain]{--pond-o:.95}
 @keyframes s-pond-in{0%{opacity:0}0.1%{opacity:calc(.55 * var(--pond-o))}33.3%{opacity:calc(.88 * var(--pond-o))}66.7%,100%{opacity:var(--pond-o)}}
 .pond-name{position:absolute;right:24px;bottom:20px;z-index:1;background:none;border:0;padding:4px 0;width:24ch;text-align:center;white-space:nowrap;font:400 11px var(--s-mono);text-transform:lowercase;color:var(--s-dim);cursor:pointer}
 .pond-name:hover{color:var(--s-fg)}
+/* the live reading above it: same box, centred, figures that don't jiggle */
+.pond-stat{position:absolute;right:24px;bottom:44px;z-index:1;width:24ch;text-align:center;white-space:nowrap;font:400 11px var(--s-mono);font-variant-numeric:tabular-nums;color:var(--s-dim);opacity:.7;pointer-events:none}
+.pond-stat:empty{display:none}
 .home-col{position:absolute;left:20vw;right:20vw;bottom:clamp(48px,14vh,128px);max-width:54rem}
 .home-tag{font-size:14px;line-height:1.625;letter-spacing:.02em;text-transform:lowercase;color:var(--s-dim);margin:0 0 clamp(28px,5vh,44px);width:max-content;max-width:100%}
 .home-prose{font-size:15px;line-height:max(22px,3vh);width:max-content;max-width:100%}

@@ -1,6 +1,6 @@
 /** Shared bits for the pond testing room: the pond contract, seeded randomness, value noise and offscreen layers. */
 export type Pointer = { x: number; y: number; on: boolean }
-export type Instance = { frame: (t: number, p: Pointer) => void; click?: (x: number, y: number) => void; cursor?: () => string }
+export type Instance = { frame: (t: number, p: Pointer) => void; click?: (x: number, y: number) => void; cursor?: () => string; /** a short live reading for the corner, e.g. 'gen 1,204 · 812 alive' */ stat?: () => string }
 export type PondDef = {
   id: string
   name: string
